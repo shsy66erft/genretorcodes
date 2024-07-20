@@ -132,8 +132,8 @@
 
             localStorage.setItem('userEmail', email); // Store the email in localStorage
 
-            const code = sha256(Math.floor(100000 + Math.random() * 900000).toString()); // Generate a 6-digit code
-            localStorage.setItem('verificationCode', code); // Store the code in localStorage for verification later
+            const code = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit code
+            localStorage.setItem('verificationCode', sha256(code)); // Store the code in localStorage for verification later
 
             const templateParams = {
                 to_email: email,
