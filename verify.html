@@ -75,13 +75,14 @@
             return Math.floor(1000 + Math.random() * 9000); // Generates a random 4-digit number
         }
 
-        document.getElementById('verify-form').addEventListener('submit', function(event) {
+        document.getElementById('verify-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             
-            const enteredCodeHashed = sha256(document.querySelector('input').value.toString());
+            const enteredCodeHashed = await sha256(document.querySelector('input').value.toString());
+            console.log(enteredCodeHashed);
             const storedCodeHashed = localStorage.getItem('verificationCode');
 
-            if (enteredCode === storedCode) {
+            if (enteredCodeHashed === storedCodeHashed) {
                 alert('Verification successful!');
                 window.location.href = 'home.html'; // Redirect to home.html after successful verification
             } else {
