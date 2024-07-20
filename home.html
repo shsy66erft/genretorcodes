@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube to MP3 Converter</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        input {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00a651;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result a {
+            color: #00a651;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube to MP3 Converter</h1>
+        <input type="text" id="youtube-url" placeholder="Enter YouTube URL" />
+        <button onclick="convertToMP3()">Convert</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function convertToMP3() {
+            const url = document.getElementById('youtube-url').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!url) {
+                alert('Please enter a YouTube URL');
+                return;
+            }
+
+            // Disable the button to prevent multiple requests
+            const button = document.querySelector('button');
+            button.disabled = true;
+            button.innerText = 'Converting...';
+
+            fetch(`https://api.example.com/convert?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        resultDiv.innerHTML = `<a href="${data.downloadUrl}" target="_blank">Download MP3</a>`;
+                    } else {
+                        resultDiv.innerText = 'Conversion failed. Please try again.';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerText = 'An error occurred. Please try again.';
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.innerText = 'Convert';
+                });
+        }
+    </script>
+</body>
+</html>

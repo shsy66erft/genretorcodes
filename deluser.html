@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request to Delete Account</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            abackground-color: #F0F0F0;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        input, textarea {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+        .confirmation-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #FF7043;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Request to Delete Your Account</h1>
+        <form id="delete-request-form">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="user-email" placeholder="Your Email" required>
+            <textarea id="message" rows="5" placeholder="Your Message (Optional)"></textarea>
+            <button class="button" type="submit">Submit Request</button>
+        </form>
+        <div id="confirmation-message" class="confirmation-message">
+            Your request has been submitted. We will process it within 14 days.
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("nx_k9rwaSlhTMgKIx"); // Replace with your actual User ID from EmailJS
+        })();
+
+        document.getElementById('delete-request-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const userEmail = document.getElementById('user-email').value;
+            const message = document.getElementById('message').value;
+
+            const templateParams = {
+                to_email: userEmail, // Sends the email to the user who made the request
+                name: name,
+                message: message
+            };
+
+            emailjs.send('service_bd418it', 'template_jszic0f', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    document.getElementById('delete-request-form').reset(); // Reset the form
+                    document.getElementById('confirmation-message').style.display = 'block'; // Show confirmation message
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('Error sending message. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>

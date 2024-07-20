@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Code</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #FFEB3B;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .menu {
+            width: 100%;
+            background-color: #FF7043;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .container {
+            text-align: center;
+            background-color: #FFE082;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            margin-top: 20px;
+        }
+        input {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="signup.html">Sign Up</a>
+        <a href="login.html">Login</a>
+    </div>
+    <div class="container">
+        <h1>Verify Code</h1>
+        <form id="verify-form">
+            <input type="text" id="verification-code" placeholder="Verification Code" required>
+            <button class="button" type="submit">Verify</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('verify-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const enteredCode = document.getElementById('verification-code').value;
+            const storedCode = localStorage.getItem('verificationCode');
+
+            if (enteredCode === storedCode) {
+                alert('Verification successful!');
+                window.location.href = 'home.html';
+            } else {
+                alert('Invalid verification code. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

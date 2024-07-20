@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Code</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFEB3B;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            background-color: #FFE082;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        input {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verify Code</h1>
+        <form id="verify-form">
+            <input type="text" placeholder="Enter verification code" required>
+            <button class="button" type="submit">Verify</button>
+        </form>
+        <button class="button" id="resend-button">Resend Code</button>
+    </div>
+
+    <script>
+        function num4() {
+            return Math.floor(1000 + Math.random() * 9000); // Generates a random 4-digit number
+        }
+
+        document.getElementById('verify-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const enteredCode = document.querySelector('input').value;
+            const storedCode = localStorage.getItem('verificationCode');
+
+            if (enteredCode === storedCode) {
+                alert('Verification successful!');
+                window.location.href = 'home.html'; // Redirect to home.html after successful verification
+            } else {
+                alert('Invalid code. Please try again.');
+            }
+        });
+
+        document.getElementById('resend-button').addEventListener('click', function() {
+            const email = localStorage.getItem('userEmail'); // Retrieve the email from localStorage
+
+            if (!email) {
+                alert('Email not found. Please sign up again.');
+                return;
+            }
+
+            const code = num4(); // Generate a new 4-digit code
+            localStorage.setItem('verificationCode', code); // Store the new code in localStorage
+
+            const templateParams = {
+                to_email: email,
+                code: code
+            };
+
+            emailjs.send('service_zuhohgv', 'template_8bbgngg', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    alert('Verification code resent. Please check your email.');
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('Error resending email. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>
