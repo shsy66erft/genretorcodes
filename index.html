@@ -58,7 +58,11 @@
         .button:hover {
             background-color: #F4511E;
         }
+        .g_id_signin {
+            margin: 10px auto;
+        }
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="menu">
@@ -73,6 +77,14 @@
             <input type="password" id="login-password" placeholder="Password" required>
             <button class="button" type="submit">Login</button>
         </form>
+        <div id="g_id_login" class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -117,6 +129,25 @@
                     alert('Error sending email. Please try again.');
                 });
         });
+
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // Decode the JWT and verify it on the server
+            // Redirect to home page upon successful verification
+            window.location.href = 'home.html';
+        }
+
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com", // Replace with your actual Client ID
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("g_id_login"),
+                { theme: "outline", size: "large" } // customization attributes
+            );
+            google.accounts.id.prompt(); // Show the One Tap dialog
+        };
     </script>
 </body>
 </html>

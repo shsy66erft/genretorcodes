@@ -43,6 +43,9 @@
         .button:hover {
             background-color: #F4511E;
         }
+        .section {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -53,6 +56,15 @@
             <button class="button" type="submit">Verify</button>
         </form>
         <button class="button" id="resend-button">Resend Code</button>
+
+        <!-- Admin Verification Section -->
+        <div class="section">
+            <h2>Admin Verification</h2>
+            <form id="admin-verify-form">
+                <input type="text" id="admin-code" placeholder="Enter admin code" required>
+                <button class="button" type="submit">Verify Admin Code</button>
+            </form>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -65,6 +77,7 @@
             return CryptoJS.SHA256(code).toString();
         }
 
+        // User verification
         document.getElementById('verify-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -80,6 +93,7 @@
             }
         });
 
+        // Resend code
         document.getElementById('resend-button').addEventListener('click', function() {
             const email = localStorage.getItem('userEmail'); // Retrieve the email from localStorage
 
@@ -101,10 +115,27 @@
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     alert('Verification code resent. Please check your email.');
-                }, function(error) {
-                    console.log('FAILED...', error);
+                })
+                .catch(function(error) {
+                    console.error('FAILED...', error);
                     alert('Error resending email. Please try again.');
                 });
+        });
+
+        // Admin verification
+        document.getElementById('admin-verify-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const enteredAdminCode = document.getElementById('admin-code').value;
+            const hashedAdminCode = hashCode(enteredAdminCode);
+            const storedHashedAdminCode = localStorage.getItem('adminVerificationHashCode');
+
+            if (hashedAdminCode === storedHashedAdminCode) {
+                alert('Admin verification successful!');
+                window.location.href = 'admin_dashboard.html'; // Redirect to admin dashboard after successful verification
+            } else {
+                alert('Invalid admin code. Please try again.');
+            }
         });
     </script>
 </body>

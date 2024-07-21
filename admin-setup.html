@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Setup</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFEB3B;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            background-color: #FFE082;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        input {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Setup</h1>
+        <form id="admin-setup-form">
+            <input type="text" id="admin-code" placeholder="Enter admin code" required>
+            <button class="button" type="submit">Set Admin Code</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
+
+        document.getElementById('admin-setup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const adminCode = document.getElementById('admin-code').value;
+            const hashedAdminCode = hashCode(adminCode);
+            
+            // Store the hashed admin code in localStorage
+            localStorage.setItem('adminVerificationHashCode', hashedAdminCode);
+            
+            alert('Admin code has been set.');
+        });
+    </script>
+</body>
+</html>

@@ -14,7 +14,6 @@
             background-color: #FFEB3B;
             font-family: Arial, sans-serif;
             margin: 0;
-       
         }
         .menu {
             width: 100%;
@@ -59,6 +58,9 @@
         .button:hover {
             background-color: #F4511E;
         }
+        .g_id_signin {
+            margin: 10px auto;
+        }
         .note {
             font-size: 12px;
             color: #777;
@@ -75,6 +77,7 @@
             text-decoration: none;
         }
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -92,6 +95,7 @@
             </div>
             <button class="button" type="submit">Sign Up</button>
         </form>
+        <div id="g_id_signup" class="g_id_signin"></div>
     </div>
     <div class="menu">
         <a href="index.html">Home</a>
@@ -118,7 +122,6 @@
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             return hashHex;
         }
-
 
         document.getElementById('signup-form').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -150,6 +153,25 @@
                     alert('Error sending email. Please try again.');
                 });
         });
+
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // Decode the JWT and verify it on the server
+            // Redirect to home page upon successful verification
+            window.location.href = 'index.html';
+        }
+
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com", // Replace with your actual Client ID
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("g_id_signup"),
+                { theme: "outline", size: "large", text: "signup_with" } // customization attributes
+            );
+            google.accounts.id.prompt(); // Show the One Tap dialog
+        };
     </script>
 </body>
 </html>

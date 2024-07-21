@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #FFEB3B;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #FFE082;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 800px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #FF7043;
+            color: white;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <!-- View Users Section -->
+        <div class="section">
+            <h2>View Users</h2>
+            <table id="users-table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Invite User Section -->
+        <div class="section">
+            <h2>Invite User</h2>
+            <form id="invite-form">
+                <input type="email" id="invite-email" placeholder="Enter email to invite" required>
+                <button class="button" type="submit">Send Invitation</button>
+            </form>
+        </div>
+        
+        <!-- Admin Actions -->
+        <div class="section">
+            <h2>Admin Actions</h2>
+            <form id="admin-actions-form">
+                <input type="email" id="action-email" placeholder="Enter email for action" required>
+                <select id="action-type">
+                    <option value="ban">Ban</option>
+                    <option value="unban">Unban</option>
+                    <option value="suspend">Suspend</option>
+                    <option value="reactivate">Reactivate</option>
+                </select>
+                <button class="button" type="submit">Apply Action</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        // Mock data
+        const users = [
+            { email: 'user1@example.com', status: 'Active' },
+            { email: 'user2@example.com', status: 'Suspended' },
+            { email: 'user3@example.com', status: 'Banned' },
+        ];
+
+        // Function to render users
+        function renderUsers() {
+            const tableBody = document.querySelector('#users-table tbody');
+            tableBody.innerHTML = '';
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.email}</td>
+                    <td>${user.status}</td>
+                    <td>
+                        <button class="button" onclick="applyAction('${user.email}', 'ban')">Ban</button>
+                        <button class="button" onclick="applyAction('${user.email}', 'unban')">Unban</button>
+                        <button class="button" onclick="applyAction('${user.email}', 'suspend')">Suspend</button>
+                        <button class="button" onclick="applyAction('${user.email}', 'reactivate')">Reactivate</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to send invitation
+        document.getElementById('invite-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('invite-email').value;
+            // Send invitation logic here
+            console.log(`Invitation sent to ${email}`);
+            alert('Invitation sent!');
+        });
+
+        // Function to apply admin actions
+        document.getElementById('admin-actions-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('action-email').value;
+            const action = document.getElementById('action-type').value;
+
+            // Apply action logic here
+            console.log(`Applying ${action} to ${email}`);
+            alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied to ${email}`);
+        });
+
+        function applyAction(email, action) {
+            console.log(`Applying ${action} to ${email}`);
+            alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied to ${email}`);
+        }
+
+        // Initialize
+        renderUsers();
+    </script>
+</body>
+</html>
