@@ -22,7 +22,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 80%;
-            max-width: 800px;
+            max-width: 1200px;
         }
         .section {
             margin-top: 20px;
@@ -85,7 +85,7 @@
                 <button class="button" type="submit">Send Invitation</button>
             </form>
         </div>
-        
+
         <!-- Admin Actions -->
         <div class="section">
             <h2>Admin Actions</h2>
@@ -96,9 +96,50 @@
                     <option value="unban">Unban</option>
                     <option value="suspend">Suspend</option>
                     <option value="reactivate">Reactivate</option>
+                    <option value="changeRole">Change Role</option>
+                    <option value="resetPassword">Reset Password</option>
                 </select>
                 <button class="button" type="submit">Apply Action</button>
             </form>
+        </div>
+
+        <!-- Additional Sections -->
+        <div class="section">
+            <h2>Settings</h2>
+            <form id="settings-form">
+                <label for="setting-name">Setting Name:</label>
+                <input type="text" id="setting-name" placeholder="Enter setting name" required>
+                <label for="setting-value">Setting Value:</label>
+                <input type="text" id="setting-value" placeholder="Enter setting value" required>
+                <button class="button" type="submit">Save Settings</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Logs</h2>
+            <button class="button" id="view-logs-button">View Logs</button>
+            <div id="logs-section" style="display: none;">
+                <h3>Activity Logs</h3>
+                <pre id="logs-output"></pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Notifications</h2>
+            <form id="notifications-form">
+                <label for="notification-email">Email:</label>
+                <input type="email" id="notification-email" placeholder="Enter email for notifications" required>
+                <button class="button" type="submit">Update Notifications</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Reports</h2>
+            <button class="button" id="generate-report-button">Generate Report</button>
+            <div id="report-section" style="display: none;">
+                <h3>Report Output</h3>
+                <pre id="report-output"></pre>
+            </div>
         </div>
     </div>
 
@@ -111,7 +152,6 @@
             { email: 'user3@example.com', status: 'Banned' },
         ];
 
-        // Function to render users
         function renderUsers() {
             const tableBody = document.querySelector('#users-table tbody');
             tableBody.innerHTML = '';
@@ -125,36 +165,75 @@
                         <button class="button" onclick="applyAction('${user.email}', 'unban')">Unban</button>
                         <button class="button" onclick="applyAction('${user.email}', 'suspend')">Suspend</button>
                         <button class="button" onclick="applyAction('${user.email}', 'reactivate')">Reactivate</button>
+                        <button class="button" onclick="applyAction('${user.email}', 'changeRole')">Change Role</button>
+                        <button class="button" onclick="applyAction('${user.email}', 'resetPassword')">Reset Password</button>
                     </td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Function to send invitation
         document.getElementById('invite-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const email = document.getElementById('invite-email').value;
-            // Send invitation logic here
             console.log(`Invitation sent to ${email}`);
             alert('Invitation sent!');
         });
 
-        // Function to apply admin actions
         document.getElementById('admin-actions-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const email = document.getElementById('action-email').value;
             const action = document.getElementById('action-type').value;
 
-            // Apply action logic here
-            console.log(`Applying ${action} to ${email}`);
-            alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied to ${email}`);
+            applyAction(email, action);
         });
 
         function applyAction(email, action) {
             console.log(`Applying ${action} to ${email}`);
             alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied to ${email}`);
+            // Add logic to interact with the backend
         }
+
+        document.getElementById('settings-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const settingName = document.getElementById('setting-name').value;
+            const settingValue = document.getElementById('setting-value').value;
+
+            console.log(`Setting updated: ${settingName} = ${settingValue}`);
+            alert('Settings saved!');
+        });
+
+        document.getElementById('view-logs-button').addEventListener('click', function() {
+            document.getElementById('logs-section').style.display = 'block';
+            // Mock logs for demonstration
+            const logs = [
+                'Log 1: User1 logged in.',
+                'Log 2: User2 was banned.',
+                'Log 3: Admin updated settings.',
+            ];
+            document.getElementById('logs-output').textContent = logs.join('\n');
+        });
+
+        document.getElementById('notifications-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('notification-email').value;
+
+            console.log(`Notifications updated for ${email}`);
+            alert('Notifications updated!');
+        });
+
+        document.getElementById('generate-report-button').addEventListener('click', function() {
+            document.getElementById('report-section').style.display = 'block';
+            // Mock report for demonstration
+            const report = `
+                Report: User Activity
+                ----------------------
+                User1: Active
+                User2: Suspended
+                User3: Banned
+            `;
+            document.getElementById('report-output').textContent = report;
+        });
 
         // Initialize
         renderUsers();
