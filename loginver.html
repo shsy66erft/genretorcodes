@@ -75,14 +75,20 @@
         </form>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
+
         document.getElementById('verify-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
             const enteredCode = document.getElementById('verification-code').value;
-            const storedCode = localStorage.getItem('verificationCode');
+            const hashedEnteredCode = hashCode(enteredCode);
+            const storedHashedCode = localStorage.getItem('verificationHashCode');
 
-            if (enteredCode === storedCode) {
+            if (hashedEnteredCode === storedHashedCode) {
                 alert('Verification successful!');
                 window.location.href = 'home.html';
             } else {

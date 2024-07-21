@@ -75,11 +75,20 @@
         </form>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
         (function() {
             emailjs.init("REvVlGrHOuI_NS26I"); // Replace 'YOUR_USER_ID' with your actual User ID from EmailJS
         })();
+
+        function num6() {
+            return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit number
+        }
+
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
 
         document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -90,8 +99,9 @@
             // Here you should verify the email and password (e.g., by checking a database).
             // This example assumes verification is always successful.
 
-            const code = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit code
-            localStorage.setItem('verificationCode', code); // Store the code in localStorage for verification later
+            const code = num6(); // Generate a 6-digit code
+            const hashedCode = hashCode(code.toString());
+            localStorage.setItem('verificationHashCode', hashedCode); // Store the hashed code in localStorage
 
             const templateParams = {
                 to_email: email,
