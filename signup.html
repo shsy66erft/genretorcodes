@@ -14,6 +14,7 @@
             background-color: #FFEB3B;
             font-family: Arial, sans-serif;
             margin: 0;
+       
         }
         .menu {
             width: 100%;
@@ -119,7 +120,7 @@
         }
 
 
-        document.getElementById('signup-form').addEventListener('submit', function(event) {
+        document.getElementById('signup-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             
             const email = document.getElementById('email').value;
@@ -133,7 +134,7 @@
             localStorage.setItem('userEmail', email); // Store the email in localStorage
 
             const code = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit code
-            localStorage.setItem('verificationCode', sha256(code)); // Store the code in localStorage for verification later
+            localStorage.setItem('verificationCode', await sha256(code)); // Store the code in localStorage for verification later
 
             const templateParams = {
                 to_email: email,
