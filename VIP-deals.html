@@ -45,6 +45,7 @@
             margin-top: 5px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -54,7 +55,7 @@
 
     <script>
         const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
-        const url = `https://api.telegram.org/bot${botToken}/getUpdates`;
+        const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
 
         async function fetchUpdates() {
             try {
@@ -72,11 +73,6 @@
             }
         }
 
-        function linkify(text) {
-            const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-            return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
-        }
-
         function displayUpdates(updates) {
             const updatesDiv = document.getElementById('updates');
             updatesDiv.innerHTML = '';
@@ -88,7 +84,7 @@
                     updateDiv.className = 'update';
 
                     const p = document.createElement('p');
-                    p.innerHTML = linkify(message.text);
+                    p.innerHTML = DOMPurify.sanitize(message.text, { ALLOWED_TAGS: ['a'], ALLOWED_ATTR: ['href'] });
 
                     const timestamp = document.createElement('div');
                     timestamp.className = 'timestamp';
