@@ -28,6 +28,7 @@
         .update {
             border-bottom: 1px solid #ddd;
             padding: 10px 0;
+            position: relative;
         }
         .update:last-child {
             border-bottom: none;
@@ -44,8 +45,20 @@
             color: #888;
             margin-top: 5px;
         }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -54,9 +67,9 @@
     </div>
 
     <script>
-        const botToken = '7397978153:AAERuQVa67brOavZU28Q_DYS-D6ihtccvlU';
+        const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
-
+        const adminHash = '19d541b0db68af1297d7d27c6a6050b3ff28598b9c4a1d4e4ad6cb75f6525f3e';
         let messageIds = new Set();
 
         async function fetchUpdates() {
@@ -95,23 +108,33 @@
                     timestamp.className = 'timestamp';
                     timestamp.textContent = new Date(message.date * 1000).toLocaleString();
 
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = 'מחק';
+                    deleteBtn.onclick = () => handleDelete(message.message_id);
+
                     updateDiv.appendChild(p);
                     updateDiv.appendChild(timestamp);
+                    updateDiv.appendChild(deleteBtn);
                     updatesDiv.appendChild(updateDiv);
                 }
             });
 
-            // Handle deletions
-            messageIds.forEach(id => {
-                if (!newMessageIds.has(id)) {
-                    const messageDiv = document.getElementById(`message-${id}`);
-                    if (messageDiv) {
-                        messageDiv.remove();
-                    }
-                }
-            });
-
             messageIds = newMessageIds;
+        }
+
+        function handleDelete(messageId) {
+            const userCode = prompt("הכנס קוד מנהל למחיקה:");
+            const hashedCode = sha256(userCode);
+
+            if (hashedCode === adminHash) {
+                const messageDiv = document.getElementById(`message-${messageId}`);
+                if (messageDiv) {
+                    messageDiv.remove();
+                }
+            } else {
+                alert("קוד שגוי");
+            }
         }
 
         // Fetch updates every 10 seconds
