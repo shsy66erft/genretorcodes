@@ -47,6 +47,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -55,10 +56,26 @@
     </div>
 
     <script>
-        const botToken = '7340941427:AAFiN2zxW5L22ltUhukamyWu__rjAt9iuMA';
-        const chatId = 7340941427; // מזהה הצ'אט החדש שלך
-        const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
-        let lastUpdateId = 0;
+        // קוד JavaScript להצפנה ופענוח
+        function decrypt(text) {
+            const key = CryptoJS.enc.Utf8.parse('mysecretkey12345'); // מפתח הסודי שלך כאן
+            const iv = CryptoJS.enc.Utf8.parse('0000000000000000'); // וקטור אתחול קבוע
+
+            const decrypted = CryptoJS.AES.decrypt(text, key, {
+                iv: iv,
+                padding: CryptoJS.pad.Pkcs7,
+                mode: CryptoJS.mode.CBC
+            });
+
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+
+        // טוקן מוצפן
+        const encryptedToken = 'U2FsdGVkX1+Tl0LKk5Z/Z6uIJ9H0R1ISy3LffZOl8Vo=';
+
+        const botToken = decrypt(encryptedToken);
+        const chatId = '@Makajajsbot'; // שם המשתמש של הבוט שלך
+        const url = `https://api.telegram.org/bot${botToken}/getUpdates?offset=-1&timeout=10&allowed_updates=["message"]`;
 
         async function fetchUpdates() {
             try {
@@ -67,7 +84,7 @@
                 console.log('Fetched updates:', data);
 
                 if (data.ok) {
-                    const updates = data.result.filter(update => update.message && update.message.chat.id == chatId);
+                    const updates = data.result.filter(update => update.message && update.message.chat.username === chatId);
                     updateMessages(updates);
                 } else {
                     console.error('Error fetching updates:', data);
@@ -92,21 +109,18 @@
 
                     const timestamp = document.createElement('div');
                     timestamp.className = 'timestamp';
-                    timestamp.textContent = new Date(message.date * 1000).toLocaleString();
+                    const date = new Date(message.date * 1000);
+                    timestamp.textContent = date.toLocaleString('he-IL');
 
                     updateDiv.appendChild(p);
                     updateDiv.appendChild(timestamp);
-
                     updatesDiv.appendChild(updateDiv);
                 }
             });
         }
 
-        // Fetch updates every 10 seconds
-        setInterval(fetchUpdates, 10000);
-
-        // Initial fetch
         fetchUpdates();
+        setInterval(fetchUpdates, 10000); // עדכון כל 10 שניות
     </script>
 </body>
-</html>
+</html>a
