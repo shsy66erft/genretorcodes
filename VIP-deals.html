@@ -72,6 +72,11 @@
             }
         }
 
+        function linkify(text) {
+            const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
+        }
+
         function displayUpdates(updates) {
             const updatesDiv = document.getElementById('updates');
             updatesDiv.innerHTML = '';
@@ -83,7 +88,7 @@
                     updateDiv.className = 'update';
 
                     const p = document.createElement('p');
-                    p.textContent = message.text;
+                    p.innerHTML = linkify(message.text);
 
                     const timestamp = document.createElement('div');
                     timestamp.className = 'timestamp';
