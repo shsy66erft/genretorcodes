@@ -57,6 +57,8 @@
         const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
 
+        let messageIds = new Set();
+
         async function fetchUpdates() {
             try {
                 const response = await fetch(url);
@@ -64,7 +66,7 @@
 
                 if (data.ok) {
                     const updates = data.result;
-                    displayUpdates(updates);
+                    updateMessages(updates);
                 } else {
                     console.error('Error fetching updates:', data);
                 }
@@ -73,15 +75,18 @@
             }
         }
 
-        function displayUpdates(updates) {
+        function updateMessages(updates) {
             const updatesDiv = document.getElementById('updates');
+            const newMessageIds = new Set();
             updatesDiv.innerHTML = '';
 
             updates.forEach(update => {
                 const message = update.message;
                 if (message && message.text) {
+                    newMessageIds.add(message.message_id);
                     const updateDiv = document.createElement('div');
                     updateDiv.className = 'update';
+                    updateDiv.id = `message-${message.message_id}`;
 
                     const p = document.createElement('p');
                     p.innerHTML = DOMPurify.sanitize(message.text, { ADD_ATTR: ['href', 'target'] });
@@ -95,6 +100,18 @@
                     updatesDiv.appendChild(updateDiv);
                 }
             });
+
+            // Handle deletions
+            messageIds.forEach(id => {
+                if (!newMessageIds.has(id)) {
+                    const messageDiv = document.getElementById(`message-${id}`);
+                    if (messageDiv) {
+                        messageDiv.remove();
+                    }
+                }
+            });
+
+            messageIds = newMessageIds;
         }
 
         // Fetch updates every 10 seconds
