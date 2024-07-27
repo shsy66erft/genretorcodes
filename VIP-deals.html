@@ -58,18 +58,19 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>עדכוני ערוץ טלגרם</h1>
         <div id="updates"></div>
+        <button onclick="deleteAllMessages()">מחק את כל ההודעות</button>
     </div>
 
     <script>
         const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
+        const chatId = '7397978153';
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
-        const adminHash = '6b86b273ff34fce19d6b804eff5a3f57428b5f72d0d1f0dd27a6e8f0f48aa25b'; // hash for "1"
+        const deleteEnabled = true;
         let messageIds = new Set();
 
         async function fetchUpdates() {
@@ -108,14 +109,16 @@
                     timestamp.className = 'timestamp';
                     timestamp.textContent = new Date(message.date * 1000).toLocaleString();
 
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.textContent = 'מחק';
-                    deleteBtn.onclick = () => handleDelete(message.message_id);
-
                     updateDiv.appendChild(p);
                     updateDiv.appendChild(timestamp);
-                    updateDiv.appendChild(deleteBtn);
+                    if (deleteEnabled) {
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-btn';
+                        deleteBtn.textContent = 'מחק';
+                        deleteBtn.onclick = () => handleDelete(message.message_id);
+                        updateDiv.appendChild(deleteBtn);
+                    }
+
                     updatesDiv.appendChild(updateDiv);
                 }
             });
@@ -123,17 +126,27 @@
             messageIds = newMessageIds;
         }
 
-        function handleDelete(messageId) {
-            const userCode = prompt("הכנס קוד מנהל למחיקה:");
-            const hashedCode = sha256(userCode);
-
-            if (hashedCode === adminHash) {
-                const messageDiv = document.getElementById(`message-${messageId}`);
-                if (messageDiv) {
-                    messageDiv.remove();
+        async function handleDelete(messageId) {
+            const deleteUrl = `https://api.telegram.org/bot${botToken}/deleteMessage?chat_id=${chatId}&message_id=${messageId}`;
+            try {
+                const response = await fetch(deleteUrl, { method: 'POST' });
+                const data = await response.json();
+                if (data.ok) {
+                    const messageDiv = document.getElementById(`message-${messageId}`);
+                    if (messageDiv) {
+                        messageDiv.remove();
+                    }
+                } else {
+                    console.error('Error deleting message:', data);
                 }
-            } else {
-                alert("קוד שגוי");
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function deleteAllMessages() {
+            for (const messageId of messageIds) {
+                await handleDelete(messageId);
             }
         }
 
