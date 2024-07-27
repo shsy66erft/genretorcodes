@@ -84,7 +84,7 @@
                     updateDiv.className = 'update';
 
                     const p = document.createElement('p');
-                    p.innerHTML = DOMPurify.sanitize(message.text, { ALLOWED_TAGS: ['a'], ALLOWED_ATTR: ['href'] });
+                    p.innerHTML = DOMPurify.sanitize(message.text, { ADD_ATTR: ['href', 'target'] });
 
                     const timestamp = document.createElement('div');
                     timestamp.className = 'timestamp';
