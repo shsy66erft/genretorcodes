@@ -45,18 +45,6 @@
             color: #888;
             margin-top: 5px;
         }
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-            display: none;
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
 </head>
@@ -64,15 +52,13 @@
     <div class="container">
         <h1>עדכוני ערוץ טלגרם</h1>
         <div id="updates"></div>
-        <button id="delete-all-btn" onclick="deleteAllMessages()" style="display: none;">מחק את כל ההודעות</button>
     </div>
 
     <script>
         const botToken = '7340941427:AAFiN2zxW5L22ltUhukamyWu__rjAt9iuMA';
-        const chatId = 'YOUR_CHAT_ID'; // הכנס את ה-chat_id שלך כאן
+        const chatId = 7340941427; // מזהה הצ'אט החדש שלך
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
-        let messageIds = new Set();
-        const onDeleteEnabled = false;  // שינוי כאן כדי להפעיל או לכבות את האפשרות למחוק הודעות
+        let lastUpdateId = 0;
 
         async function fetchUpdates() {
             try {
@@ -93,16 +79,13 @@
 
         function updateMessages(updates) {
             const updatesDiv = document.getElementById('updates');
-            const newMessageIds = new Set();
             updatesDiv.innerHTML = '';
 
             updates.forEach(update => {
                 const message = update.message;
                 if (message && message.text) {
-                    newMessageIds.add(message.message_id);
                     const updateDiv = document.createElement('div');
                     updateDiv.className = 'update';
-                    updateDiv.id = `message-${message.message_id}`;
 
                     const p = document.createElement('p');
                     p.innerHTML = DOMPurify.sanitize(message.text, { ADD_ATTR: ['href', 'target'] });
@@ -114,47 +97,9 @@
                     updateDiv.appendChild(p);
                     updateDiv.appendChild(timestamp);
 
-                    if (onDeleteEnabled) {
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'delete-btn';
-                        deleteBtn.textContent = 'מחק';
-                        deleteBtn.onclick = () => handleDelete(message.message_id);
-                        deleteBtn.style.display = 'block';
-                        updateDiv.appendChild(deleteBtn);
-                    }
-
                     updatesDiv.appendChild(updateDiv);
                 }
             });
-
-            messageIds = newMessageIds;
-            document.getElementById('delete-all-btn').style.display = onDeleteEnabled ? 'block' : 'none';
-        }
-
-        async function handleDelete(messageId) {
-            const deleteUrl = `https://api.telegram.org/bot${botToken}/deleteMessage?chat_id=${chatId}&message_id=${messageId}`;
-            try {
-                const response = await fetch(deleteUrl, { method: 'POST' });
-                const data = await response.json();
-                console.log('Deleting message:', messageId, data);
-                if (data.ok) {
-                    const messageDiv = document.getElementById(`message-${messageId}`);
-                    if (messageDiv) {
-                        messageDiv.remove();
-                    }
-                } else {
-                    console.error('Error deleting message:', data);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        async function deleteAllMessages() {
-            console.log('Deleting all messages:', messageIds);
-            for (const messageId of messageIds) {
-                await handleDelete(messageId);
-            }
         }
 
         // Fetch updates every 10 seconds
