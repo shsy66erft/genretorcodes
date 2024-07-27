@@ -68,8 +68,8 @@
     </div>
 
     <script>
-        const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
-        const chatId = '7397978153';
+        const botToken = '7340941427:AAFiN2zxW5L22ltUhukamyWu__rjAt9iuMA';
+        const chatId = '7340941427'; // הכנס את ה-chat_id שלך כאן
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
         let messageIds = new Set();
         const onDeleteEnabled = false;  // שינוי כאן כדי להפעיל או לכבות את האפשרות למחוק הודעות
@@ -81,7 +81,7 @@
                 console.log('Fetched updates:', data);
 
                 if (data.ok) {
-                    const updates = data.result;
+                    const updates = data.result.filter(update => update.message && update.message.chat.id == chatId);
                     updateMessages(updates);
                 } else {
                     console.error('Error fetching updates:', data);
