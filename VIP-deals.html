@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>עדכוני הטבות VIP ברשת טלגרם</title>
+    <title>עדכוני ערוץ טלגרם</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,9 +67,9 @@
     </div>
 
     <script>
-        const botToken = '7444282650:7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
+        const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
-        const adminHash = '19d541b0db68af1297d7d27c6a6050b3ff28598b9c4a1d4e4ad6cb75f6525f3e';
+        const adminHash = '6b86b273ff34fce19d6b804eff5a3f57428b5f72d0d1f0dd27a6e8f0f48aa25b'; // hash for "1"
         let messageIds = new Set();
 
         async function fetchUpdates() {
