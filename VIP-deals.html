@@ -76,6 +76,7 @@
             try {
                 const response = await fetch(url);
                 const data = await response.json();
+                console.log('Fetched updates:', data);
 
                 if (data.ok) {
                     const updates = data.result;
