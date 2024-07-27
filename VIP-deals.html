@@ -70,7 +70,6 @@
         const botToken = '7444282650:AAH4Mh3WvtABFwCPGk9RHru9kxs739f1xP8';
         const chatId = '7397978153';
         const url = `https://api.telegram.org/bot${botToken}/getUpdates?parse_mode=HTML`;
-        const deleteEnabled = true;
         let messageIds = new Set();
 
         async function fetchUpdates() {
@@ -111,13 +110,11 @@
 
                     updateDiv.appendChild(p);
                     updateDiv.appendChild(timestamp);
-                    if (deleteEnabled) {
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'delete-btn';
-                        deleteBtn.textContent = 'מחק';
-                        deleteBtn.onclick = () => handleDelete(message.message_id);
-                        updateDiv.appendChild(deleteBtn);
-                    }
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = 'מחק';
+                    deleteBtn.onclick = () => handleDelete(message.message_id);
+                    updateDiv.appendChild(deleteBtn);
 
                     updatesDiv.appendChild(updateDiv);
                 }
@@ -131,6 +128,7 @@
             try {
                 const response = await fetch(deleteUrl, { method: 'POST' });
                 const data = await response.json();
+                console.log('Deleting message:', messageId, data);  // Debugging line
                 if (data.ok) {
                     const messageDiv = document.getElementById(`message-${messageId}`);
                     if (messageDiv) {
@@ -145,6 +143,7 @@
         }
 
         async function deleteAllMessages() {
+            console.log('Deleting all messages:', messageIds);  // Debugging line
             for (const messageId of messageIds) {
                 await handleDelete(messageId);
             }
