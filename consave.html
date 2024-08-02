@@ -146,20 +146,21 @@
     </style>
 </head>
 <body>
-<div id="bthn" lang="he"></div><script>
-(function () {
-   var script = document.createElement("script");
-   script.type = "text/javascript";
-   script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
-   script.setAttribute(
-     "integrity",
-     "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
-   );
-   script.setAttribute("crossorigin", "anonymous");
-   document.getElementsByTagName("head")[0].appendChild(script);
- })();
-</script>
-    
+    <div id="bthn" lang="he"></div>
+    <script>
+        (function () {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+            script.setAttribute(
+                "integrity",
+                "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
+            );
+            script.setAttribute("crossorigin", "anonymous");
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })();
+    </script>
+
     <div class="container">
         <h1>Upload and Process Excel File</h1>
         <input type="file" id="upload" />
@@ -195,7 +196,6 @@
         <button onclick="adjustFontSize('reset')">Reset Font Size</button>
     </div>
 
-    <div id="bthn" lang="he"></div>
     <script>
         let numbersArray = [];
         let columnHeaders = [];
@@ -272,13 +272,12 @@
                 numbersArray.forEach(number => {
                     const row = document.createElement('tr');
                     row.innerHTML = 
-                        <td>${number}</td>
+                        `<td>${number}</td>
                         <td>
                             <button class="button" onclick="dialNumber('${number}')">Call</button>
                             <button class="button" onclick="openDialer('${number}')">Save to Contact</button>
                             <button class="vcard-button" onclick="downloadVCard('${number}')">Download VCard</button>
-                        </td>
-                    ;
+                        </td>`;
                     tableBody.appendChild(row);
                 });
             };
@@ -287,26 +286,25 @@
         }
 
         function dialNumber(number) {
-            window.location.href = tel:${number};
+            window.location.href = `tel:${number}`;
         }
 
         function openDialer(number) {
-            window.location.href = tel:${number};
+            window.location.href = `tel:${number}`;
         }
 
         function downloadVCard(number) {
             const vCardData = 
-BEGIN:VCARD
+`BEGIN:VCARD
 VERSION:3.0
 FN:Contact
 TEL:${number}
-END:VCARD
-;
+END:VCARD`;
             const blob = new Blob([vCardData], { type: 'text/vcard' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = ${number}.vcf;
+            a.download = `${number}.vcf`;
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -319,7 +317,13 @@ END:VCARD
 
             let vCardData = '';
             numbersArray.forEach((number, index) => {
-                vCardData += BEGIN:VCARD\nVERSION:3.0\nFN:Contact ${index + 1}\nTEL:${number}\nEND:VCARD\n;
+                vCardData += 
+`BEGIN:VCARD
+VERSION:3.0
+FN:Contact ${index + 1}
+TEL:${number}
+END:VCARD
+`;
             });
 
             const blob = new Blob([vCardData], { type: 'text/vcard' });
@@ -350,22 +354,8 @@ END:VCARD
                 newSize = 16; // Reset to default size
             }
 
-            document.body.style.fontSize = ${newSize}px;
+            document.body.style.fontSize = `${newSize}px`;
         }
     </script>
-    <div id="bthn" lang="he"></div>
-    <script>
-        (function () {
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
-            script.setAttribute(
-                "integrity",
-                "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
-            );
-            script.setAttribute("crossorigin", "anonymous");
-            document.getElementsByTagName("head")[0].appendChild(script);
-        })();
-    </script>
 </body>
-</html> 
+</html>
