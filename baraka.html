@@ -79,12 +79,29 @@
                 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                 const json = XLSX.utils.sheet_to_json(worksheet);
 
-                // Assuming numbers are in a column named 'Numbers'
-                numbersArray = json.map(row => row.Numbers);
+                // Debug: Log the data to inspect it
+                console.log('Sheet Data:', json);
+
+                // Dynamically find the column header for numbers
+                const headers = Object.keys(json[0] || {});
+                const numberColumn = headers.find(header => /number/i.test(header)); // case-insensitive match
+
+                if (!numberColumn) {
+                    alert('No valid column found for numbers.');
+                    return;
+                }
+
+                // Extract numbers from the dynamically identified column
+                numbersArray = json.map(row => row[numberColumn]).filter(number => number);
 
                 // Populate the table
                 const tableBody = document.querySelector('#data-table tbody');
                 tableBody.innerHTML = ''; // Clear previous data
+
+                if (numbersArray.length === 0) {
+                    alert('No valid numbers found.');
+                    return;
+                }
 
                 numbersArray.forEach(number => {
                     const row = document.createElement('tr');
