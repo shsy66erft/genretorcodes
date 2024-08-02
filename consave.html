@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Distribution List</title>
+    <title>Upload and Process Excel File</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,40 +13,36 @@
             color: #333;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+        h1, h2 {
             color: #4CAF50;
         }
-        input, button {
+        input[type="file"], select {
             margin: 10px 0;
             width: 100%;
             box-sizing: border-box;
         }
-        input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .button {
+        button, .button {
             cursor: pointer;
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px;
-            font-size: 16px;
+            padding: 10px 15px;
             border-radius: 4px;
+            font-size: 14px;
             transition: background-color 0.3s, transform 0.2s;
+            margin: 5px 0;
         }
-        .button:hover {
+        button:hover, .button:hover {
             background-color: #45a049;
         }
-        .button:active {
+        button:active, .button:active {
             transform: scale(0.98);
         }
         .accessibility-btn {
@@ -79,26 +76,27 @@
             cursor: pointer;
             margin: 5px 0;
         }
-        #bthn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            z-index: 1000;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        .number-list {
-            list-style: none;
-            padding: 0;
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
         }
         .number-list-item {
             margin-bottom: 10px;
             display: flex;
             align-items: center;
         }
-        .vcard-button, .vcard-all-button {
+        .vcard-button {
             background-color: #007bff;
             color: white;
             border: none;
@@ -109,23 +107,36 @@
             margin-left: 10px;
             transition: background-color 0.3s;
         }
-        .vcard-button:hover, .vcard-all-button:hover {
+        .vcard-button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Create Distribution List</h1>
-        <input type="text" id="emailInput" placeholder="Enter email addresses, separated by commas" />
-        <button class="button" onclick="createList()">Create Distribution List</button>
+        <h1>Upload and Process Excel File</h1>
+        <input type="file" id="upload" />
+        <button class="button" onclick="processFile()">Process File</button>
 
-        <h2>Shareable Link</h2>
-        <input type="text" id="shareableLink" readonly placeholder="Your shareable link will appear here" />
+        <h2>Select Column</h2>
+        <select id="column-select">
+            <option value="">Select Column</option>
+        </select>
 
-        <h2>Number List</h2>
-        <ul id="numberList" class="number-list"></ul>
-        <button class="button vcard-all-button" onclick="downloadAllVCards()">Download All as VCard</button>
+        <h2>Data</h2>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+
+        <button class="button" onclick="generateVCard()">Generate vCard for All Numbers</button>
     </div>
 
     <button class="accessibility-btn" onclick="toggleAccessibilityMenu()">A</button>
@@ -138,63 +149,109 @@
     </div>
 
     <div id="bthn" lang="he"></div>
-
     <script>
-        let numbers = []; // Array to hold numbers for VCard generation
+        let numbersArray = [];
+        let columnHeaders = [];
 
-        function createList() {
-            const emailInput = document.getElementById('emailInput').value.trim();
-            const shareableLink = document.getElementById('shareableLink');
-            const numberList = document.getElementById('numberList');
+        function processFile() {
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
 
-            if (!emailInput) {
-                alert('Please enter some email addresses.');
+            if (!file) {
+                alert('Please select a file first.');
                 return;
             }
 
-            // Replace with your server URL
-            const serverUrl = 'https://example.com/create-distribution-list';
+            const reader = new FileReader();
 
-            fetch(serverUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ emails: emailInput.split(',').map(email => email.trim()) })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Assuming the server returns a unique link
-                    shareableLink.value = data.link;
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
 
-                    // Populate number list (for demonstration, using static numbers)
-                    numbers = ['1234567890', '0987654321']; // Replace with actual numbers from the server
-                    numberList.innerHTML = ''; // Clear previous list
-                    numbers.forEach(number => {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'number-list-item';
-                        listItem.innerHTML = `
-                            ${number}
-                            <button class="vcard-button" onclick="downloadVCard('${number}')">VCard</button>
-                        `;
-                        numberList.appendChild(listItem);
-                    });
-                } else {
-                    alert('Failed to create the distribution list.');
+                if (json.length === 0) {
+                    alert('No data found in the file.');
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while creating the distribution list.');
-            });
+
+                columnHeaders = Object.keys(json[0]);
+                const columnSelect = document.getElementById('column-select');
+                columnSelect.innerHTML = '<option value="">Select Column</option>'; // Clear previous options
+
+                columnHeaders.forEach(header => {
+                    const option = document.createElement('option');
+                    option.value = header;
+                    option.textContent = header;
+                    columnSelect.appendChild(option);
+                });
+
+                document.querySelector('#data-table tbody').innerHTML = '';
+                numbersArray = [];
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processSelectedColumn() {
+            const columnSelect = document.getElementById('column-select');
+            const selectedColumn = columnSelect.value;
+
+            if (!selectedColumn) {
+                alert('Please select a column first.');
+                return;
+            }
+
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                numbersArray = json.map(row => row[selectedColumn]).filter(number => number);
+
+                const tableBody = document.querySelector('#data-table tbody');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                if (numbersArray.length === 0) {
+                    alert('No valid numbers found.');
+                    return;
+                }
+
+                numbersArray.forEach(number => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${number}</td>
+                        <td>
+                            <button class="button" onclick="dialNumber('${number}')">Call</button>
+                            <button class="button" onclick="openDialer('${number}')">Save to Contact</button>
+                            <button class="vcard-button" onclick="downloadVCard('${number}')">Download VCard</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function dialNumber(number) {
+            window.location.href = `tel:${number}`;
+        }
+
+        function openDialer(number) {
+            window.location.href = `tel:${number}`;
         }
 
         function downloadVCard(number) {
             const vCardData = `
 BEGIN:VCARD
 VERSION:3.0
-FN:${number}
+FN:Contact
 TEL:${number}
 END:VCARD
             `.trim();
@@ -208,14 +265,16 @@ END:VCARD
             URL.revokeObjectURL(url);
         }
 
-        function downloadAllVCards() {
-            const vCardData = numbers.map(number => `
-BEGIN:VCARD
-VERSION:3.0
-FN:${number}
-TEL:${number}
-END:VCARD
-            `.trim()).join('\n');
+        function generateVCard() {
+            if (numbersArray.length === 0) {
+                alert('No numbers to save.');
+                return;
+            }
+
+            let vCardData = '';
+            numbersArray.forEach((number, index) => {
+                vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:Contact ${index + 1}\nTEL:${number}\nEND:VCARD\n`;
+            });
 
             const blob = new Blob([vCardData], { type: 'text/vcard' });
             const url = URL.createObjectURL(blob);
@@ -226,28 +285,30 @@ END:VCARD
             URL.revokeObjectURL(url);
         }
 
+        document.getElementById('column-select').addEventListener('change', processSelectedColumn);
+
         function toggleAccessibilityMenu() {
             const menu = document.getElementById('accessibilityMenu');
-            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
         function adjustFontSize(action) {
-            const body = document.body;
-            const currentSize = window.getComputedStyle(body).fontSize;
-
+            const currentSize = parseFloat(window.getComputedStyle(document.body).fontSize);
             let newSize;
+
             if (action === 'increase') {
-                newSize = parseFloat(currentSize) * 1.2 + 'px';
+                newSize = currentSize * 1.2;
             } else if (action === 'decrease') {
-                newSize = parseFloat(currentSize) * 0.8 + 'px';
-            } else if (action === 'reset') {
-                newSize = '16px';
+                newSize = currentSize / 1.2;
+            } else {
+                newSize = 16; // Reset to default size
             }
 
-            body.style.fontSize = newSize;
+            document.body.style.fontSize = `${newSize}px`;
         }
-
-        // Load external script
+    </script>
+    <div id="bthn" lang="he"></div>
+    <script>
         (function () {
             var script = document.createElement("script");
             script.type = "text/javascript";
