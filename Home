@@ -1,380 +1,123 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">w
-    <title>יצירת סיסמאות</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Save Excel Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
-        :root {
-            --background-color: #ffffff;
-            --text-color: #000000;
-            --header-bg-color: #283593;
-            --button-bg-color: #283593;
-            --button-hover-bg-color: #1a237e;
-            --button-text-color: #ffffff;
-            --input-bg-color: #ffffff;
-            --input-text-color: #000000;
-            --password-history-bg-color: #e8eaf6;
-            --password-history-item-bg-color: #ffffff;
-            --password-display-color: #283593;
-            --password-strength-text-color: #ffffff;
-            --section-bg-color: #ffffff;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        body.dark-theme {
-            --background-color: #333333;
-            --text-color: #ffffff;
-            --header-bg-color: #1a237e;
-            --button-bg-color: #1a237e;
-            --button-hover-bg-color: #000000;
-            --input-bg-color: #555555;
-            --input-text-color: #ffffff;
-            --password-history-bg-color: #444444;
-            --password-history-item-bg-color: #555555;
-            --password-display-color: #ffffff;
-            --password-strength-text-color: #ffffff;
-            --section-bg-color: #333333;
+        table, th, td {
+            border: 1px solid black;
         }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-        .header {
-            background-color: var(--header-bg-color);
-            color: var(--text-color);
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        th, td {
+            padding: 8px;
+            text-align: left;
         }
         .button {
-            padding: 0.75rem 1.5rem;
-            color: var(--button-text-color);
-            background-color: var(--button-bg-color);
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
-            margin: 1rem 0.5rem;
-            font-size: 1rem;
-            transition: background-color 0.3s, transform 0.2s;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
         }
         .button:hover {
-            background-color: var(--button-hover-bg-color);
-            transform: scale(1.05);
-        }
-        .button:disabled {
-            background-color: #d0d0d0;
-            cursor: not-allowed;
-        }
-        .image {
-            width: 100%;
-            height: auto;
-            max-width: 600px;
-            margin: 2rem auto;
-            display: block;
-        }
-        .content, .section, .settings, .auth, .theme, .advanced {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: var(--section-bg-color);
-            padding: 2rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .input-group {
-            margin: 1rem 0;
-        }
-        .input-group label {
-            margin-right: 0.5rem;
-            font-weight: bold;
-        }
-        .input-group input, .input-group select, .input-group textarea {
-            padding: 0.5rem;
-            font-size: 1rem;
-            width: calc(100% - 1rem);
-            background-color: var(--input-bg-color);
-            color: var(--input-text-color);
-        }
-        .password-display {
-            margin: 1rem 0;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--password-display-color);
-            word-break: break-all;
-        }
-        .password-history {
-            margin: 1rem 0;
-            padding: 1rem;
-            background-color: var(--password-history-bg-color);
-            border-radius: 5px;
-        }
-        .password-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .password-history li {
-            background-color: var(--password-history-item-bg-color);
-            border: 1px solid #d0d0d0;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
-        .password-strength {
-            margin: 1rem 0;
-            padding: 0.5rem;
-            color: var(--password-strength-text-color);
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .strength-weak {
-            background-color: #f44336;
-        }
-        .strength-moderate {
-            background-color: #ff9800;
-        }
-        .strength-strong {
-            background-color: #4caf50;
-        }
-        .theme-switcher {
-            margin: 1rem 0;
-            text-align: center;
-        }
-        .theme-switcher button {
-            padding: 0.5rem 1rem;
-            margin: 0.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-        .hidden {
-            display: none;
+            background-color: white;
+            color: black;
+            border: 1px solid #4CAF50;
         }
     </style>
 </head>
-<body class="light-theme" onload="setDefaultLanguage()">
-    <div class="header">
-        <h1 id="header-title">שירות יצירת סיסמאות</h1>
-    </div>
+<body>
+    <h1>Upload and Process Excel File</h1>
+    <input type="file" id="upload" />
+    <button onclick="processFile()">Process File</button>
 
-    <div class="content">
-        <h2 id="content-title">יצירת סיסמאות חזקות</h2>
-        <p id="content-description">גם לך נמאס לחפש שעה סיסמה שקל לזכור? האתר רוצה סיסמה חזקה? אצלנו תקבל את הסיסמה הכי טובה שיש, ולשמור אותה לקובץ כך שחשבונך יהיה מוגן מפרצות אבטחה. איננו שומרים סיסמאות שים לב להוריד את הסיסמה לקובץ!</p>
-        <img src="s.jpeg" alt="Password Generator Illustration" class="image">
-    </div>
+    <h2>Data</h2>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
 
-    <div class="section">
-        <div class="input-group">
-            <label for="password-length">אורך הסיסמה:</label>
-            <input type="number" id="password-length" min="6" max="30" value="12">
-        </div>
-
-        <div class="input-group">
-            <label><input type="checkbox" id="include-lowercase" checked> אותיות קטנות</label>
-            <label><input type="checkbox" id="include-uppercase" checked> אותיות גדולות</label>
-            <label><input type="checkbox" id="include-numbers" checked> מספרים</label>
-            <label><input type="checkbox" id="include-symbols" checked> סימנים</label>
-        </div>
-
-        <div class="password-display" id="password-display"></div>
-
-        <button class="button" onclick="generatePassword()">יצירת סיסמה</button>
-        <button class="button" onclick="generateMultiplePasswords()">יצירת 10 סיסמאות</button>
-        <button class="button" id="copy-button" onclick="copyPassword()" disabled>העתק</button>
-        <button class="button" onclick="savePasswords()">שמור סיסמאות</button>
-        <button class="button" onclick="emailPasswords()">שלח סיסמאות בדוא"ל</button>
-        <button class="button" onclick="clearPasswordHistory()">נקה היסטוריית סיסמאות</button>
-        <button class="button" onclick="togglePasswordVisibility()">הצג/הסתר סיסמה</button>
-        <button class="button" onclick="showLastGeneratedPassword()">הצג סיסמה אחרונה</button>
-        <button class="button" onclick="generatePasswordWithPattern()">יצירת סיסמה לפי תבנית</button>
-        <button class="button" onclick="addUserSpecifiedWords()">הוסף מילים שהמשתמש קובע</button>
-        <button class="button" onclick="importPasswords()">ייבוא סיסמאות</button>
-        <button class="button" onclick="exportPasswordsToCSV()">יצוא ל-CSV</button>
-
-        <div class="password-history" id="password-history">
-            <h3>היסטוריית סיסמאות שנוצרו:</h3>
-            <ul id="password-history-list"></ul>
-        </div>
-
-        <div class="password-strength" id="password-strength">חוזק הסיסמא: אין</div>
-
-        <div class="email-section" id="email-section">
-            <h3>שלח סיסמאות בדוא"ל:</h3>
-            <input type="email" id="email-address" placeholder="הזן את כתובת הדוא"ל שלך">
-            <textarea id="email-body" rows="4" placeholder="הזן את ההודעה שלך"></textarea>
-            <button class="button" onclick="emailPasswords()">שלח דוא"ל</button>
-        </div>
-
-        <div class="hidden">
-            <input type="file" id="import-file" accept=".txt, .csv">
-        </div>
-    </div>
-
-    <div class="theme-switcher">
-        <button class="button" onclick="switchTheme('light')">תאורה</button>
-        <button class="button" onclick="switchTheme('dark')">כהה</button>
-    </div>
+    <button class="button" onclick="saveAll()">Save All</button>
 
     <script>
-        function setDefaultLanguage() {
-            document.documentElement.lang = 'he'; // Set Hebrew as default language
-        }
+        let numbersArray = [];
 
-        function generatePassword() {
-            const length = parseInt(document.getElementById('password-length').value);
-            const includeLowercase = document.getElementById('include-lowercase').checked;
-            const includeUppercase = document.getElementById('include-uppercase').checked;
-            const includeNumbers = document.getElementById('include-numbers').checked;
-            const includeSymbols = document.getElementById('include-symbols').checked;
-            let charset = '';
-            if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
-            if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            if (includeNumbers) charset += '0123456789';
-            if (includeSymbols) charset += '!@#$%^&*()_+[]{}|;:,.<>?';
-            let password = '';
-            for (let i = 0; i < length; i++) {
-                password += charset.charAt(Math.floor(Math.random() * charset.length));
+        function processFile() {
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
             }
-            document.getElementById('password-display').innerText = password;
-            document.getElementById('copy-button').disabled = false;
-            updatePasswordHistory(password);
-            updatePasswordStrength(password);
-        }
 
-        function generateMultiplePasswords() {
-            let passwords = [];
-            for (let i = 0; i < 10; i++) {
-                passwords.push(generateRandomPassword());
-            }
-            document.getElementById('password-display').innerText = passwords.join('\n');
-            document.getElementById('copy-button').disabled = false;
-            updatePasswordHistory(passwords.join('\n'));
-        }
+            const reader = new FileReader();
 
-        function generateRandomPassword() {
-            const length = parseInt(document.getElementById('password-length').value);
-            const includeLowercase = document.getElementById('include-lowercase').checked;
-            const includeUppercase = document.getElementById('include-uppercase').checked;
-            const includeNumbers = document.getElementById('include-numbers').checked;
-            const includeSymbols = document.getElementById('include-symbols').checked;
-            let charset = '';
-            if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
-            if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            if (includeNumbers) charset += '0123456789';
-            if (includeSymbols) charset += '!@#$%^&*()_+[]{}|;:,.<>?';
-            let password = '';
-            for (let i = 0; i < length; i++) {
-                password += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            return password;
-        }
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
 
-        function updatePasswordHistory(password) {
-            const historyList = document.getElementById('password-history-list');
-            const listItem = document.createElement('li');
-            listItem.innerText = password;
-            historyList.appendChild(listItem);
-        }
+                // Assuming the first sheet contains the data
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
 
-        function updatePasswordStrength(password) {
-            const strengthDisplay = document.getElementById('password-strength');
-            let strength = 'חלשה';
-            if (password.length >= 12) {
-                strength = 'בינונית';
-                if (/[A-Z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*()_+[]{}|;:,.<>?]/.test(password)) {
-                    strength = 'חזקה';
-                }
-            }
-            strengthDisplay.innerText = `חוזק הסיסמא: ${strength}`;
-            strengthDisplay.className = `password-strength strength-${strength.toLowerCase()}`;
-        }
+                // Assuming numbers are in a column named 'Numbers'
+                numbersArray = json.map(row => row.Numbers);
 
-        function copyPassword() {
-            const password = document.getElementById('password-display').innerText;
-            navigator.clipboard.writeText(password);
-        }
+                // Populate the table
+                const tableBody = document.querySelector('#data-table tbody');
+                tableBody.innerHTML = ''; // Clear previous data
 
-        function savePasswords() {
-            // Logic to save passwords (e.g., to a file or local storage)
-            alert('סיסמאות נשמרות...');
-        }
-
-        function emailPasswords() {
-            const email = document.getElementById('email-address').value;
-            const body = document.getElementById('email-body').value;
-            // Logic to send email with passwords
-            alert(`שליחת סיסמאות ל-${email}`);
-        }
-
-        function clearPasswordHistory() {
-            document.getElementById('password-history-list').innerHTML = '';
-        }
-
-        function showLastGeneratedPassword() {
-            const password = document.getElementById('password-display').innerText;
-            alert(`הסיסמה האחרונה היא: ${password}`);
-        }
-
-        function togglePasswordVisibility() {
-            const passwordDisplay = document.getElementById('password-display');
-            passwordDisplay.style.visibility = passwordDisplay.style.visibility === 'hidden' ? 'visible' : 'hidden';
-        }
-
-        function generatePasswordWithPattern() {
-            // Logic to generate password based on a pattern
-            alert('יצירת סיסמה לפי תבנית');
-        }
-
-        function addUserSpecifiedWords() {
-            // Logic to add user-specified words
-            alert('הוספת מילים שהמשתמש קובע');
-        }
-
-        function importPasswords() {
-            const fileInput = document.getElementById('import-file');
-            fileInput.click();
-            fileInput.onchange = () => {
-                const file = fileInput.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const content = e.target.result;
-                        const passwords = content.split(/\r?\n/);
-                        document.getElementById('password-display').innerText = passwords.join('\n');
-                        updatePasswordHistory(passwords.join('\n'));
-                    };
-                    reader.readAsText(file);
-                }
+                numbersArray.forEach(number => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${number}</td>
+                        <td><button class="button" onclick="saveToContact('${number}')">Save to Contact</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
             };
+
+            reader.readAsArrayBuffer(file);
         }
 
-        function exportPasswordsToCSV() {
-            const historyList = document.getElementById('password-history-list');
-            let csvContent = 'data:text/csv;charset=utf-8,סיסמאות\n';
-            historyList.querySelectorAll('li').forEach(li => {
-                csvContent += li.innerText + '\n';
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', 'passwords.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        function saveToContact(number) {
+            // Placeholder function to simulate saving contact
+            // Replace this with actual contact saving logic
+            alert(`Number ${number} saved to contact!`);
         }
 
-        function switchTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.body.classList.remove('light-theme');
-            } else {
-                document.body.classList.add('light-theme');
-                document.body.classList.remove('dark-theme');
+        function saveAll() {
+            if (numbersArray.length === 0) {
+                alert('No numbers to save.');
+                return;
             }
+
+            // Placeholder function to simulate saving all contacts
+            // Replace this with actual contact saving logic
+            numbersArray.forEach(number => {
+                // Simulate saving each number
+                console.log(`Number ${number} saved to contact!`);
+            });
+            alert('All numbers saved to contacts!');
         }
     </script>
 </body>
