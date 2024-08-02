@@ -3,249 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Excel Processing</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <title>Table Management</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #4CAF50;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #333;
-            font-size: 20px;
-            margin: 20px 0 10px;
-        }
-        input[type="file"], select {
-            margin: 10px 0;
-            padding: 10px;
-            width: calc(100% - 22px);
+        .settings-bar, .accessibility-bar {
+            background-color: #f4f4f4;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            padding: 10px;
+            margin-bottom: 10px;
         }
-        table {
+        .settings-bar button, .accessibility-bar button {
+            margin-right: 5px;
+        }
+        #data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px 0;
         }
-        table, th, td {
+        #data-table th, #data-table td {
             border: 1px solid #ddd;
+            padding: 8px;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
+        #data-table th {
+            background-color: #f2f2f2;
         }
-        th {
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        td {
-            background-color: #fff;
-        }
-        .button {
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: background-color 0.3s, transform 0.2s;
-            margin: 5px;
-            display: inline-block;
-            text-align: center;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        .button:active {
-            transform: scale(0.98);
-        }
-        .accessibility-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .accessibility-btn:hover {
-            background-color: #0056b3;
-        }
-        .accessibility-menu, .settings-menu {
-            display: none;
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            z-index: 1000;
-            width: 300px;
-        }
-        .accessibility-menu h3, .settings-menu h3 {
-            margin: 0 0 10px;
-            font-size: 16px;
-            color: #333;
-        }
-        .accessibility-menu button, .settings-menu button {
-            background: none;
-            border: none;
-            font-size: 16px;
-            color: #007bff;
-            cursor: pointer;
-            margin: 5px 0;
-            display: block;
-            width: 100%;
-            text-align: left;
-        }
-        .accessibility-menu button:hover, .settings-menu button:hover {
-            text-decoration: underline;
+        tr.selected {
+            background-color: #d3ffd3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Upload and Process Excel File</h1>
-        <input type="file" id="upload" />
-        <button class="button" onclick="processFile()">Process File</button>
-
-        <h2>Select Column</h2>
-        <select id="column-select">
-            <option value="">Select Column</option>
-        </select>
-
-        <h2>Data</h2>
-        <table id="data-table">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be inserted here -->
-            </tbody>
-        </table>
-
-        <button class="button" onclick="generateVCard()">Generate vCard for All Numbers</button>
+    <div class="settings-bar">
+        <button onclick="toggleSettingsMenu()">Toggle Settings</button>
+        <div id="settingsMenu" style="display: none;">
+            <button onclick="copySelectedRows()">Copy Selected Rows</button>
+            <button onclick="shareSelectedRows()">Share Selected Rows</button>
+            <button onclick="sortTable('asc')">Sort Ascending</button>
+            <button onclick="sortTable('desc')">Sort Descending</button>
+            <button onclick="filterTable()">Filter Table</button>
+            <button onclick="highlightDuplicates()">Highlight Duplicates</button>
+            <button onclick="addRow()">Add Row</button>
+            <button onclick="removeRow()">Remove Row</button>
+            <button onclick="updateRow()">Update Row</button>
+            <button onclick="addColumn()">Add Column</button>
+            <button onclick="removeColumn()">Remove Column</button>
+            <button onclick="updateColumn()">Update Column</button>
+            <button onclick="printTable()">Print Table</button>
+            <button onclick="resetTable()">Reset Table</button>
+            <button onclick="searchInTable()">Search Table</button>
+            <button onclick="toggleTableVisibility()">Toggle Table Visibility</button>
+            <button onclick="addComment()">Add Comment</button>
+            <button onclick="clearFilters()">Clear Filters</button>
+        </div>
     </div>
 
-    <button class="accessibility-btn" onclick="toggleAccessibilityMenu()">A</button>
-    <button class="button" onclick="toggleSettingsMenu()">⚙️</button>
-
-    <div class="accessibility-menu" id="accessibilityMenu">
-        <h3>Accessibility Settings</h3>
-        <button onclick="adjustFontSize('increase')">Increase Font Size</button>
-        <button onclick="adjustFontSize('decrease')">Decrease Font Size</button>
-        <button onclick="adjustFontSize('reset')">Reset Font Size</button>
+    <div class="accessibility-bar">
+        <button onclick="toggleAccessibilityMenu()">Toggle Accessibility Menu</button>
+        <div id="accessibilityMenu" style="display: none;">
+            <button onclick="adjustFontSize('increase')">Increase Font Size</button>
+            <button onclick="adjustFontSize('decrease')">Decrease Font Size</button>
+            <button onclick="adjustFontSize('reset')">Reset Font Size</button>
+        </div>
     </div>
 
-    <div class="settings-menu" id="settingsMenu">
-        <h3>Advanced Settings</h3>
-        <button onclick="copySelectedRows()">Copy Selected Rows</button>
-        <button onclick="shareSelectedRows()">Share Selected Rows</button>
-        <button onclick="sortTable('asc')">Sort Table Ascending</button>
-        <button onclick="sortTable('desc')">Sort Table Descending</button>
-        <button onclick="filterTable()">Filter Table</button>
-        <button onclick="highlightDuplicates()">Highlight Duplicates</button>
-        <button onclick="mergeCells()">Merge Cells</button>
-        <button onclick="splitCells()">Split Cells</button>
-        <button onclick="applyStyles()">Apply Styles</button>
-        <button onclick="toggleRowVisibility()">Toggle Row Visibility</button>
-        <button onclick="toggleTableVisibility()">Toggle Table Visibility</button>
-        <button onclick="addRow()">Add Row</button>
-        <button onclick="removeRow()">Remove Row</button>
-        <button onclick="updateRow()">Update Row</button>
-        <button onclick="addColumn()">Add Column</button>
-        <button onclick="removeColumn()">Remove Column</button>
-        <button onclick="updateColumn()">Update Column</button>
-        <button onclick="printTable()">Print Table</button>
-        <button onclick="resizeTable()">Resize Table</button>
-        <button onclick="applyTheme()">Apply Theme</button>
-        <button onclick="toggleTableHeaders()">Toggle Table Headers</button>
-        <button onclick="resetTable()">Reset Table</button>
-        <button onclick="exportToExcel()">Export to Excel</button>
-        <button onclick="exportToPDF()">Export to PDF</button>
-        <button onclick="importFromExcel()">Import from Excel</button>
-        <button onclick="filterByCondition()">Filter by Condition</button>
-        <button onclick="clearFilters()">Clear Filters</button>
-        <button onclick="addComment()">Add Comment</button>
-        <button onclick="removeComment()">Remove Comment</button>
-        <button onclick="toggleSorting()">Toggle Sorting</button>
-        <button onclick="showTableStats()">Show Table Stats</button>
-        <button onclick="searchInTable()">Search in Table</button>
-        <button onclick="addBookmark()">Add Bookmark</button>
-        <button onclick="removeBookmark()">Remove Bookmark</button>
-        <button onclick="setReminder()">Set Reminder</button>
-        <button onclick="showHelp()">Show Help</button>
-    </div>
+    <input type="file" id="file-input" accept=".csv, .json" onchange="handleFile(event)">
+    <select id="column-select">
+        <option value="">Select Column</option>
+    </select>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be dynamically added here -->
+        </tbody>
+    </table>
 
     <script>
         let numbersArray = [];
-        let columnHeaders = [];
 
-        function processFile() {
-            const fileInput = document.getElementById('upload');
-            const file = fileInput.files[0];
-
-            if (!file) {
-                alert('Please select a file first.');
-                return;
-            }
-
+        function handleFile(event) {
+            const file = event.target.files[0];
             const reader = new FileReader();
 
-            reader.onload = function(event) {
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json(worksheet);
-
-                if (json.length === 0) {
-                    alert('No data found in the file.');
-                    return;
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                const dataType = file.type;
+                if (dataType.includes('json')) {
+                    processJSON(fileContent);
+                } else if (dataType.includes('csv')) {
+                    processCSV(fileContent);
                 }
-
-                columnHeaders = Object.keys(json[0]);
-                const columnSelect = document.getElementById('column-select');
-                columnSelect.innerHTML = '<option value="">Select Column</option>'; // Clear previous options
-
-                columnHeaders.forEach(header => {
-                    const option = document.createElement('option');
-                    option.value = header;
-                    option.textContent = header;
-                    columnSelect.appendChild(option);
-                });
-
-                populateTable(json);
             };
 
-            reader.readAsArrayBuffer(file);
+            reader.readAsText(file);
+        }
+
+        function processJSON(fileContent) {
+            try {
+                const json = JSON.parse(fileContent);
+                populateTable(json);
+                populateColumnSelect(json);
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                alert('Failed to parse JSON file.');
+            }
+        }
+
+        function processCSV(fileContent) {
+            const lines = fileContent.split('\n');
+            const headers = lines[0].split(',');
+
+            const json = lines.slice(1).map(line => {
+                const values = line.split(',');
+                return headers.reduce((obj, header, index) => {
+                    obj[header] = values[index];
+                    return obj;
+                }, {});
+            });
+
+            populateTable(json);
+            populateColumnSelect(json);
         }
 
         function populateTable(json) {
@@ -277,6 +160,18 @@
                     </td>
                 `;
                 tableBody.appendChild(row);
+            });
+        }
+
+        function populateColumnSelect(json) {
+            const columnSelect = document.getElementById('column-select');
+            const headers = Object.keys(json[0]);
+            columnSelect.innerHTML = '<option value="">Select Column</option>';
+            headers.forEach(header => {
+                const option = document.createElement('option');
+                option.value = header;
+                option.textContent = header;
+                columnSelect.appendChild(option);
             });
         }
 
@@ -341,33 +236,6 @@
             });
         }
 
-        function mergeCells() {
-            // Placeholder for merge cells functionality
-            alert('Merge cells functionality is not implemented.');
-        }
-
-        function splitCells() {
-            // Placeholder for split cells functionality
-            alert('Split cells functionality is not implemented.');
-        }
-
-        function applyStyles() {
-            // Placeholder for apply styles functionality
-            alert('Apply styles functionality is not implemented.');
-        }
-
-        function toggleRowVisibility() {
-            const rows = document.querySelectorAll('#data-table tbody tr');
-            rows.forEach(row => {
-                row.style.display = row.style.display === 'none' ? '' : 'none';
-            });
-        }
-
-        function toggleTableVisibility() {
-            const table = document.getElementById('data-table');
-            table.style.display = table.style.display === 'none' ? '' : 'none';
-        }
-
         function addRow() {
             const tableBody = document.querySelector('#data-table tbody');
             const row = document.createElement('tr');
@@ -391,18 +259,21 @@
             const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
             selectedRows.forEach(row => {
                 const cell = row.querySelector('td');
-                cell.innerHTML = 'Updated Data';
+                cell.innerText = prompt('Enter new data:', cell.innerText);
             });
         }
 
         function addColumn() {
             const table = document.getElementById('data-table');
             const headers = table.querySelectorAll('thead th');
-            const newHeader = document.createElement('th');
-            newHeader.innerText = 'New Column';
-            table.querySelector('thead tr').appendChild(newHeader);
-            
-            table.querySelectorAll('tbody tr').forEach(row => {
+            headers.forEach(header => {
+                const newHeader = document.createElement('th');
+                newHeader.innerText = 'New Column';
+                header.parentNode.appendChild(newHeader);
+            });
+
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
                 const newCell = document.createElement('td');
                 newCell.innerText = 'New Data';
                 row.appendChild(newCell);
@@ -411,115 +282,37 @@
 
         function removeColumn() {
             const table = document.getElementById('data-table');
-            const lastHeader = table.querySelector('thead th:last-child');
+            const headers = table.querySelectorAll('thead th');
+            const lastHeader = headers[headers.length - 1];
             if (lastHeader) {
                 lastHeader.remove();
-                table.querySelectorAll('tbody tr').forEach(row => row.lastChild.remove());
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => row.lastChild.remove());
             }
         }
 
         function updateColumn() {
-            const columnName = prompt('Enter column name to update:');
-            const newValue = prompt('Enter new value:');
-            const headers = Array.from(document.querySelectorAll('#data-table thead th'));
-            headers.forEach(header => {
-                if (header.innerText === columnName) {
-                    const index = Array.from(header.parentNode.children).indexOf(header);
-                    document.querySelectorAll('#data-table tbody tr').forEach(row => {
-                        row.children[index].innerText = newValue;
-                    });
+            const column = prompt('Enter column index (0-based):');
+            const table = document.getElementById('data-table');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const cell = row.children[column];
+                if (cell) {
+                    cell.innerText = prompt('Enter new data:', cell.innerText);
                 }
             });
         }
 
         function printTable() {
-            const table = document.getElementById('data-table');
-            const printWindow = window.open('', '', 'height=600,width=800');
-            printWindow.document.write('<html><head><title>Print Table</title>');
-            printWindow.document.write('</head><body >');
-            printWindow.document.write(table.outerHTML);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.focus();
-            printWindow.print();
-        }
-
-        function resizeTable() {
-            // Placeholder for resize table functionality
-            alert('Resize table functionality is not implemented.');
-        }
-
-        function applyTheme() {
-            // Placeholder for apply theme functionality
-            alert('Apply theme functionality is not implemented.');
-        }
-
-        function toggleTableHeaders() {
-            const headers = document.querySelector('#data-table thead');
-            headers.style.display = headers.style.display === 'none' ? '' : 'none';
+            const table = document.getElementById('data-table').outerHTML;
+            const newWindow = window.open('', '', 'width=800,height=600');
+            newWindow.document.write(`<html><head><title>Print Table</title></head><body>${table}</body></html>`);
+            newWindow.document.close();
+            newWindow.print();
         }
 
         function resetTable() {
-            const table = document.getElementById('data-table');
-            table.querySelector('tbody').innerHTML = '';
-            table.querySelector('thead').innerHTML = '<tr><th>Data</th><th>Action</th></tr>';
-        }
-
-        function exportToExcel() {
-            // Placeholder for export to Excel functionality
-            alert('Export to Excel functionality is not implemented.');
-        }
-
-        function exportToPDF() {
-            // Placeholder for export to PDF functionality
-            alert('Export to PDF functionality is not implemented.');
-        }
-
-        function importFromExcel() {
-            // Placeholder for import from Excel functionality
-            alert('Import from Excel functionality is not implemented.');
-        }
-
-        function filterByCondition() {
-            const condition = prompt('Enter filter condition:');
-            if (condition) {
-                const rows = document.querySelectorAll('#data-table tbody tr');
-                rows.forEach(row => {
-                    const cell = row.querySelector('td').innerText;
-                    row.style.display = cell.includes(condition) ? '' : 'none';
-                });
-            }
-        }
-
-        function clearFilters() {
-            const rows = document.querySelectorAll('#data-table tbody tr');
-            rows.forEach(row => row.style.display = '');
-        }
-
-        function addComment() {
-            const comment = prompt('Enter comment:');
-            if (comment) {
-                const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
-                selectedRows.forEach(row => {
-                    const cell = row.querySelector('td');
-                    cell.innerHTML += `<br><small>${comment}</small>`;
-                });
-            }
-        }
-
-        function removeComment() {
-            // Placeholder for remove comment functionality
-            alert('Remove comment functionality is not implemented.');
-        }
-
-        function toggleSorting() {
-            // Placeholder for toggle sorting functionality
-            alert('Toggle sorting functionality is not implemented.');
-        }
-
-        function showTableStats() {
-            // Placeholder for show table stats functionality
-            alert('Show table stats functionality is not implemented.');
+            document.querySelector('#data-table tbody').innerHTML = '';
         }
 
         function searchInTable() {
@@ -533,33 +326,32 @@
             }
         }
 
-        function addBookmark() {
-            // Placeholder for add bookmark functionality
-            alert('Add bookmark functionality is not implemented.');
+        function toggleTableVisibility() {
+            const table = document.getElementById('data-table');
+            table.style.display = table.style.display === 'none' ? '' : 'none';
         }
 
-        function removeBookmark() {
-            // Placeholder for remove bookmark functionality
-            alert('Remove bookmark functionality is not implemented.');
+        function addComment() {
+            const comment = prompt('Enter comment:');
+            const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
+            selectedRows.forEach(row => {
+                const cell = row.querySelector('td');
+                cell.innerHTML += `<div class="comment">${comment}</div>`;
+            });
         }
 
-        function setReminder() {
-            // Placeholder for set reminder functionality
-            alert('Set reminder functionality is not implemented.');
-        }
-
-        function showHelp() {
-            // Placeholder for show help functionality
-            alert('Show help functionality is not implemented.');
-        }
-
-        function toggleAccessibilityMenu() {
-            const menu = document.getElementById('accessibilityMenu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        function clearFilters() {
+            const rows = document.querySelectorAll('#data-table tbody tr');
+            rows.forEach(row => row.style.display = '');
         }
 
         function toggleSettingsMenu() {
             const menu = document.getElementById('settingsMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleAccessibilityMenu() {
+            const menu = document.getElementById('accessibilityMenu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
@@ -575,12 +367,10 @@
 
         function dialNumber(number) {
             alert(`Dialing number: ${number}`);
-            // Implement phone dialer functionality here
         }
 
         function openDialer(number) {
             alert(`Opening dialer to save number: ${number}`);
-            // Implement phone dialer functionality here
         }
 
         function downloadVCard(number) {
