@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Table Functions</title>
+    <title>Advanced Excel Processing</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPDF/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -55,6 +54,10 @@
         }
         th {
             background-color: #f4f4f4;
+            color: #333;
+        }
+        td {
+            background-color: #fff;
         }
         .button {
             cursor: pointer;
@@ -64,12 +67,18 @@
             padding: 10px 20px;
             border-radius: 4px;
             font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
             margin: 5px;
+            display: inline-block;
+            text-align: center;
         }
         .button:hover {
             background-color: #45a049;
         }
-        .accessibility-btn, .settings-btn {
+        .button:active {
+            transform: scale(0.98);
+        }
+        .accessibility-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -80,8 +89,9 @@
             border-radius: 50%;
             font-size: 24px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .accessibility-btn:hover, .settings-btn:hover {
+        .accessibility-btn:hover {
             background-color: #0056b3;
         }
         .accessibility-menu, .settings-menu {
@@ -116,19 +126,6 @@
         .accessibility-menu button:hover, .settings-menu button:hover {
             text-decoration: underline;
         }
-        .vcard-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 5px;
-        }
-        .vcard-button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -137,16 +134,16 @@
         <input type="file" id="upload" />
         <button class="button" onclick="processFile()">Process File</button>
 
-        <h2>Select Column(s)</h2>
-        <select id="column-select" multiple>
-            <!-- Options will be added dynamically -->
+        <h2>Select Column</h2>
+        <select id="column-select">
+            <option value="">Select Column</option>
         </select>
 
         <h2>Data</h2>
         <table id="data-table">
             <thead>
                 <tr>
-                    <th>Number</th>
+                    <th>Data</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -155,11 +152,11 @@
             </tbody>
         </table>
 
-        <button class="vcard-button" onclick="generateVCard()">Generate vCard for All Numbers</button>
+        <button class="button" onclick="generateVCard()">Generate vCard for All Numbers</button>
     </div>
 
     <button class="accessibility-btn" onclick="toggleAccessibilityMenu()">A</button>
-    <button class="settings-btn" onclick="toggleSettingsMenu()">⚙️</button>
+    <button class="button" onclick="toggleSettingsMenu()">⚙️</button>
 
     <div class="accessibility-menu" id="accessibilityMenu">
         <h3>Accessibility Settings</h3>
@@ -170,37 +167,30 @@
 
     <div class="settings-menu" id="settingsMenu">
         <h3>Advanced Settings</h3>
-        <button onclick="sortAscending()">Sort Ascending</button>
-        <button onclick="sortDescending()">Sort Descending</button>
-        <button onclick="exportToPDF()">Export to PDF</button>
-        <button onclick="filterByRange()">Filter by Range</button>
+        <button onclick="copySelectedRows()">Copy Selected Rows</button>
+        <button onclick="shareSelectedRows()">Share Selected Rows</button>
+        <button onclick="sortTable('asc')">Sort Table Ascending</button>
+        <button onclick="sortTable('desc')">Sort Table Descending</button>
+        <button onclick="filterTable()">Filter Table</button>
         <button onclick="highlightDuplicates()">Highlight Duplicates</button>
-        <button onclick="searchTable()">Search Table</button>
-        <button onclick="downloadCSV()">Download CSV</button>
-        <button onclick="clearTable()">Clear Table</button>
-        <button onclick="removeDuplicates()">Remove Duplicates</button>
-        <button onclick="highlightCell()">Highlight Cell</button>
         <button onclick="mergeCells()">Merge Cells</button>
         <button onclick="splitCells()">Split Cells</button>
         <button onclick="applyStyles()">Apply Styles</button>
         <button onclick="toggleRowVisibility()">Toggle Row Visibility</button>
-        <button onclick="filterByKeyword()">Filter by Keyword</button>
+        <button onclick="toggleTableVisibility()">Toggle Table Visibility</button>
         <button onclick="addRow()">Add Row</button>
         <button onclick="removeRow()">Remove Row</button>
         <button onclick="updateRow()">Update Row</button>
-        <button onclick="sortByMultipleColumns()">Sort by Multiple Columns</button>
-        <button onclick="groupByColumn()">Group by Column</button>
-        <button onclick="unmergeCells()">Unmerge Cells</button>
         <button onclick="addColumn()">Add Column</button>
         <button onclick="removeColumn()">Remove Column</button>
         <button onclick="updateColumn()">Update Column</button>
-        <button onclick="toggleTableVisibility()">Toggle Table Visibility</button>
-        <button onclick="resizeTable()">Resize Table</button>
         <button onclick="printTable()">Print Table</button>
+        <button onclick="resizeTable()">Resize Table</button>
         <button onclick="applyTheme()">Apply Theme</button>
         <button onclick="toggleTableHeaders()">Toggle Table Headers</button>
         <button onclick="resetTable()">Reset Table</button>
         <button onclick="exportToExcel()">Export to Excel</button>
+        <button onclick="exportToPDF()">Export to PDF</button>
         <button onclick="importFromExcel()">Import from Excel</button>
         <button onclick="filterByCondition()">Filter by Condition</button>
         <button onclick="clearFilters()">Clear Filters</button>
@@ -213,300 +203,393 @@
         <button onclick="removeBookmark()">Remove Bookmark</button>
         <button onclick="setReminder()">Set Reminder</button>
         <button onclick="showHelp()">Show Help</button>
-        <button onclick="copyRow()">Copy Row</button>
-        <button onclick="shareRow()">Share Row</button>
     </div>
 
     <script>
-        // Function to process the uploaded file
+        let numbersArray = [];
+        let columnHeaders = [];
+
         function processFile() {
             const fileInput = document.getElementById('upload');
             const file = fileInput.files[0];
-            if (!file) return;
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
 
             const reader = new FileReader();
+
             reader.onload = function(event) {
                 const data = new Uint8Array(event.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-                displayTable(rows);
-                populateColumnSelect(rows[0]);
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                if (json.length === 0) {
+                    alert('No data found in the file.');
+                    return;
+                }
+
+                columnHeaders = Object.keys(json[0]);
+                const columnSelect = document.getElementById('column-select');
+                columnSelect.innerHTML = '<option value="">Select Column</option>'; // Clear previous options
+
+                columnHeaders.forEach(header => {
+                    const option = document.createElement('option');
+                    option.value = header;
+                    option.textContent = header;
+                    columnSelect.appendChild(option);
+                });
+
+                populateTable(json);
             };
+
             reader.readAsArrayBuffer(file);
         }
 
-        // Display the table with data
-        function displayTable(rows) {
-            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '';
-            rows.slice(1).forEach((row, index) => {
-                const tr = document.createElement('tr');
-                row.forEach(cell => {
-                    const td = document.createElement('td');
-                    td.textContent = cell;
-                    tr.appendChild(td);
-                });
-                const actionTd = document.createElement('td');
-                const copyButton = document.createElement('button');
-                copyButton.textContent = 'Copy';
-                copyButton.onclick = () => copyRow(index + 1);
-                const shareButton = document.createElement('button');
-                shareButton.textContent = 'Share';
-                shareButton.onclick = () => shareRow(index + 1);
-                actionTd.appendChild(copyButton);
-                actionTd.appendChild(shareButton);
-                tr.appendChild(actionTd);
-                tableBody.appendChild(tr);
-            });
-        }
-
-        // Populate the column selection dropdown
-        function populateColumnSelect(columns) {
+        function populateTable(json) {
             const columnSelect = document.getElementById('column-select');
-            columnSelect.innerHTML = '';
-            columns.forEach((column, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = column;
-                columnSelect.appendChild(option);
+            const selectedColumn = columnSelect.value;
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = ''; // Clear previous data
+
+            if (!selectedColumn) {
+                alert('Please select a column first.');
+                return;
+            }
+
+            numbersArray = json.map(row => row[selectedColumn]).filter(number => number);
+
+            if (numbersArray.length === 0) {
+                alert('No valid numbers found.');
+                return;
+            }
+
+            numbersArray.forEach(number => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${number}</td>
+                    <td>
+                        <button class="button" onclick="dialNumber('${number}')">Call</button>
+                        <button class="button" onclick="openDialer('${number}')">Save to Contact</button>
+                        <button class="button" onclick="downloadVCard('${number}')">Download VCard</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
         }
 
-        // Copy a specific row
-        function copyRow(rowIndex) {
-            const table = document.getElementById('data-table');
-            const row = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr')[rowIndex - 1];
-            const rowData = Array.from(row.getElementsByTagName('td')).map(td => td.textContent);
-            navigator.clipboard.writeText(rowData.join('\t')).then(() => {
-                alert('Row copied to clipboard!');
+        function copySelectedRows() {
+            const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
+            const data = Array.from(selectedRows).map(row => row.innerText).join('\n');
+            navigator.clipboard.writeText(data).then(() => {
+                alert('Selected rows copied to clipboard.');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
             });
         }
 
-        // Share a specific row (example uses a simple alert)
-        function shareRow(rowIndex) {
-            const table = document.getElementById('data-table');
-            const row = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr')[rowIndex - 1];
-            const rowData = Array.from(row.getElementsByTagName('td')).map(td => td.textContent);
-            const rowText = rowData.join(' | ');
-            const shareUrl = `https://wa.me/?text=${encodeURIComponent(rowText)}`;
-            window.open(shareUrl, '_blank');
+        function shareSelectedRows() {
+            const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
+            const data = Array.from(selectedRows).map(row => row.innerText).join('\n');
+            const shareData = {
+                title: 'Shared Data',
+                text: data
+            };
+            navigator.share(shareData).then(() => {
+                alert('Shared successfully.');
+            }).catch(err => {
+                console.error('Failed to share data: ', err);
+            });
         }
 
-        // Accessibility functionality
+        function sortTable(order) {
+            const table = document.getElementById('data-table');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            rows.sort((a, b) => {
+                const aText = a.querySelector('td').innerText;
+                const bText = b.querySelector('td').innerText;
+                return order === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
+            });
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function filterTable() {
+            const filter = prompt('Enter filter text:');
+            if (filter) {
+                const rows = document.querySelectorAll('#data-table tbody tr');
+                rows.forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    row.style.display = text.includes(filter.toLowerCase()) ? '' : 'none';
+                });
+            }
+        }
+
+        function highlightDuplicates() {
+            const rows = document.querySelectorAll('#data-table tbody tr');
+            const seen = new Set();
+            rows.forEach(row => {
+                const cell = row.querySelector('td').innerText;
+                if (seen.has(cell)) {
+                    row.style.backgroundColor = '#ffdddd';
+                } else {
+                    seen.add(cell);
+                }
+            });
+        }
+
+        function mergeCells() {
+            // Placeholder for merge cells functionality
+            alert('Merge cells functionality is not implemented.');
+        }
+
+        function splitCells() {
+            // Placeholder for split cells functionality
+            alert('Split cells functionality is not implemented.');
+        }
+
+        function applyStyles() {
+            // Placeholder for apply styles functionality
+            alert('Apply styles functionality is not implemented.');
+        }
+
+        function toggleRowVisibility() {
+            const rows = document.querySelectorAll('#data-table tbody tr');
+            rows.forEach(row => {
+                row.style.display = row.style.display === 'none' ? '' : 'none';
+            });
+        }
+
+        function toggleTableVisibility() {
+            const table = document.getElementById('data-table');
+            table.style.display = table.style.display === 'none' ? '' : 'none';
+        }
+
+        function addRow() {
+            const tableBody = document.querySelector('#data-table tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>New Data</td>
+                <td>
+                    <button class="button" onclick="dialNumber('New Number')">Call</button>
+                    <button class="button" onclick="openDialer('New Number')">Save to Contact</button>
+                    <button class="button" onclick="downloadVCard('New Number')">Download VCard</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        function removeRow() {
+            const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
+            selectedRows.forEach(row => row.remove());
+        }
+
+        function updateRow() {
+            const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
+            selectedRows.forEach(row => {
+                const cell = row.querySelector('td');
+                cell.innerHTML = 'Updated Data';
+            });
+        }
+
+        function addColumn() {
+            const table = document.getElementById('data-table');
+            const headers = table.querySelectorAll('thead th');
+            const newHeader = document.createElement('th');
+            newHeader.innerText = 'New Column';
+            table.querySelector('thead tr').appendChild(newHeader);
+            
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const newCell = document.createElement('td');
+                newCell.innerText = 'New Data';
+                row.appendChild(newCell);
+            });
+        }
+
+        function removeColumn() {
+            const table = document.getElementById('data-table');
+            const lastHeader = table.querySelector('thead th:last-child');
+            if (lastHeader) {
+                lastHeader.remove();
+                table.querySelectorAll('tbody tr').forEach(row => row.lastChild.remove());
+            }
+        }
+
+        function updateColumn() {
+            const columnName = prompt('Enter column name to update:');
+            const newValue = prompt('Enter new value:');
+            const headers = Array.from(document.querySelectorAll('#data-table thead th'));
+            headers.forEach(header => {
+                if (header.innerText === columnName) {
+                    const index = Array.from(header.parentNode.children).indexOf(header);
+                    document.querySelectorAll('#data-table tbody tr').forEach(row => {
+                        row.children[index].innerText = newValue;
+                    });
+                }
+            });
+        }
+
+        function printTable() {
+            const table = document.getElementById('data-table');
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Print Table</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(table.outerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        function resizeTable() {
+            // Placeholder for resize table functionality
+            alert('Resize table functionality is not implemented.');
+        }
+
+        function applyTheme() {
+            // Placeholder for apply theme functionality
+            alert('Apply theme functionality is not implemented.');
+        }
+
+        function toggleTableHeaders() {
+            const headers = document.querySelector('#data-table thead');
+            headers.style.display = headers.style.display === 'none' ? '' : 'none';
+        }
+
+        function resetTable() {
+            const table = document.getElementById('data-table');
+            table.querySelector('tbody').innerHTML = '';
+            table.querySelector('thead').innerHTML = '<tr><th>Data</th><th>Action</th></tr>';
+        }
+
+        function exportToExcel() {
+            // Placeholder for export to Excel functionality
+            alert('Export to Excel functionality is not implemented.');
+        }
+
+        function exportToPDF() {
+            // Placeholder for export to PDF functionality
+            alert('Export to PDF functionality is not implemented.');
+        }
+
+        function importFromExcel() {
+            // Placeholder for import from Excel functionality
+            alert('Import from Excel functionality is not implemented.');
+        }
+
+        function filterByCondition() {
+            const condition = prompt('Enter filter condition:');
+            if (condition) {
+                const rows = document.querySelectorAll('#data-table tbody tr');
+                rows.forEach(row => {
+                    const cell = row.querySelector('td').innerText;
+                    row.style.display = cell.includes(condition) ? '' : 'none';
+                });
+            }
+        }
+
+        function clearFilters() {
+            const rows = document.querySelectorAll('#data-table tbody tr');
+            rows.forEach(row => row.style.display = '');
+        }
+
+        function addComment() {
+            const comment = prompt('Enter comment:');
+            if (comment) {
+                const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
+                selectedRows.forEach(row => {
+                    const cell = row.querySelector('td');
+                    cell.innerHTML += `<br><small>${comment}</small>`;
+                });
+            }
+        }
+
+        function removeComment() {
+            // Placeholder for remove comment functionality
+            alert('Remove comment functionality is not implemented.');
+        }
+
+        function toggleSorting() {
+            // Placeholder for toggle sorting functionality
+            alert('Toggle sorting functionality is not implemented.');
+        }
+
+        function showTableStats() {
+            // Placeholder for show table stats functionality
+            alert('Show table stats functionality is not implemented.');
+        }
+
+        function searchInTable() {
+            const search = prompt('Enter search text:');
+            if (search) {
+                const rows = document.querySelectorAll('#data-table tbody tr');
+                rows.forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    row.style.display = text.includes(search.toLowerCase()) ? '' : 'none';
+                });
+            }
+        }
+
+        function addBookmark() {
+            // Placeholder for add bookmark functionality
+            alert('Add bookmark functionality is not implemented.');
+        }
+
+        function removeBookmark() {
+            // Placeholder for remove bookmark functionality
+            alert('Remove bookmark functionality is not implemented.');
+        }
+
+        function setReminder() {
+            // Placeholder for set reminder functionality
+            alert('Set reminder functionality is not implemented.');
+        }
+
+        function showHelp() {
+            // Placeholder for show help functionality
+            alert('Show help functionality is not implemented.');
+        }
+
         function toggleAccessibilityMenu() {
             const menu = document.getElementById('accessibilityMenu');
-            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleSettingsMenu() {
+            const menu = document.getElementById('settingsMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
         function adjustFontSize(action) {
             const body = document.body;
-            let currentSize = parseFloat(window.getComputedStyle(body).fontSize);
-            if (action === 'increase') {
-                body.style.fontSize = (currentSize + 2) + 'px';
-            } else if (action === 'decrease') {
-                body.style.fontSize = (currentSize - 2) + 'px';
-            } else {
-                body.style.fontSize = '16px';
-            }
+            let currentSize = window.getComputedStyle(body).fontSize;
+            let newSize = parseFloat(currentSize);
+            if (action === 'increase') newSize += 2;
+            else if (action === 'decrease') newSize -= 2;
+            else newSize = 16; // Reset size
+            body.style.fontSize = newSize + 'px';
         }
 
-        // Settings functionality
-        function toggleSettingsMenu() {
-            const menu = document.getElementById('settingsMenu');
-            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+        function dialNumber(number) {
+            alert(`Dialing number: ${number}`);
+            // Implement phone dialer functionality here
         }
 
-        function sortAscending() {
-            // Sort table rows in ascending order
+        function openDialer(number) {
+            alert(`Opening dialer to save number: ${number}`);
+            // Implement phone dialer functionality here
         }
 
-        function sortDescending() {
-            // Sort table rows in descending order
-        }
-
-        function exportToPDF() {
-            // Export table data to PDF
-        }
-
-        function filterByRange() {
-            // Filter table rows by numeric range
-        }
-
-        function highlightDuplicates() {
-            // Highlight duplicate values in a selected column
-        }
-
-        function searchTable() {
-            // Add a search bar and search table data
-        }
-
-        function downloadCSV() {
-            // Download table data as CSV
-        }
-
-        function clearTable() {
-            // Clear all data from the table
-        }
-
-        function removeDuplicates() {
-            // Remove duplicate rows from the table
-        }
-
-        function highlightCell() {
-            // Highlight a specific cell in the table
-        }
-
-        function mergeCells() {
-            // Merge selected cells
-        }
-
-        function splitCells() {
-            // Split merged cells
-        }
-
-        function applyStyles() {
-            // Apply custom styles to the table
-        }
-
-        function toggleRowVisibility() {
-            // Toggle the visibility of table rows
-        }
-
-        function filterByKeyword() {
-            // Filter rows by keyword in a selected column
-        }
-
-        function addRow() {
-            // Add a new row to the table
-        }
-
-        function removeRow() {
-            // Remove a selected row from the table
-        }
-
-        function updateRow() {
-            // Update data in a selected row
-        }
-
-        function sortByMultipleColumns() {
-            // Sort table by multiple columns
-        }
-
-        function groupByColumn() {
-            // Group rows by values in a selected column
-        }
-
-        function unmergeCells() {
-            // Unmerge previously merged cells
-        }
-
-        function addColumn() {
-            // Add a new column to the table
-        }
-
-        function removeColumn() {
-            // Remove a selected column from the table
-        }
-
-        function updateColumn() {
-            // Update data in a selected column
-        }
-
-        function toggleTableVisibility() {
-            // Toggle the visibility of the table
-        }
-
-        function resizeTable() {
-            // Resize the table
-        }
-
-        function printTable() {
-            // Print the table
-        }
-
-        function applyTheme() {
-            // Apply a theme to the table
-        }
-
-        function toggleTableHeaders() {
-            // Toggle table headers visibility
-        }
-
-        function resetTable() {
-            // Reset the table to its initial state
-        }
-
-        function exportToExcel() {
-            // Export table data to Excel
-        }
-
-        function importFromExcel() {
-            // Import data from an Excel file
-        }
-
-        function filterByCondition() {
-            // Filter table data based on custom conditions
-        }
-
-        function clearFilters() {
-            // Clear all filters from the table
-        }
-
-        function addComment() {
-            // Add comments to table cells
-        }
-
-        function removeComment() {
-            // Remove comments from table cells
-        }
-
-        function toggleSorting() {
-            // Toggle sorting for a column
-        }
-
-        function showTableStats() {
-            // Display statistics about table data
-        }
-
-        function searchInTable() {
-            // Search for specific data in the table
-        }
-
-        function addBookmark() {
-            // Add a bookmark to the table
-        }
-
-        function removeBookmark() {
-            // Remove a bookmark from the table
-        }
-
-        function setReminder() {
-            // Set a reminder for table data
-        }
-
-        function showHelp() {
-            // Show help or documentation for table operations
-        }
-
-        function generateVCard() {
-            // Generate vCard for all numbers
-            const table = document.getElementById('data-table');
-            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            let vCardData = '';
-            for (let row of rows) {
-                const cells = row.getElementsByTagName('td');
-                const number = cells[0].textContent;
-                vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:${number}\nTEL:${number}\nEND:VCARD\n`;
-            }
+        function downloadVCard(number) {
+            const vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${number}\nTEL:${number}\nEND:VCARD`;
             const blob = new Blob([vCardData], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'contacts.vcf';
-            a.click();
-            URL.revokeObjectURL(url);
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${number}.vcf`;
+            link.click();
         }
     </script>
 </body>
