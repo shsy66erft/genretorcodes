@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload and Save Excel Data</title>
+    <title>Upload and Generate vCard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         table {
@@ -40,7 +40,7 @@
 <body>
     <h1>Upload and Process Excel File</h1>
     <input type="file" id="upload" />
-    <button onclick="processFile()">Process File</button>
+    <button class="button" onclick="processFile()">Process File</button>
 
     <h2>Data</h2>
     <table id="data-table">
@@ -55,7 +55,7 @@
         </tbody>
     </table>
 
-    <button class="button" onclick="saveAll()">Save All</button>
+    <button class="button" onclick="generateVCard()">Generate vCard</button>
 
     <script>
         let numbersArray = [];
@@ -101,23 +101,28 @@
 
         function saveToContact(number) {
             // Placeholder function to simulate saving contact
-            // Replace this with actual contact saving logic
             alert(`Number ${number} saved to contact!`);
         }
 
-        function saveAll() {
+        function generateVCard() {
             if (numbersArray.length === 0) {
                 alert('No numbers to save.');
                 return;
             }
 
-            // Placeholder function to simulate saving all contacts
-            // Replace this with actual contact saving logic
-            numbersArray.forEach(number => {
-                // Simulate saving each number
-                console.log(`Number ${number} saved to contact!`);
+            let vCardData = '';
+            numbersArray.forEach((number, index) => {
+                vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:Contact ${index + 1}\nTEL:${number}\nEND:VCARD\n`;
             });
-            alert('All numbers saved to contacts!');
+
+            // Create a Blob and download it
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.vcf';
+            a.click();
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
