@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Settings</title>
+    <title>Advanced Table Functions</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPDF/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -54,10 +55,6 @@
         }
         th {
             background-color: #f4f4f4;
-            color: #333;
-        }
-        td {
-            background-color: #fff;
         }
         .button {
             cursor: pointer;
@@ -67,18 +64,12 @@
             padding: 10px 20px;
             border-radius: 4px;
             font-size: 14px;
-            transition: background-color 0.3s, transform 0.2s;
             margin: 5px;
-            display: inline-block;
-            text-align: center;
         }
         .button:hover {
             background-color: #45a049;
         }
-        .button:active {
-            transform: scale(0.98);
-        }
-        .accessibility-btn {
+        .accessibility-btn, .settings-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -89,12 +80,11 @@
             border-radius: 50%;
             font-size: 24px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
-        .accessibility-btn:hover {
+        .accessibility-btn:hover, .settings-btn:hover {
             background-color: #0056b3;
         }
-        .accessibility-menu {
+        .accessibility-menu, .settings-menu {
             display: none;
             position: fixed;
             bottom: 80px;
@@ -105,14 +95,14 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 10px;
             z-index: 1000;
-            width: 200px;
+            width: 300px;
         }
-        .accessibility-menu h3 {
+        .accessibility-menu h3, .settings-menu h3 {
             margin: 0 0 10px;
             font-size: 16px;
             color: #333;
         }
-        .accessibility-menu button {
+        .accessibility-menu button, .settings-menu button {
             background: none;
             border: none;
             font-size: 16px;
@@ -123,7 +113,7 @@
             width: 100%;
             text-align: left;
         }
-        .accessibility-menu button:hover {
+        .accessibility-menu button:hover, .settings-menu button:hover {
             text-decoration: underline;
         }
         .vcard-button {
@@ -135,51 +125,9 @@
             cursor: pointer;
             font-size: 14px;
             margin: 5px;
-            transition: background-color 0.3s;
         }
         .vcard-button:hover {
             background-color: #0056b3;
-        }
-        .vcard-button:active {
-            transform: scale(0.98);
-        }
-        .mini-menu-tab {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #333;
-            color: white;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-        .mini-menu-content {
-            display: none;
-            position: fixed;
-            bottom: 60px;
-            right: 20px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            z-index: 1000;
-            width: 250px;
-        }
-        .mini-menu-content button {
-            background: none;
-            border: none;
-            font-size: 16px;
-            color: #007bff;
-            cursor: pointer;
-            margin: 5px 0;
-            display: block;
-            width: 100%;
-            text-align: left;
-        }
-        .mini-menu-content button:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
@@ -189,16 +137,17 @@
         <input type="file" id="upload" />
         <button class="button" onclick="processFile()">Process File</button>
 
-        <h2>Select Columns</h2>
+        <h2>Select Column(s)</h2>
         <select id="column-select" multiple>
-            <!-- Options will be populated dynamically -->
+            <!-- Options will be added dynamically -->
         </select>
 
         <h2>Data</h2>
         <table id="data-table">
             <thead>
-                <tr id="table-headers">
-                    <!-- Headers will be populated dynamically -->
+                <tr>
+                    <th>Number</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -210,6 +159,7 @@
     </div>
 
     <button class="accessibility-btn" onclick="toggleAccessibilityMenu()">A</button>
+    <button class="settings-btn" onclick="toggleSettingsMenu()">⚙️</button>
 
     <div class="accessibility-menu" id="accessibilityMenu">
         <h3>Accessibility Settings</h3>
@@ -218,176 +168,346 @@
         <button onclick="adjustFontSize('reset')">Reset Font Size</button>
     </div>
 
-    <div class="mini-menu-tab" onclick="toggleMiniMenu()">Advanced Settings</div>
-
-    <div class="mini-menu-content" id="miniMenu">
+    <div class="settings-menu" id="settingsMenu">
+        <h3>Advanced Settings</h3>
         <button onclick="sortAscending()">Sort Ascending</button>
         <button onclick="sortDescending()">Sort Descending</button>
+        <button onclick="exportToPDF()">Export to PDF</button>
         <button onclick="filterByRange()">Filter by Range</button>
         <button onclick="highlightDuplicates()">Highlight Duplicates</button>
-        <button onclick="removeDuplicates()">Remove Duplicates</button>
-        <button onclick="showTopN()">Show Top N Values</button>
-        <button onclick="showBottomN()">Show Bottom N Values</button>
-        <button onclick="findAndReplace()">Find and Replace</button>
-        <button onclick="toggleTableVisibility()">Toggle Table Visibility</button>
-        <button onclick="freezePane()">Freeze Pane</button>
-        <button onclick="exportToPDF()">Export to PDF</button>
-        <button onclick="importFromCSV()">Import from CSV</button>
-        <button onclick="applyTheme()">Apply Theme</button>
-        <button onclick="customSorting()">Custom Sorting</button>
-        <button onclick="addRowNumbers()">Add Row Numbers</button>
-        <button onclick="mergeCells()">Merge Cells</button>
-        <button onclick="unmergeCells()">Unmerge Cells</button>
-        <button onclick="addWatermark()">Add Watermark</button>
-        <button onclick="toggleRowNumbers()">Show/Hide Row Numbers</button>
-        <button onclick="lockTable()">Lock Table</button>
-        <button onclick="unlockTable()">Unlock Table</button>
-        <button onclick="addComments()">Add Comments</button>
         <button onclick="searchTable()">Search Table</button>
+        <button onclick="downloadCSV()">Download CSV</button>
         <button onclick="clearTable()">Clear Table</button>
+        <button onclick="removeDuplicates()">Remove Duplicates</button>
+        <button onclick="highlightCell()">Highlight Cell</button>
+        <button onclick="mergeCells()">Merge Cells</button>
+        <button onclick="splitCells()">Split Cells</button>
+        <button onclick="applyStyles()">Apply Styles</button>
+        <button onclick="toggleRowVisibility()">Toggle Row Visibility</button>
+        <button onclick="filterByKeyword()">Filter by Keyword</button>
+        <button onclick="addRow()">Add Row</button>
+        <button onclick="removeRow()">Remove Row</button>
+        <button onclick="updateRow()">Update Row</button>
+        <button onclick="sortByMultipleColumns()">Sort by Multiple Columns</button>
+        <button onclick="groupByColumn()">Group by Column</button>
+        <button onclick="unmergeCells()">Unmerge Cells</button>
+        <button onclick="addColumn()">Add Column</button>
+        <button onclick="removeColumn()">Remove Column</button>
+        <button onclick="updateColumn()">Update Column</button>
+        <button onclick="toggleTableVisibility()">Toggle Table Visibility</button>
+        <button onclick="resizeTable()">Resize Table</button>
+        <button onclick="printTable()">Print Table</button>
+        <button onclick="applyTheme()">Apply Theme</button>
+        <button onclick="toggleTableHeaders()">Toggle Table Headers</button>
+        <button onclick="resetTable()">Reset Table</button>
         <button onclick="exportToExcel()">Export to Excel</button>
-        <button onclick="importFromJSON()">Import from JSON</button>
-        <button onclick="duplicateRow()">Duplicate Row</button>
-        <button onclick="deleteRow()">Delete Row</button>
-        <button onclick="addFilter()">Add Filter</button>
-        <button onclick="removeFilter()">Remove Filter</button>
-        <button onclick="splitColumn()">Split Column</button>
-        <button onclick="mergeRows()">Merge Rows</button>
-        <button onclick="sortMultiple()">Sort Multiple Columns</button>
-        <button onclick="conditionalFormatting()">Conditional Formatting</button>
-        <button onclick="generateReport()">Generate Report</button>
-        <button onclick="sendToEmail()">Send to Email</button>
-        <button onclick="sendToWhatsApp()">Send to WhatsApp</button>
-        <button onclick="createPivotTable()">Create Pivot Table</button>
-        <button onclick="importFromXML()">Import from XML</button>
-        <button onclick="dataValidation()">Data Validation</button>
-        <button onclick="generateSummary()">Generate Summary</button>
-        <button onclick="highlightErrors()">Highlight Errors</button>
-        <button onclick="saveChanges()">Save Changes</button>
-        <button onclick="discardChanges()">Discard Changes</button>
-        <button onclick="showDetails()">Show Details</button>
-        <button onclick="refreshData()">Refresh Data</button>
-        <button onclick="createChart()">Create Chart</button>
-        <button onclick="addAnnotations()">Add Annotations</button>
+        <button onclick="importFromExcel()">Import from Excel</button>
+        <button onclick="filterByCondition()">Filter by Condition</button>
+        <button onclick="clearFilters()">Clear Filters</button>
+        <button onclick="addComment()">Add Comment</button>
+        <button onclick="removeComment()">Remove Comment</button>
+        <button onclick="toggleSorting()">Toggle Sorting</button>
+        <button onclick="showTableStats()">Show Table Stats</button>
+        <button onclick="searchInTable()">Search in Table</button>
+        <button onclick="addBookmark()">Add Bookmark</button>
+        <button onclick="removeBookmark()">Remove Bookmark</button>
+        <button onclick="setReminder()">Set Reminder</button>
+        <button onclick="showHelp()">Show Help</button>
+        <button onclick="copyRow()">Copy Row</button>
+        <button onclick="shareRow()">Share Row</button>
     </div>
 
     <script>
-        document.getElementById('upload').addEventListener('change', processFile);
-
+        // Function to process the uploaded file
         function processFile() {
-            const file = document.getElementById('upload').files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheetNames = workbook.SheetNames;
-                    const sheet = workbook.Sheets[sheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(sheet);
-                    displayData(jsonData);
-                    populateColumnSelect(Object.keys(jsonData[0]));
-                };
-                reader.readAsArrayBuffer(file);
-            }
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                displayTable(rows);
+                populateColumnSelect(rows[0]);
+            };
+            reader.readAsArrayBuffer(file);
         }
 
-        function displayData(data) {
-            const tableHeaders = document.getElementById('table-headers');
+        // Display the table with data
+        function displayTable(rows) {
             const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
-            tableHeaders.innerHTML = '';
             tableBody.innerHTML = '';
-            if (data.length > 0) {
-                const headers = Object.keys(data[0]);
-                headers.forEach(header => {
-                    const th = document.createElement('th');
-                    th.textContent = header;
-                    tableHeaders.appendChild(th);
+            rows.slice(1).forEach((row, index) => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
                 });
-                data.forEach(row => {
-                    const tr = document.createElement('tr');
-                    headers.forEach(header => {
-                        const td = document.createElement('td');
-                        td.textContent = row[header] || '';
-                        tr.appendChild(td);
-                    });
-                    tableBody.appendChild(tr);
-                });
-            }
+                const actionTd = document.createElement('td');
+                const copyButton = document.createElement('button');
+                copyButton.textContent = 'Copy';
+                copyButton.onclick = () => copyRow(index + 1);
+                const shareButton = document.createElement('button');
+                shareButton.textContent = 'Share';
+                shareButton.onclick = () => shareRow(index + 1);
+                actionTd.appendChild(copyButton);
+                actionTd.appendChild(shareButton);
+                tr.appendChild(actionTd);
+                tableBody.appendChild(tr);
+            });
         }
 
+        // Populate the column selection dropdown
         function populateColumnSelect(columns) {
             const columnSelect = document.getElementById('column-select');
             columnSelect.innerHTML = '';
-            columns.forEach(col => {
+            columns.forEach((column, index) => {
                 const option = document.createElement('option');
-                option.value = col;
-                option.textContent = col;
+                option.value = index;
+                option.textContent = column;
                 columnSelect.appendChild(option);
             });
         }
 
-        function generateVCard() {
-            // Implement vCard generation logic
+        // Copy a specific row
+        function copyRow(rowIndex) {
+            const table = document.getElementById('data-table');
+            const row = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr')[rowIndex - 1];
+            const rowData = Array.from(row.getElementsByTagName('td')).map(td => td.textContent);
+            navigator.clipboard.writeText(rowData.join('\t')).then(() => {
+                alert('Row copied to clipboard!');
+            });
         }
 
+        // Share a specific row (example uses a simple alert)
+        function shareRow(rowIndex) {
+            const table = document.getElementById('data-table');
+            const row = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr')[rowIndex - 1];
+            const rowData = Array.from(row.getElementsByTagName('td')).map(td => td.textContent);
+            const rowText = rowData.join(' | ');
+            const shareUrl = `https://wa.me/?text=${encodeURIComponent(rowText)}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        // Accessibility functionality
         function toggleAccessibilityMenu() {
             const menu = document.getElementById('accessibilityMenu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
         }
 
-        function toggleMiniMenu() {
-            const menu = document.getElementById('miniMenu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        function adjustFontSize(action) {
+            const body = document.body;
+            let currentSize = parseFloat(window.getComputedStyle(body).fontSize);
+            if (action === 'increase') {
+                body.style.fontSize = (currentSize + 2) + 'px';
+            } else if (action === 'decrease') {
+                body.style.fontSize = (currentSize - 2) + 'px';
+            } else {
+                body.style.fontSize = '16px';
+            }
         }
 
-        function sortAscending() { /* implementation */ }
-        function sortDescending() { /* implementation */ }
-        function filterByRange() { /* implementation */ }
-        function highlightDuplicates() { /* implementation */ }
-        function removeDuplicates() { /* implementation */ }
-        function showTopN() { /* implementation */ }
-        function showBottomN() { /* implementation */ }
-        function findAndReplace() { /* implementation */ }
-        function toggleTableVisibility() { /* implementation */ }
-        function freezePane() { /* implementation */ }
-        function exportToPDF() { /* implementation */ }
-        function importFromCSV() { /* implementation */ }
-        function applyTheme() { /* implementation */ }
-        function customSorting() { /* implementation */ }
-        function addRowNumbers() { /* implementation */ }
-        function mergeCells() { /* implementation */ }
-        function unmergeCells() { /* implementation */ }
-        function addWatermark() { /* implementation */ }
-        function toggleRowNumbers() { /* implementation */ }
-        function lockTable() { /* implementation */ }
-        function unlockTable() { /* implementation */ }
-        function addComments() { /* implementation */ }
-        function searchTable() { /* implementation */ }
-        function clearTable() { /* implementation */ }
-        function exportToExcel() { /* implementation */ }
-        function importFromJSON() { /* implementation */ }
-        function duplicateRow() { /* implementation */ }
-        function deleteRow() { /* implementation */ }
-        function addFilter() { /* implementation */ }
-        function removeFilter() { /* implementation */ }
-        function splitColumn() { /* implementation */ }
-        function mergeRows() { /* implementation */ }
-        function sortMultiple() { /* implementation */ }
-        function conditionalFormatting() { /* implementation */ }
-        function generateReport() { /* implementation */ }
-        function sendToEmail() { /* implementation */ }
-        function sendToWhatsApp() { /* implementation */ }
-        function createPivotTable() { /* implementation */ }
-        function importFromXML() { /* implementation */ }
-        function dataValidation() { /* implementation */ }
-        function generateSummary() { /* implementation */ }
-        function highlightErrors() { /* implementation */ }
-        function saveChanges() { /* implementation */ }
-        function discardChanges() { /* implementation */ }
-        function showDetails() { /* implementation */ }
-        function refreshData() { /* implementation */ }
-        function createChart() { /* implementation */ }
-        function addAnnotations() { /* implementation */ }
+        // Settings functionality
+        function toggleSettingsMenu() {
+            const menu = document.getElementById('settingsMenu');
+            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+        }
+
+        function sortAscending() {
+            // Sort table rows in ascending order
+        }
+
+        function sortDescending() {
+            // Sort table rows in descending order
+        }
+
+        function exportToPDF() {
+            // Export table data to PDF
+        }
+
+        function filterByRange() {
+            // Filter table rows by numeric range
+        }
+
+        function highlightDuplicates() {
+            // Highlight duplicate values in a selected column
+        }
+
+        function searchTable() {
+            // Add a search bar and search table data
+        }
+
+        function downloadCSV() {
+            // Download table data as CSV
+        }
+
+        function clearTable() {
+            // Clear all data from the table
+        }
+
+        function removeDuplicates() {
+            // Remove duplicate rows from the table
+        }
+
+        function highlightCell() {
+            // Highlight a specific cell in the table
+        }
+
+        function mergeCells() {
+            // Merge selected cells
+        }
+
+        function splitCells() {
+            // Split merged cells
+        }
+
+        function applyStyles() {
+            // Apply custom styles to the table
+        }
+
+        function toggleRowVisibility() {
+            // Toggle the visibility of table rows
+        }
+
+        function filterByKeyword() {
+            // Filter rows by keyword in a selected column
+        }
+
+        function addRow() {
+            // Add a new row to the table
+        }
+
+        function removeRow() {
+            // Remove a selected row from the table
+        }
+
+        function updateRow() {
+            // Update data in a selected row
+        }
+
+        function sortByMultipleColumns() {
+            // Sort table by multiple columns
+        }
+
+        function groupByColumn() {
+            // Group rows by values in a selected column
+        }
+
+        function unmergeCells() {
+            // Unmerge previously merged cells
+        }
+
+        function addColumn() {
+            // Add a new column to the table
+        }
+
+        function removeColumn() {
+            // Remove a selected column from the table
+        }
+
+        function updateColumn() {
+            // Update data in a selected column
+        }
+
+        function toggleTableVisibility() {
+            // Toggle the visibility of the table
+        }
+
+        function resizeTable() {
+            // Resize the table
+        }
+
+        function printTable() {
+            // Print the table
+        }
+
+        function applyTheme() {
+            // Apply a theme to the table
+        }
+
+        function toggleTableHeaders() {
+            // Toggle table headers visibility
+        }
+
+        function resetTable() {
+            // Reset the table to its initial state
+        }
+
+        function exportToExcel() {
+            // Export table data to Excel
+        }
+
+        function importFromExcel() {
+            // Import data from an Excel file
+        }
+
+        function filterByCondition() {
+            // Filter table data based on custom conditions
+        }
+
+        function clearFilters() {
+            // Clear all filters from the table
+        }
+
+        function addComment() {
+            // Add comments to table cells
+        }
+
+        function removeComment() {
+            // Remove comments from table cells
+        }
+
+        function toggleSorting() {
+            // Toggle sorting for a column
+        }
+
+        function showTableStats() {
+            // Display statistics about table data
+        }
+
+        function searchInTable() {
+            // Search for specific data in the table
+        }
+
+        function addBookmark() {
+            // Add a bookmark to the table
+        }
+
+        function removeBookmark() {
+            // Remove a bookmark from the table
+        }
+
+        function setReminder() {
+            // Set a reminder for table data
+        }
+
+        function showHelp() {
+            // Show help or documentation for table operations
+        }
+
+        function generateVCard() {
+            // Generate vCard for all numbers
+            const table = document.getElementById('data-table');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            let vCardData = '';
+            for (let row of rows) {
+                const cells = row.getElementsByTagName('td');
+                const number = cells[0].textContent;
+                vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:${number}\nTEL:${number}\nEND:VCARD\n`;
+            }
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.vcf';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>
