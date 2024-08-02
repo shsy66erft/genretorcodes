@@ -1,319 +1,446 @@
-// Initialize the global variable to store JSON data
-let jsonData = [];
-
-// Handle file input and process data based on file type
-function handleFile(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-        const fileContent = e.target.result;
-        const dataType = file.type;
-
-        if (dataType.includes('json')) {
-            processJSON(fileContent);
-        } else if (dataType.includes('csv')) {
-            processCSV(fileContent);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Process Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    };
-
-    reader.readAsText(file);
-}
-
-// Process JSON file and populate the table
-function processJSON(fileContent) {
-    try {
-        jsonData = JSON.parse(fileContent);
-        populateColumnSelect(jsonData);
-        populateTable();
-    } catch (error) {
-        console.error('Error parsing JSON:', error);
-        alert('Failed to parse JSON file.');
-    }
-}
-
-// Process CSV file and populate the table
-function processCSV(fileContent) {
-    const lines = fileContent.split('\n');
-    const headers = lines[0].split(',');
-
-    jsonData = lines.slice(1).map(line => {
-        const values = line.split(',');
-        return headers.reduce((obj, header, index) => {
-            obj[header] = values[index];
-            return obj;
-        }, {});
-    });
-
-    populateColumnSelect(jsonData);
-    populateTable();
-}
-
-// Populate the column selection dropdown based on JSON data
-function populateColumnSelect(json) {
-    const columnSelect = document.getElementById('column-select');
-    const headers = Object.keys(json[0] || {});
-    columnSelect.innerHTML = '<option value="">Select Column</option>';
-    headers.forEach(header => {
-        const option = document.createElement('option');
-        option.value = header;
-        option.textContent = header;
-        columnSelect.appendChild(option);
-    });
-}
-
-// Populate the table with selected column data
-function populateTable() {
-    const selectedColumn = document.getElementById('column-select').value;
-    const tableBody = document.querySelector('#data-table tbody');
-    tableBody.innerHTML = ''; // Clear previous data
-
-    if (!selectedColumn || jsonData.length === 0) {
-        return;
-    }
-
-    jsonData.forEach(row => {
-        const cellValue = row[selectedColumn];
-        if (cellValue) {
-            const tableRow = document.createElement('tr');
-            tableRow.innerHTML = `
-                <td>${cellValue}</td>
-                <td>
-                    <input type="checkbox" class="row-select">
-                </td>
-            `;
-            tableBody.appendChild(tableRow);
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-    });
-}
-
-// Copy selected phone numbers to clipboard
-function copySelectedRows() {
-    const selectedCheckboxes = document.querySelectorAll('#data-table tbody .row-select:checked');
-    const phoneNumbers = Array.from(selectedCheckboxes).map(checkbox => {
-        const row = checkbox.closest('tr');
-        return row.querySelector('td').innerText;
-    }).join('\n');
-
-    if (phoneNumbers) {
-        navigator.clipboard.writeText(phoneNumbers).then(() => {
-            alert('Selected phone numbers copied to clipboard.');
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-        });
-    } else {
-        alert('No phone numbers selected.');
-    }
-}
-
-// Share selected phone numbers
-function shareSelectedRows() {
-    const selectedCheckboxes = document.querySelectorAll('#data-table tbody .row-select:checked');
-    const phoneNumbers = Array.from(selectedCheckboxes).map(checkbox => {
-        const row = checkbox.closest('tr');
-        return row.querySelector('td').innerText;
-    }).join('\n');
-
-    if (phoneNumbers) {
-        const shareData = {
-            title: 'Shared Phone Numbers',
-            text: phoneNumbers
-        };
-        navigator.share(shareData).then(() => {
-            alert('Shared successfully.');
-        }).catch(err => {
-            console.error('Failed to share data: ', err);
-        });
-    } else {
-        alert('No phone numbers selected to share.');
-    }
-}
-
-// Function to handle row selection (for copying or sharing)
-document.querySelector('#data-table').addEventListener('click', function(event) {
-    if (event.target.classList.contains('row-select')) {
-        const row = event.target.closest('tr');
-        row.classList.toggle('selected', event.target.checked);
-    }
-});
-
-// Additional functions to manage table and settings
-
-function sortTable(order) {
-    const table = document.getElementById('data-table');
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-    rows.sort((a, b) => {
-        const aText = a.querySelector('td').innerText;
-        const bText = b.querySelector('td').innerText;
-        return order === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
-    });
-    const tbody = table.querySelector('tbody');
-    tbody.innerHTML = '';
-    rows.forEach(row => tbody.appendChild(row));
-}
-
-function filterTable() {
-    const filter = prompt('Enter filter text:');
-    if (filter) {
-        const rows = document.querySelectorAll('#data-table tbody tr');
-        rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(filter.toLowerCase()) ? '' : 'none';
-        });
-    }
-}
-
-function highlightDuplicates() {
-    const rows = document.querySelectorAll('#data-table tbody tr');
-    const seen = new Set();
-    rows.forEach(row => {
-        const cell = row.querySelector('td').innerText;
-        if (seen.has(cell)) {
-            row.style.backgroundColor = '#ffdddd';
-        } else {
-            seen.add(cell);
+        h1 {
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
-    });
-}
-
-function addRow() {
-    const tableBody = document.querySelector('#data-table tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>New Data</td>
-        <td>
-            <input type="checkbox" class="row-select">
-        </td>
-    `;
-    tableBody.appendChild(row);
-}
-
-function removeRow() {
-    const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
-    selectedRows.forEach(row => row.remove());
-}
-
-function updateRow() {
-    const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
-    selectedRows.forEach(row => {
-        const cell = row.querySelector('td');
-        cell.innerText = prompt('Enter new data:', cell.innerText);
-    });
-}
-
-function addColumn() {
-    const table = document.getElementById('data-table');
-    const headers = table.querySelectorAll('thead th');
-    const newHeader = document.createElement('th');
-    newHeader.innerText = 'New Column';
-    headers[0].parentNode.appendChild(newHeader);
-
-    const rows = table.querySelectorAll('tbody tr');
-    rows.forEach(row => {
-        const newCell = document.createElement('td');
-        newCell.innerText = 'New Data';
-        row.appendChild(newCell);
-    });
-}
-
-function removeColumn() {
-    const table = document.getElementById('data-table');
-    const headers = table.querySelectorAll('thead th');
-    const lastHeader = headers[headers.length - 1];
-    if (lastHeader) {
-        lastHeader.remove();
-        const rows = table.querySelectorAll('tbody tr');
-        rows.forEach(row => row.lastChild.remove());
-    }
-}
-
-function updateColumn() {
-    const column = prompt('Enter column index (0-based):');
-    const table = document.getElementById('data-table');
-    const rows = table.querySelectorAll('tbody tr');
-    rows.forEach(row => {
-        const cell = row.children[column];
-        if (cell) {
-            cell.innerText = prompt('Enter new data:', cell.innerText);
+        h2 {
+            color: #333;
+            font-size: 20px;
+            margin: 20px 0 10px;
         }
-    });
-}
+        input[type="file"], select, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: calc(100% - 22px);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        td {
+            background-color: #fff;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .button:active {
+            transform: scale(0.98);
+        }
+        .settings-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .settings-btn:hover {
+            background-color: #0056b3;
+        }
+        .settings-menu {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 1000;
+            width: 250px;
+        }
+        .settings-menu h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .settings-menu button {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #007bff;
+            cursor: pointer;
+            margin: 5px 0;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+        .settings-menu button:hover {
+            text-decoration: underline;
+        }
+        .comment {
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload and Process Data</h1>
+        <input type="file" id="upload" />
+        <button class="button" onclick="handleFileUpload()">Upload File</button>
 
-function printTable() {
-    const table = document.getElementById('data-table').outerHTML;
-    const newWindow = window.open('', '', 'width=800,height=600');
-    newWindow.document.write(`<html><head><title>Print Table</title></head><body>${table}</body></html>`);
-    newWindow.document.close();
-    newWindow.print();
-}
+        <h2>Select Column</h2>
+        <select id="column-select">
+            <option value="">Select Column</option>
+        </select>
 
-function resetTable() {
-    document.querySelector('#data-table tbody').innerHTML = '';
-}
+        <h2>Data</h2>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
 
-function searchInTable() {
-    const search = prompt('Enter search text:');
-    if (search) {
-        const rows = document.querySelectorAll('#data-table tbody tr');
-        rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(search.toLowerCase()) ? '' : 'none';
-        });
-    }
-}
+        <button class="button" onclick="copySelectedRows()">Copy Selected Rows</button>
+        <button class="button" onclick="shareSelectedRows()">Share Selected Rows</button>
+        <button class="button" onclick="addRow()">Add Row</button>
+        <button class="button" onclick="removeRow()">Remove Selected Rows</button>
+        <button class="button" onclick="updateRow()">Update Selected Rows</button>
+        <button class="button" onclick="addColumn()">Add Column</button>
+        <button class="button" onclick="removeColumn()">Remove Last Column</button>
+        <button class="button" onclick="updateColumn()">Update Column</button>
+        <button class="button" onclick="printTable()">Print Table</button>
+        <button class="button" onclick="resetTable()">Reset Table</button>
+        <button class="button" onclick="searchInTable()">Search in Table</button>
+        <button class="button" onclick="toggleTableVisibility()">Toggle Table Visibility</button>
+        <button class="button" onclick="highlightDuplicates()">Highlight Duplicates</button>
+        <button class="button" onclick="addComment()">Add Comment</button>
+        <button class="button" onclick="clearFilters()">Clear Filters</button>
+    </div>
 
-function toggleTableVisibility() {
-    const table = document.getElementById('data-table');
-    table.style.display = table.style.display === 'none' ? '' : 'none';
-}
+    <button class="settings-btn" onclick="toggleSettingsMenu()">⚙</button>
 
-function addComment() {
-    const comment = prompt('Enter comment:');
-    const selectedRows = document.querySelectorAll('#data-table tbody tr.selected');
-    selectedRows.forEach(row => {
-        const cell = row.querySelector('td');
-        cell.innerHTML += `<div class="comment">${comment}</div>`;
-    });
-}
+    <div class="settings-menu" id="settingsMenu">
+        <h3>Advanced Settings</h3>
+        <button onclick="toggleAccessibilityMenu()">Accessibility Settings</button>
+        <button onclick="sortTable('asc')">Sort Ascending</button>
+        <button onclick="sortTable('desc')">Sort Descending</button>
+        <button onclick="filterTable()">Filter Table</button>
+        <button onclick="highlightDuplicates()">Highlight Duplicates</button>
+    </div>
 
-function clearFilters() {
-    const rows = document.querySelectorAll('#data-table tbody tr');
-    rows.forEach(row => row.style.display = '');
-}
+    <div class="settings-menu" id="accessibilityMenu">
+        <h3>Accessibility Settings</h3>
+        <button onclick="adjustFontSize('increase')">Increase Font Size</button>
+        <button onclick="adjustFontSize('decrease')">Decrease Font Size</button>
+        <button onclick="adjustFontSize('reset')">Reset Font Size</button>
+    </div>
 
-function toggleSettingsMenu() {
-    const menu = document.getElementById('settingsMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-}
+    <script>
+        let jsonData = [];
 
-function toggleAccessibilityMenu() {
-    const menu = document.getElementById('accessibilityMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-}
+        function handleFileUpload() {
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const fileContent = event.target.result;
+                const dataType = file.type;
+                if (dataType.includes('json')) {
+                    processJSON(fileContent);
+                } else if (dataType.includes('csv')) {
+                    processCSV(fileContent);
+                } else {
+                    alert('Unsupported file type.');
+                }
+            };
+            reader.readAsText(file);
+        }
 
-function adjustFontSize(action) {
-    const body = document.body;
-    let currentSize = window.getComputedStyle(body).fontSize;
-    let newSize = parseFloat(currentSize);
-    if (action === 'increase') newSize += 2;
-    else if (action === 'decrease') newSize -= 2;
-    else newSize = 16; // Reset size
-    body.style.fontSize = newSize + 'px';
-}
+        function processJSON(fileContent) {
+            try {
+                jsonData = JSON.parse(fileContent);
+                populateColumnSelect(jsonData);
+                populateTable();
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                alert('Failed to parse JSON file.');
+            }
+        }
 
-function dialNumber(number) {
-    alert(`Dialing number: ${number}`);
-}
+        function processCSV(fileContent) {
+            const lines = fileContent.split('\n');
+            const headers = lines[0].split(',');
 
-function openDialer(number) {
-    alert(`Opening dialer to save number: ${number}`);
-}
+            jsonData = lines.slice(1).map(line => {
+                const values = line.split(',');
+                return headers.reduce((obj, header, index) => {
+                    obj[header] = values[index];
+                    return obj;
+                }, {});
+            });
 
-function downloadVCard(number) {
-    const vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${number}\nTEL:${number}\nEND:VCARD`;
-    const blob = new Blob([vCardData], { type: 'text/vcard' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${number}.vcf`;
-    link.click();
-}
+            populateColumnSelect(jsonData);
+            populateTable();
+        }
+
+        function populateColumnSelect(json) {
+            const columnSelect = document.getElementById('column-select');
+            const headers = Object.keys(json[0] || {});
+            columnSelect.innerHTML = '<option value="">Select Column</option>';
+            headers.forEach(header => {
+                const option = document.createElement('option');
+                option.value = header;
+                option.textContent = header;
+                columnSelect.appendChild(option);
+            });
+        }
+
+        function populateTable() {
+            const selectedColumn = document.getElementById('column-select').value;
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = '';
+
+            if (!selectedColumn || jsonData.length === 0) {
+                return;
+            }
+
+            jsonData.forEach(row => {
+                const cellValue = row[selectedColumn];
+                if (cellValue) {
+                    const rowElement = document.createElement('tr');
+                    rowElement.innerHTML = `
+                        <td>${cellValue}</td>
+                        <td><input type="checkbox" class="row-checkbox" /></td>
+                    `;
+                    tableBody.appendChild(rowElement);
+                }
+            });
+        }
+
+        function copySelectedRows() {
+            const selectedRows = document.querySelectorAll('.row-checkbox:checked');
+            const phoneNumbers = Array.from(selectedRows).map(row => row.parentNode.parentNode.cells[0].textContent);
+            if (phoneNumbers.length > 0) {
+                navigator.clipboard.writeText(phoneNumbers.join('\n')).then(() => {
+                    alert('Copied selected phone numbers to clipboard.');
+                }).catch(err => {
+                    console.error('Error copying to clipboard:', err);
+                    alert('Failed to copy to clipboard.');
+                });
+            } else {
+                alert('No rows selected.');
+            }
+        }
+
+        function shareSelectedRows() {
+            const selectedRows = document.querySelectorAll('.row-checkbox:checked');
+            const phoneNumbers = Array.from(selectedRows).map(row => row.parentNode.parentNode.cells[0].textContent);
+            if (phoneNumbers.length > 0) {
+                const shareData = {
+                    title: 'Phone Numbers',
+                    text: `Here are the phone numbers:\n\n${phoneNumbers.join('\n')}`
+                };
+                navigator.share(shareData).catch(err => {
+                    console.error('Error sharing:', err);
+                    alert('Failed to share.');
+                });
+            } else {
+                alert('No rows selected.');
+            }
+        }
+
+        function addRow() {
+            // Functionality for adding a new row (example implementation)
+            alert('Add row functionality is not implemented.');
+        }
+
+        function removeRow() {
+            // Functionality for removing selected rows
+            document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
+                checkbox.closest('tr').remove();
+            });
+        }
+
+        function updateRow() {
+            // Functionality for updating selected rows (example implementation)
+            alert('Update row functionality is not implemented.');
+        }
+
+        function addColumn() {
+            // Functionality for adding a new column (example implementation)
+            alert('Add column functionality is not implemented.');
+        }
+
+        function removeColumn() {
+            // Functionality for removing the last column (example implementation)
+            alert('Remove column functionality is not implemented.');
+        }
+
+        function updateColumn() {
+            // Functionality for updating column data (example implementation)
+            alert('Update column functionality is not implemented.');
+        }
+
+        function printTable() {
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Print Table</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(document.querySelector('.container').innerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function resetTable() {
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = '';
+        }
+
+        function searchInTable() {
+            const query = prompt('Enter search query:');
+            if (query) {
+                document.querySelectorAll('#data-table tbody tr').forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+                });
+            }
+        }
+
+        function toggleTableVisibility() {
+            const table = document.querySelector('#data-table');
+            table.style.display = table.style.display === 'none' ? '' : 'none';
+        }
+
+        function highlightDuplicates() {
+            const tableBody = document.querySelector('#data-table tbody');
+            const cellTexts = {};
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const cellText = row.cells[0].textContent;
+                if (cellTexts[cellText]) {
+                    row.style.backgroundColor = '#ffcccc';
+                } else {
+                    cellTexts[cellText] = true;
+                }
+            });
+        }
+
+        function addComment() {
+            const comment = prompt('Enter comment:');
+            if (comment) {
+                const comments = document.querySelectorAll('.comment');
+                if (comments.length > 0) {
+                    comments[comments.length - 1].insertAdjacentHTML('afterend', `<div class="comment">${comment}</div>`);
+                } else {
+                    document.querySelector('.container').insertAdjacentHTML('beforeend', `<div class="comment">${comment}</div>`);
+                }
+            }
+        }
+
+        function clearFilters() {
+            document.querySelectorAll('#data-table tbody tr').forEach(row => {
+                row.style.display = '';
+            });
+        }
+
+        function toggleSettingsMenu() {
+            const menu = document.getElementById('settingsMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function sortTable(order) {
+            const tableBody = document.querySelector('#data-table tbody');
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+            rows.sort((a, b) => {
+                const aValue = a.cells[0].textContent;
+                const bValue = b.cells[0].textContent;
+                return order === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            });
+            tableBody.innerHTML = '';
+            rows.forEach(row => tableBody.appendChild(row));
+        }
+
+        function filterTable() {
+            // Example implementation: filter based on user input
+            const filter = prompt('Enter filter value:');
+            if (filter) {
+                document.querySelectorAll('#data-table tbody tr').forEach(row => {
+                    row.style.display = row.textContent.includes(filter) ? '' : 'none';
+                });
+            }
+        }
+
+        function toggleAccessibilityMenu() {
+            const menu = document.getElementById('accessibilityMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function adjustFontSize(action) {
+            const body = document.body;
+            let currentSize = window.getComputedStyle(body).fontSize;
+            let newSize = parseFloat(currentSize);
+            if (action === 'increase') newSize += 2;
+            else if (action === 'decrease') newSize -= 2;
+            else newSize = 16; // Reset size
+            body.style.fontSize = newSize + 'px';
+        }
+    </script>
+</body>
+</html>
