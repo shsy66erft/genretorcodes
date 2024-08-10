@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="google-site-verification" content="hyQcru-EMCBElKe1q0cl45iQFK7EIZ6LnSAM9ZmEPWs" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Login</title>
     <style>
         body {
             display: flex;
@@ -61,43 +62,11 @@
         .g_id_signin {
             margin: 10px auto;
         }
-        .note {
-            font-size: 12px;
-            color: #777;
-        }
-        .terms-container {
-            text-align: left;
-            margin-top: 10px;
-        }
-        .terms-container input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        .terms-container a {
-            color: #FF7043;
-            text-decoration: none;
-        }
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-
-    <div class="container">
-        <h1>Sign Up</h1>
-        <form id="signup-form">
-            <input type="text" placeholder="First Name" required>
-            <input type="text" placeholder="Last Name" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <p class="note">Don't reuse your bank password, we didn't spend a lot on security for this app.<br>At least 6 characters</p>
-            <div class="terms-container">
-                <input type="checkbox" id="terms-checkbox" required>
-                <label for="terms-checkbox">I accept the <a href="terms-en.html" target="_blank">terms and conditions</a>.</label>
-            </div>
-            <button class="button" type="submit">Sign Up</button>
-        </form>
-        <div id="g_id_signup" class="g_id_signin"></div>
-    </div>
-        <div class="menu">
+    <div class="menu">
         <a href="index.html">Home</a>
         <a href="contact.html">Contact Us</a>
         <a href="signup.html">Sign Up</a>
@@ -105,52 +74,60 @@
         <a href="policy.html">Privacy Policy</a>
     </div>
     
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button class="button" type="submit">Login</button>
+        </form>
+        <div id="g_id_login" class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
         (function() {
             emailjs.init("REvVlGrHOuI_NS26I"); // Replace 'YOUR_USER_ID' with your actual User ID from EmailJS
         })();
 
-        async function sha256(message) {
-            // encode as UTF-8
-            const msgBuffer = new TextEncoder().encode(message);                    
-
-            // hash the message
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-
-            // convert ArrayBuffer to Array
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-            // convert bytes to hex string                  
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
+        function num6() {
+            return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit number
         }
 
-        document.getElementById('signup-form').addEventListener('submit', async function(event) {
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
-            const email = document.getElementById('email').value;
-            const termsCheckbox = document.getElementById('terms-checkbox');
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
-            if (!termsCheckbox.checked) {
-                alert('You must accept the terms and conditions.');
-                return;
-            }
+            // Here you should verify the email and password (e.g., by checking a database).
+            // This example assumes verification is always successful.
 
-            localStorage.setItem('userEmail', email); // Store the email in localStorage
-
-            const code = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit code
-            localStorage.setItem('verificationCode', await sha256(code)); // Store the code in localStorage for verification later
+            const code = num6(); // Generate a 6-digit code
+            const hashedCode = hashCode(code.toString());
+            localStorage.setItem('verificationHashCode', hashedCode); // Store the hashed code in localStorage
 
             const templateParams = {
                 to_email: email,
                 code: code
             };
 
-            emailjs.send('service_zuhohgv', 'template_1wpdy5y', templateParams)
+            emailjs.send('service_zuhohgv', 'template_rkg9tjl', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
-                    window.location.href = 'verify.html';
+                    window.location.href = 'loginver.html';
                 }, function(error) {
                     console.log('FAILED...', error);
                     alert('Error sending email. Please try again.');
@@ -161,7 +138,7 @@
             console.log("Encoded JWT ID token: " + response.credential);
             // Decode the JWT and verify it on the server
             // Redirect to home page upon successful verification
-            window.location.href = 'index.html';
+            window.location.href = 'home.html';
         }
 
         window.onload = function () {
@@ -170,8 +147,8 @@
                 callback: handleCredentialResponse
             });
             google.accounts.id.renderButton(
-                document.getElementById("g_id_signup"),
-                { theme: "outline", size: "large", text: "signup_with" } // customization attributes
+                document.getElementById("g_id_login"),
+                { theme: "outline", size: "large" } // customization attributes
             );
             google.accounts.id.prompt(); // Show the One Tap dialog
         };

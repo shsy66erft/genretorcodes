@@ -54,6 +54,10 @@
         .button:hover {
             background-color: #F4511E;
         }
+        #logs-output {
+            white-space: pre-wrap; /* To maintain formatting */
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -147,10 +151,20 @@
     <script>
         // Mock data
         const users = [
-            { email: 'user1@example.com', status: 'Active' },
-            { email: 'user2@example.com', status: 'Suspended' },
-            { email: 'user3@example.com', status: 'Banned' },
+            { email: 'opipoy2424@gmail.com', status: 'website manager' },
+            { email: 'shay053713@gmail.com', status: 'website owner' },
         ];
+        const logs = [];
+        const adminCodeHash = CryptoJS.SHA256("admin330").toString();
+
+        function promptAdminCode(callback) {
+            const inputCode = prompt("Enter admin code:");
+            if (CryptoJS.SHA256(inputCode).toString() === adminCodeHash) {
+                callback();
+            } else {
+                alert("Invalid admin code.");
+            }
+        }
 
         function renderUsers() {
             const tableBody = document.querySelector('#users-table tbody');
@@ -161,18 +175,28 @@
                     <td>${user.email}</td>
                     <td>${user.status}</td>
                     <td>
-                        <button class="button" onclick="applyAction('${user.email}', 'ban')">Ban</button>
-                        <button class="button" onclick="applyAction('${user.email}', 'unban')">Unban</button>
-                        <button class="button" onclick="applyAction('${user.email}', 'suspend')">Suspend</button>
-                        <button class="button" onclick="applyAction('${user.email}', 'reactivate')">Reactivate</button>
-                        <button class="button" onclick="applyAction('${user.email}', 'changeRole')">Change Role</button>
-                        <button class="button" onclick="applyAction('${user.email}', 'resetPassword')">Reset Password</button>
+                        <button class="button" onclick="promptAdminCode(() => applyAction('${user.email}', 'ban'))">Ban</button>
+                        <button class="button" onclick="promptAdminCode(() => applyAction('${user.email}', 'unban'))">Unban</button>
+                        <button class="button" onclick="promptAdminCode(() => applyAction('${user.email}', 'suspend'))">Suspend</button>
+                        <button class="button" onclick="promptAdminCode(() => applyAction('${user.email}', 'reactivate'))">Reactivate</button>
+                        <button class="button" onclick="promptAdminCode(() => applyAction('${user.email}', 'changeRole'))">Change Role</button>
+                        <button class="button" onclick="promptAdminCode(() => applyAction('${user.email}', 'resetPassword'))">Reset Password</button>
                     </td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
+<<<<<<< HEAD
+=======
+        function updateLog(action, email, additionalInfo = '') {
+            const timestamp = new Date().toLocaleString();
+            const logEntry = `[${timestamp}] Action: ${action} on ${email} ${additionalInfo}`;
+            logs.push(logEntry);
+            document.getElementById('logs-output').textContent = logs.join('\n');
+        }
+
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
         function sendRequest(action, email, data) {
             // Mock function to simulate a backend request
             console.log(`Request: ${action} for ${email}`, data);
@@ -184,6 +208,7 @@
         document.getElementById('invite-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const email = document.getElementById('invite-email').value;
+<<<<<<< HEAD
             sendRequest('invite', email)
                 .then(response => {
                     console.log(`Invitation sent to ${email}`);
@@ -193,6 +218,19 @@
                     console.error('Error sending invitation:', error);
                     alert('Error sending invitation.');
                 });
+=======
+            promptAdminCode(() => {
+                sendRequest('invite', email)
+                    .then(response => {
+                        console.log(`Invitation sent to ${email}`);
+                        alert('Invitation sent!');
+                    })
+                    .catch(error => {
+                        console.error('Error sending invitation:', error);
+                        alert('Error sending invitation.');
+                    });
+            });
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
         });
 
         document.getElementById('admin-actions-form').addEventListener('submit', function(event) {
@@ -200,7 +238,9 @@
             const email = document.getElementById('action-email').value;
             const action = document.getElementById('action-type').value;
 
-            applyAction(email, action);
+            promptAdminCode(() => {
+                applyAction(email, action);
+            });
         });
 
         function applyAction(email, action) {
@@ -210,10 +250,20 @@
                 const newPassword = prompt('Enter new password for ' + email);
                 if (!newPassword) return; // Cancel if no password is provided
                 data = { newPassword };
+<<<<<<< HEAD
+=======
+                updateLog(action, email, `with new password.`);
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
             } else if (action === 'changeRole') {
                 const newRole = prompt('Enter new role for ' + email);
                 if (!newRole) return; // Cancel if no role is provided
                 data = { newRole };
+<<<<<<< HEAD
+=======
+                updateLog(action, email, `with new role ${newRole}.`);
+            } else {
+                updateLog(action, email);
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
             }
 
             sendRequest(action, email, data)
@@ -237,6 +287,7 @@
             const settingName = document.getElementById('setting-name').value;
             const settingValue = document.getElementById('setting-value').value;
 
+<<<<<<< HEAD
             sendRequest('updateSetting', settingName, { value: settingValue })
                 .then(response => {
                     console.log(`Setting updated: ${settingName} = ${settingValue}`);
@@ -246,21 +297,38 @@
                     console.error('Error updating settings:', error);
                     alert('Error saving settings.');
                 });
+=======
+            promptAdminCode(() => {
+                sendRequest('updateSetting', settingName, { value: settingValue })
+                    .then(response => {
+                        console.log(`Setting updated: ${settingName} = ${settingValue}`);
+                        alert('Settings saved!');
+                    })
+                    .catch(error => {
+                        console.error('Error updating settings:', error);
+                        alert('Error saving settings.');
+                    });
+            });
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
         });
 
         document.getElementById('view-logs-button').addEventListener('click', function() {
             document.getElementById('logs-section').style.display = 'block';
+<<<<<<< HEAD
             document.getElementById('logs-output').textContent = `
                 Log entry 1: User logged in
                 Log entry 2: User updated profile
                 Log entry 3: Admin changed user role
             `;
+=======
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
         });
 
         document.getElementById('notifications-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const email = document.getElementById('notification-email').value;
 
+<<<<<<< HEAD
             sendRequest('updateNotifications', email)
                 .then(response => {
                     console.log(`Notifications updated for ${email}`);
@@ -270,6 +338,19 @@
                     console.error('Error updating notifications:', error);
                     alert('Error updating notifications.');
                 });
+=======
+            promptAdminCode(() => {
+                sendRequest('updateNotifications', email)
+                    .then(response => {
+                        console.log(`Notifications updated for ${email}`);
+                        alert('Notifications updated!');
+                    })
+                    .catch(error => {
+                        console.error('Error updating notifications:', error);
+                        alert('Error updating notifications.');
+                    });
+            });
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
         });
 
         document.getElementById('generate-report-button').addEventListener('click', function() {

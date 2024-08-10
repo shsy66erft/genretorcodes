@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Process Excel File</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+        }
+        .button:hover {
+            background-color: white;
+            color: black;
+            border: 1px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload and Process Excel File</h1>
+    <input type="file" id="upload" />
+    <button class="button" onclick="processFile()">Process File</button>
+
+    <h2>Select Column</h2>
+    <select id="column-select">
+        <option value="">Select Column</option>
+    </select>
+
+    <h2>Data</h2>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <button class="button" onclick="generateVCard()">Generate vCard</button>
+
+    <script>
+        let numbersArray = [];
+        let columnHeaders = [];
+
+        function processFile() {
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // Assuming the first sheet contains the data
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                if (json.length === 0) {
+                    alert('No data found in the file.');
+                    return;
+                }
+
+                // Display column headers
+                columnHeaders = Object.keys(json[0]);
+                const columnSelect = document.getElementById('column-select');
+                columnSelect.innerHTML = '<option value="">Select Column</option>'; // Clear previous options
+
+                columnHeaders.forEach(header => {
+                    const option = document.createElement('option');
+                    option.value = header;
+                    option.textContent = header;
+                    columnSelect.appendChild(option);
+                });
+
+                // Clear previous data and reset numbersArray
+                document.querySelector('#data-table tbody').innerHTML = '';
+                numbersArray = [];
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processSelectedColumn() {
+            const columnSelect = document.getElementById('column-select');
+            const selectedColumn = columnSelect.value;
+
+            if (!selectedColumn) {
+                alert('Please select a column first.');
+                return;
+            }
+
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                // Extract numbers from the selected column
+                numbersArray = json.map(row => row[selectedColumn]).filter(number => number);
+
+                // Populate the table
+                const tableBody = document.querySelector('#data-table tbody');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                if (numbersArray.length === 0) {
+                    alert('No valid numbers found.');
+                    return;
+                }
+
+                numbersArray.forEach(number => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${number}</td>
+                        <td>
+                            <button class="button" onclick="dialNumber('${number}')">Call</button>
+                            <button class="button" onclick="saveToContact('${number}')">Save to Contact</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function dialNumber(number) {
+            window.location.href = `tel:${number}`;
+        }
+
+        function saveToContact(number) {
+            // Placeholder function to simulate saving contact
+            alert(`Number ${number} saved to contact!`);
+        }
+
+        function generateVCard() {
+            if (numbersArray.length === 0) {
+                alert('No numbers to save.');
+                return;
+            }
+
+            let vCardData = '';
+            numbersArray.forEach((number, index) => {
+                vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:Contact ${index + 1}\nTEL:${number}\nEND:VCARD\n`;
+            });
+
+            // Create a Blob and download it
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.vcf';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Bind processSelectedColumn to column select change
+        document.getElementById('column-select').addEventListener('change', processSelectedColumn);
+    </script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Process Excel File</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            font-size: 20px;
+            margin: 20px 0 10px;
+        }
+        input[type="file"], select {
+            margin: 10px 0;
+            padding: 10px;
+            width: calc(100% - 22px);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        td {
+            background-color: #fff;
+        }
+        .button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .button:active {
+            transform: scale(0.98);
+        }
+        .accessibility-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .accessibility-btn:hover {
+            background-color: #0056b3;
+        }
+        .accessibility-menu {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 1000;
+            width: 200px;
+        }
+        .accessibility-menu h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .accessibility-menu button {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #007bff;
+            cursor: pointer;
+            margin: 5px 0;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+        .accessibility-menu button:hover {
+            text-decoration: underline;
+        }
+        .vcard-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        .vcard-button:hover {
+            background-color: #0056b3;
+        }
+        .vcard-button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div id="bthn" lang="he"></div>
+    <script>
+        (function () {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+            script.setAttribute(
+                "integrity",
+                "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
+            );
+            script.setAttribute("crossorigin", "anonymous");
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })();
+    </script>
+
+    <div class="container">
+        <h1>Upload and Process Excel File</h1>
+        <input type="file" id="upload" />
+        <button class="button" onclick="processFile()">Process File</button>
+
+        <h2>Select Column</h2>
+        <select id="column-select">
+            <option value="">Select Column</option>
+        </select>
+
+        <h2>Data</h2>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+
+        <button class="vcard-button" onclick="generateVCard()">Generate vCard for All Numbers</button>
+    </div>
+
+    <button class="accessibility-btn" onclick="toggleAccessibilityMenu()">A</button>
+
+    <div class="accessibility-menu" id="accessibilityMenu">
+        <h3>Accessibility Settings</h3>
+        <button onclick="adjustFontSize('increase')">Increase Font Size</button>
+        <button onclick="adjustFontSize('decrease')">Decrease Font Size</button>
+        <button onclick="adjustFontSize('reset')">Reset Font Size</button>
+    </div>
+
+    <script>
+        let numbersArray = [];
+        let columnHeaders = [];
+
+        function processFile() {
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                if (json.length === 0) {
+                    alert('No data found in the file.');
+                    return;
+                }
+
+                columnHeaders = Object.keys(json[0]);
+                const columnSelect = document.getElementById('column-select');
+                columnSelect.innerHTML = '<option value="">Select Column</option>'; // Clear previous options
+
+                columnHeaders.forEach(header => {
+                    const option = document.createElement('option');
+                    option.value = header;
+                    option.textContent = header;
+                    columnSelect.appendChild(option);
+                });
+
+                document.querySelector('#data-table tbody').innerHTML = '';
+                numbersArray = [];
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processSelectedColumn() {
+            const columnSelect = document.getElementById('column-select');
+            const selectedColumn = columnSelect.value;
+
+            if (!selectedColumn) {
+                alert('Please select a column first.');
+                return;
+            }
+
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                numbersArray = json.map(row => row[selectedColumn]).filter(number => number);
+
+                const tableBody = document.querySelector('#data-table tbody');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                if (numbersArray.length === 0) {
+                    alert('No valid numbers found.');
+                    return;
+                }
+
+                numbersArray.forEach(number => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = 
+                        `<td>${number}</td>
+                        <td>
+                            <button class="button" onclick="dialNumber('${number}')">Call</button>
+                            <button class="button" onclick="openDialer('${number}')">Save to Contact</button>
+                            <button class="vcard-button" onclick="downloadVCard('${number}')">Download VCard</button>
+                        </td>`;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function dialNumber(number) {
+            window.location.href = `tel:${number}`;
+        }
+
+        function openDialer(number) {
+            window.location.href = `tel:${number}`;
+        }
+
+        function downloadVCard(number) {
+            const vCardData = 
+`BEGIN:VCARD
+VERSION:3.0
+FN:Contact
+TEL:${number}
+END:VCARD`;
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${number}.vcf`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function generateVCard() {
+            if (numbersArray.length === 0) {
+                alert('No numbers to save.');
+                return;
+            }
+
+            let vCardData = '';
+            numbersArray.forEach((number, index) => {
+                vCardData += 
+`BEGIN:VCARD
+VERSION:3.0
+FN:Contact ${index + 1}
+TEL:${number}
+END:VCARD
+`;
+            });
+
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.vcf';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('column-select').addEventListener('change', processSelectedColumn);
+
+        function toggleAccessibilityMenu() {
+            const menu = document.getElementById('accessibilityMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function adjustFontSize(action) {
+            const currentSize = parseFloat(window.getComputedStyle(document.body).fontSize);
+            let newSize;
+
+            if (action === 'increase') {
+                newSize = currentSize * 1.2;
+            } else if (action === 'decrease') {
+                newSize = currentSize / 1.2;
+            } else {
+                newSize = 16; // Reset to default size
+            }
+
+            document.body.style.fontSize = `${newSize}px`;
+        }
+    </script>
+</body>
+</html>

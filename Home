@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Save Excel Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+        }
+        .button:hover {
+            background-color: white;
+            color: black;
+            border: 1px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload and Process Excel File</h1>
+    <input type="file" id="upload" />
+    <button onclick="processFile()">Process File</button>
+
+    <h2>Data</h2>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <button class="button" onclick="saveAll()">Save All</button>
+
+    <script>
+        let numbersArray = [];
+
+        function processFile() {
+            const fileInput = document.getElementById('upload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file first.');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // Assuming the first sheet contains the data
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                // Assuming numbers are in a column named 'Numbers'
+                numbersArray = json.map(row => row.Numbers);
+
+                // Populate the table
+                const tableBody = document.querySelector('#data-table tbody');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                numbersArray.forEach(number => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${number}</td>
+                        <td><button class="button" onclick="saveToContact('${number}')">Save to Contact</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function saveToContact(number) {
+            // Placeholder function to simulate saving contact
+            // Replace this with actual contact saving logic
+            alert(`Number ${number} saved to contact!`);
+        }
+
+        function saveAll() {
+            if (numbersArray.length === 0) {
+                alert('No numbers to save.');
+                return;
+            }
+
+            // Placeholder function to simulate saving all contacts
+            // Replace this with actual contact saving logic
+            numbersArray.forEach(number => {
+                // Simulate saving each number
+                console.log(`Number ${number} saved to contact!`);
+            });
+            alert('All numbers saved to contacts!');
+        }
+    </script>
+</body>
+</html>

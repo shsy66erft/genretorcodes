@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,3 +156,162 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google-site-verification" content="hyQcru-EMCBElKe1q0cl45iQFK7EIZ6LnSAM9ZmEPWs" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #FFEB3B;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .menu {
+            width: 100%;
+            background-color: #FF7043;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .container {
+            text-align: center;
+            background-color: #FFE082;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            margin-top: 20px;
+        }
+        input {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+        .g_id_signin {
+            margin: 10px auto;
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="signup.html">Sign Up</a>
+        <a href="login.html">Login</a>
+        <a href="policy.html">Privacy Policy</a>
+    </div>
+    
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button class="button" type="submit">Login</button>
+        </form>
+        <div id="g_id_login" class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("REvVlGrHOuI_NS26I"); // Replace 'YOUR_USER_ID' with your actual User ID from EmailJS
+        })();
+
+        function num6() {
+            return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit number
+        }
+
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Here you should verify the email and password (e.g., by checking a database).
+            // This example assumes verification is always successful.
+
+            const code = num6(); // Generate a 6-digit code
+            const hashedCode = hashCode(code.toString());
+            localStorage.setItem('verificationHashCode', hashedCode); // Store the hashed code in localStorage
+
+            const templateParams = {
+                to_email: email,
+                code: code
+            };
+
+            emailjs.send('service_zuhohgv', 'template_rkg9tjl', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    window.location.href = 'loginver.html';
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('Error sending email. Please try again.');
+                });
+        });
+
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // Decode the JWT and verify it on the server
+            // Redirect to home page upon successful verification
+            window.location.href = 'home.html';
+        }
+
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com", // Replace with your actual Client ID
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("g_id_login"),
+                { theme: "outline", size: "large" } // customization attributes
+            );
+            google.accounts.id.prompt(); // Show the One Tap dialog
+        };
+    </script>
+</body>
+</html>
+>>>>>>> b79aa8ac505400c71aa4d47e52b776b522a3afc6
