@@ -85,7 +85,7 @@
                 <button class="button" type="submit">Send Invitation</button>
             </form>
         </div>
-
+        
         <!-- Admin Actions -->
         <div class="section">
             <h2>Admin Actions</h2>
@@ -173,11 +173,26 @@
             });
         }
 
+        function sendRequest(action, email, data) {
+            // Mock function to simulate a backend request
+            console.log(`Request: ${action} for ${email}`, data);
+            return new Promise((resolve) => {
+                setTimeout(() => resolve({ status: 'success' }), 1000);
+            });
+        }
+
         document.getElementById('invite-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const email = document.getElementById('invite-email').value;
-            console.log(`Invitation sent to ${email}`);
-            alert('Invitation sent!');
+            sendRequest('invite', email)
+                .then(response => {
+                    console.log(`Invitation sent to ${email}`);
+                    alert('Invitation sent!');
+                })
+                .catch(error => {
+                    console.error('Error sending invitation:', error);
+                    alert('Error sending invitation.');
+                });
         });
 
         document.getElementById('admin-actions-form').addEventListener('submit', function(event) {
@@ -189,9 +204,32 @@
         });
 
         function applyAction(email, action) {
-            console.log(`Applying ${action} to ${email}`);
-            alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied to ${email}`);
-            // Add logic to interact with the backend
+            let data = {};
+
+            if (action === 'resetPassword') {
+                const newPassword = prompt('Enter new password for ' + email);
+                if (!newPassword) return; // Cancel if no password is provided
+                data = { newPassword };
+            } else if (action === 'changeRole') {
+                const newRole = prompt('Enter new role for ' + email);
+                if (!newRole) return; // Cancel if no role is provided
+                data = { newRole };
+            }
+
+            sendRequest(action, email, data)
+                .then(response => {
+                    alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied to ${email}`);
+                    // Update user status in mock data for demonstration
+                    const user = users.find(user => user.email === email);
+                    if (user) {
+                        user.status = action.charAt(0).toUpperCase() + action.slice(1);
+                    }
+                    renderUsers();
+                })
+                .catch(error => {
+                    console.error(`Error applying ${action}:`, error);
+                    alert(`Error applying ${action}.`);
+                });
         }
 
         document.getElementById('settings-form').addEventListener('submit', function(event) {
@@ -199,40 +237,50 @@
             const settingName = document.getElementById('setting-name').value;
             const settingValue = document.getElementById('setting-value').value;
 
-            console.log(`Setting updated: ${settingName} = ${settingValue}`);
-            alert('Settings saved!');
+            sendRequest('updateSetting', settingName, { value: settingValue })
+                .then(response => {
+                    console.log(`Setting updated: ${settingName} = ${settingValue}`);
+                    alert('Settings saved!');
+                })
+                .catch(error => {
+                    console.error('Error updating settings:', error);
+                    alert('Error saving settings.');
+                });
         });
 
         document.getElementById('view-logs-button').addEventListener('click', function() {
             document.getElementById('logs-section').style.display = 'block';
-            // Mock logs for demonstration
-            const logs = [
-                'Log 1: User1 logged in.',
-                'Log 2: User2 was banned.',
-                'Log 3: Admin updated settings.',
-            ];
-            document.getElementById('logs-output').textContent = logs.join('\n');
+            document.getElementById('logs-output').textContent = `
+                Log entry 1: User logged in
+                Log entry 2: User updated profile
+                Log entry 3: Admin changed user role
+            `;
         });
 
         document.getElementById('notifications-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const email = document.getElementById('notification-email').value;
 
-            console.log(`Notifications updated for ${email}`);
-            alert('Notifications updated!');
+            sendRequest('updateNotifications', email)
+                .then(response => {
+                    console.log(`Notifications updated for ${email}`);
+                    alert('Notifications updated!');
+                })
+                .catch(error => {
+                    console.error('Error updating notifications:', error);
+                    alert('Error updating notifications.');
+                });
         });
 
         document.getElementById('generate-report-button').addEventListener('click', function() {
             document.getElementById('report-section').style.display = 'block';
-            // Mock report for demonstration
-            const report = `
-                Report: User Activity
-                ----------------------
+            document.getElementById('report-output').textContent = `
+                Report generated on ${new Date().toLocaleString()}:
+                ----------------------------------------------
                 User1: Active
                 User2: Suspended
                 User3: Banned
             `;
-            document.getElementById('report-output').textContent = report;
         });
 
         // Initialize
