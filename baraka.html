@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>coming soon</title>
-    <details>soon...</details>
+    <title>דף מסיבות</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,34 +12,48 @@
             padding: 0;
         }
 
+        .cookie-consent {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            z-index: 1000;
+        }
+
+        .cookie-consent button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .cookie-consent button:hover {
+            background-color: #218838;
+        }
+
         .filter {
             text-align: center;
             margin: 20px 0;
         }
 
-        .filter button, .filter select, .filter input {
+        .filter select, .filter input {
             padding: 10px;
             margin: 0 5px;
-            border: none;
+            border: 1px solid #ddd;
             font-size: 16px;
             cursor: pointer;
         }
 
-        .filter button {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        .filter button:hover {
-            background-color: #0056b3;
-        }
-
-        .filter select {
-            background-color: #f0f0f0;
-        }
-
         .filter input {
-            border: 1px solid #ddd;
             width: 200px;
         }
 
@@ -90,6 +103,16 @@
             margin-left: 10px;
         }
 
+        .favorite {
+            cursor: pointer;
+            font-size: 20px;
+            color: gray;
+        }
+
+        .favorite.active {
+            color: red;
+        }
+
         button {
             padding: 10px;
             border: none;
@@ -101,6 +124,11 @@
 
         button:hover {
             background-color: #218838;
+        }
+
+        .sold-out {
+            color: red;
+            text-decoration: line-through;
         }
 
         /* Popup styles */
@@ -132,9 +160,29 @@
             font-size: 20px;
             cursor: pointer;
         }
+
+        .personal-menu {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .personal-menu:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+    <div class="cookie-consent" id="cookie-consent">
+        אנו משתמשים בעוגיות כדי לשפר את חווית השימוש שלך באתר. 
+        <button onclick="acceptCookies()">אני מסכים</button>
+    </div>
+
     <div class="filter">
         <input type="text" id="search" placeholder="חפש לפי שם האירוע..." oninput="filterParties()">
         <select id="ageFilter" onchange="filterParties()">
@@ -146,70 +194,257 @@
         </select>
         <select id="dateFilter" onchange="filterParties()">
             <option value="">סנן לפי תאריך</option>
-            <option value="2024-08">אוגוסט 2024</option>
-            <option value="2024-09">ספטמבר 2024</option>
+            <option value="upcoming">מסיבות קרובות</option>
+            <option value="past">מסיבות שחלפו</option>
         </select>
         <select id="organizerFilter" onchange="filterParties()">
             <option value="">סנן לפי מפיק</option>
             <option value="baraka">baraka</option>
             <option value="baraka youngs">baraka youngs</option>
         </select>
-        <button onclick="showParties('upcoming')">מסיבות קרובות</button>
-        <button onclick="showParties('past')">מסיבות שחלפו</button>
     </div>
 
+    <div class="personal-menu" onclick="togglePersonalMenu()">אזור אישי</div>
+
     <div id="parties-list">
-        <!-- Example Party -->
-        <div class="party" data-date="2023-06" data-age="14" data-organizer="baraka youngs">
+        <!-- Party 1 -->
+        <div class="party" data-id="1" data-date="2023-06-26" data-age="14" data-organizer="baraka youngs" data-sold-out="True">
             <img src="pp.png.jpg" alt="תמונה של המסיבה" class="party-image">
             <div class="party-details">
-                <p class="party-name">מסיבה לדוגמה</p>
-                <p class="party-date">תאריך: 26/06/2023</p>
+                <p class="party-name">האירוע הסתיים!</p>
+                <p class="party-date">תאריך: 26/06/2024</p>
                 <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
                 <p class="party-age">גיל: 14+</p>
+                <span class="sold-out">האירוע הסתיים!</span>
                 <div class="party-footer">
                     <img src="הורדה.png" alt="אייקון ההפקה" class="party-icon">
                     <span class="party-name">baraka youngs</span>
+                    <span class="favorite" onclick="toggleFavorite(event)">&#9734;</span>
                 </div>
-                <button onclick="openPopup('party1')">  פרטי המסיבה ומנהלות</button>
-                <button onclick="openPopup('party1')"> פרטי ההפקה</button>
-                <button onclick="openPopup('party1')">  לכרטיסים</button>
-
-                
-
+                <button onclick="window.location.href='https://example.com/tickets'">כרטיסים</button>
+                <button onclick="openPopup('admin1')">מנהלות</button>
+                <button onclick="openPopup('production1')">פרטי ההפקה</button>
             </div>
         </div>
-        <!-- Add more parties here -->
+        <!-- Party 2 -->
+        <div class="party" data-id="2" data-date="2023-07-15" data-age="16" data-organizer="baraka" data-sold-out="False">
+            <img src="pp2.png.jpg" alt="תמונה של המסיבה" class="party-image">
+            <div class="party-details">
+                <p class="party-name">המסיבה הקרובה</p>
+                <p class="party-date">תאריך: 15/07/2024</p>
+                <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
+                <p class="party-age">גיל: 16+</p>
+                <div class="party-footer">
+                    <img src="הורדה2.png" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">baraka</span>
+                    <span class="favorite" onclick="toggleFavorite(event)">&#9734;</span>
+                </div>
+                <button onclick="window.location.href='https://example.com/tickets2'">כרטיסים</button>
+                <button onclick="openPopup('admin2')">מנהלות</button>
+                <button onclick="openPopup('production2')">פרטי ההפקה</button>
+            </div>
+        </div>
+        <!-- Party 3 -->
+        <div class="party" data-id="3" data-date="2023-08-10" data-age="18" data-organizer="baraka youngs" data-sold-out="True">
+            <img src="pp3.png.jpg" alt="תמונה של המסיבה" class="party-image">
+            <div class="party-details">
+                <p class="party-name">האירוע הגדול</p>
+                <p class="party-date">תאריך: 10/08/2024</p>
+                <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
+                <p class="party-age">גיל: 18+</p>
+                <span class="sold-out">האירוע הסתיים!</span>
+                <div class="party-footer">
+                    <img src="הורדה3.png" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">baraka youngs</span>
+                    <span class="favorite" onclick="toggleFavorite(event)">&#9734;</span>
+                </div>
+                <button onclick="window.location.href='https://example.com/tickets3'">כרטיסים</button>
+                <button onclick="openPopup('admin3')">מנהלות</button>
+                <button onclick="openPopup('production3')">פרטי ההפקה</button>
+            </div>
+        </div>
+        <!-- Party 4 -->
+        <div class="party" data-id="4" data-date="2023-09-20" data-age="21" data-organizer="baraka" data-sold-out="False">
+            <img src="pp4.png.jpg" alt="תמונה של המסיבה" class="party-image">
+            <div class="party-details">
+                <p class="party-name">מסיבת סוף הקיץ</p>
+                <p class="party-date">תאריך: 20/09/2024</p>
+                <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
+                <p class="party-age">גיל: 21+</p>
+                <div class="party-footer">
+                    <img src="הורדה4.png" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">baraka</span>
+                    <span class="favorite" onclick="toggleFavorite(event)">&#9734;</span>
+                </div>
+                <button onclick="window.location.href='https://example.com/tickets4'">כרטיסים</button>
+                <button onclick="openPopup('admin4')">מנהלות</button>
+                <button onclick="openPopup('production4')">פרטי ההפקה</button>
+            </div>
+        </div>
+        <!-- Party 5 -->
+        <div class="party" data-id="5" data-date="2023-10-30" data-age="16" data-organizer="baraka youngs" data-sold-out="False">
+            <img src="pp5.png.jpg" alt="תמונה של המסיבה" class="party-image">
+            <div class="party-details">
+                <p class="party-name">מסיבת חנוכה</p>
+                <p class="party-date">תאריך: 30/10/2024</p>
+                <p class="party-address">כתובת: רחוב יהודה הלוי 20, נתניה</p>
+                <p class="party-age">גיל: 16+</p>
+                <div class="party-footer">
+                    <img src="הורדה5.png" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">baraka youngs</span>
+                    <span class="favorite" onclick="toggleFavorite(event)">&#9734;</span>
+                </div>
+                <button onclick="window.location.href='https://example.com/tickets5'">כרטיסים</button>
+                <button onclick="openPopup('admin5')">מנהלות</button>
+                <button onclick="openPopup('production5')">פרטי ההפקה</button>
+            </div>
+        </div>
+        <!-- Party 6 -->
+        <div class="party" data-id="6" data-date="2023-12-15" data-age="18" data-organizer="baraka" data-sold-out="True">
+            <img src="pp6.png.jpg" alt="תמונה של המסיבה" class="party-image">
+            <div class="party-details">
+                <p class="party-name">מסיבת סילבסטר</p>
+                <p class="party-date">תאריך: 15/12/2024</p>
+                <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
+                <p class="party-age">גיל: 18+</p>
+                <span class="sold-out">האירוע הסתיים!</span>
+                <div class="party-footer">
+                    <img src="הורדה6.png" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">baraka</span>
+                    <span class="favorite" onclick="toggleFavorite(event)">&#9734;</span>
+                </div>
+                <button onclick="window.location.href='https://example.com/tickets6'">כרטיסים</button>
+                <button onclick="openPopup('admin6')">מנהלות</button>
+                <button onclick="openPopup('production6')">פרטי ההפקה</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Popup -->
-    <div id="popup" class="popup">
+    <!-- Popups -->
+    <div id="admin1" class="popup">
         <div class="popup-content">
-            <span class="popup-close" onclick="closePopup()">&times;</span>
-            <div id="popup-details"></div>
+            <span class="popup-close" onclick="closePopup('admin1')">&times;</span>
+            <h2>מנהלות האירוע</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="admin2" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('admin2')">&times;</span>
+            <h2>מנהלות האירוע</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="admin3" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('admin3')">&times;</span>
+            <h2>מנהלות האירוע</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="admin4" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('admin4')">&times;</span>
+            <h2>מנהלות האירוע</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="admin5" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('admin5')">&times;</span>
+            <h2>מנהלות האירוע</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="admin6" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('admin6')">&times;</span>
+            <h2>מנהלות האירוע</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+
+    <div id="production1" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('production1')">&times;</span>
+            <h2>פרטי ההפקה</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="production2" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('production2')">&times;</span>
+            <h2>פרטי ההפקה</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="production3" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('production3')">&times;</span>
+            <h2>פרטי ההפקה</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="production4" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('production4')">&times;</span>
+            <h2>פרטי ההפקה</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="production5" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('production5')">&times;</span>
+            <h2>פרטי ההפקה</h2>
+            <p>SOON</p>
+        </div>
+    </div>
+    <div id="production6" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup('production6')">&times;</span>
+            <h2>פרטי ההפקה</h2>
+            <p>SOON</p>
         </div>
     </div>
 
     <script>
         function filterParties() {
-            const search = document.getElementById('search').value.toLowerCase();
-            const ageFilter = document.getElementById('ageFilter').value;
-            const dateFilter = document.getElementById('dateFilter').value;
-            const organizerFilter = document.getElementById('organizerFilter').value;
-            const parties = document.querySelectorAll('.party');
+            let search = document.getElementById('search').value.toLowerCase();
+            let ageFilter = document.getElementById('ageFilter').value;
+            let dateFilter = document.getElementById('dateFilter').value;
+            let organizerFilter = document.getElementById('organizerFilter').value;
+            let parties = document.querySelectorAll('.party');
 
             parties.forEach(party => {
-                const partyName = party.querySelector('.party-name').textContent.toLowerCase();
-                const partyAge = party.getAttribute('data-age');
-                const partyDate = party.getAttribute('data-date');
-                const partyOrganizer = party.getAttribute('data-organizer');
+                let name = party.querySelector('.party-name').innerText.toLowerCase();
+                let age = party.getAttribute('data-age');
+                let date = party.getAttribute('data-date');
+                let organizer = party.getAttribute('data-organizer');
+                let soldOut = party.getAttribute('data-sold-out') === 'True';
 
-                const matchesSearch = partyName.includes(search);
-                const matchesAge = ageFilter === "" || partyAge === ageFilter;
-                const matchesDate = dateFilter === "" || partyDate.startsWith(dateFilter);
-                const matchesOrganizer = organizerFilter === "" || partyOrganizer === organizerFilter;
+                let show = true;
 
-                if (matchesSearch && matchesAge && matchesDate && matchesOrganizer) {
+                if (search && !name.includes(search)) {
+                    show = false;
+                }
+
+                if (ageFilter && ageFilter !== age) {
+                    show = false;
+                }
+
+                if (dateFilter === 'upcoming' && new Date(date) < new Date()) {
+                    show = false;
+                }
+
+                if (dateFilter === 'past' && new Date(date) >= new Date()) {
+                    show = false;
+                }
+
+                if (organizerFilter && organizerFilter !== organizer) {
+                    show = false;
+                }
+
+                if (show) {
                     party.style.display = 'block';
                 } else {
                     party.style.display = 'none';
@@ -217,30 +452,33 @@
             });
         }
 
-        function showParties(type) {
-            const parties = document.querySelectorAll('.party');
-            parties.forEach(party => {
-                if (type === 'upcoming') {
-                    // Add logic to filter upcoming parties
-                    party.style.display = 'block'; // Adjust as necessary
-                } else if (type === 'past') {
-                    // Add logic to filter past parties
-                    party.style.display = 'block'; // Adjust as necessary
-                }
-            });
+        function toggleFavorite(event) {
+            event.target.classList.toggle('active');
         }
 
-        function openPopup(partyId) {
-            const popup = document.getElementById('popup');
-            const details = document.getElementById('popup-details');
-            // Add logic to populate popup with details for the selected party
-            details.innerHTML = `<h2> המסיבה חלפה ${name}</h2><p>פרטי האירוע כבר לא זמינים......</p>`;
-            popup.style.display = 'flex';
+        function acceptCookies() {
+            document.getElementById('cookie-consent').style.display = 'none';
+            localStorage.setItem('cookiesAccepted', 'true');
         }
 
-        function closePopup() {
-            const popup = document.getElementById('popup');
-            popup.style.display = 'none';
+        function togglePersonalMenu() {
+            alert('היכנס לאזור האישי');
+        }
+
+        function openPopup(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closePopup(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('cookiesAccepted') === 'true') {
+                document.getElementById('cookie-consent').style.display = 'none';
+            } else {
+                document.getElementById('cookie-consent').style.display = 'block';
+            }
         }
     </script>
 </body>
