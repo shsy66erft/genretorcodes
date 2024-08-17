@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דף מסיבות</title>
+    <title>coming soon</title>
+    <details>soon...</details>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -135,22 +136,23 @@
 </head>
 <body>
     <div class="filter">
-        <input type="text" id="search" placeholder="חפש לפי שם הפקה..." oninput="filterParties()">
+        <input type="text" id="search" placeholder="חפש לפי שם האירוע..." oninput="filterParties()">
         <select id="ageFilter" onchange="filterParties()">
             <option value="">סנן לפי גיל</option>
+            <option value="14">14+</option>
+            <option value="16">16+</option>
             <option value="18">18+</option>
             <option value="21">21+</option>
-            <option value="25">25+</option>
         </select>
         <select id="dateFilter" onchange="filterParties()">
             <option value="">סנן לפי תאריך</option>
-            <option value="2024-08-01">אוגוסט 2024</option>
-            <option value="2024-09-01">ספטמבר 2024</option>
+            <option value="2024-08">אוגוסט 2024</option>
+            <option value="2024-09">ספטמבר 2024</option>
         </select>
         <select id="organizerFilter" onchange="filterParties()">
             <option value="">סנן לפי מפיק</option>
-            <option value="מפיק1">מפיק1</option>
-            <option value="מפיק2">מפיק2</option>
+            <option value="baraka">baraka</option>
+            <option value="baraka youngs">baraka youngs</option>
         </select>
         <button onclick="showParties('upcoming')">מסיבות קרובות</button>
         <button onclick="showParties('past')">מסיבות שחלפו</button>
@@ -158,17 +160,23 @@
 
     <div id="parties-list">
         <!-- Example Party -->
-        <div class="party" data-date="2024-08-20" data-age="18" data-organizer="מפיק1">
-            <img src="party1.jpg" alt="תמונה של המסיבה" class="party-image">
+        <div class="party" data-date="2023-06" data-age="14" data-organizer="baraka youngs">
+            <img src="pp.png.jpg" alt="תמונה של המסיבה" class="party-image">
             <div class="party-details">
-                <p class="party-date">תאריך: 20/08/2024</p>
-                <p class="party-address">כתובת: רחוב המסיבה 1, תל אביב</p>
-                <p class="party-age">גיל: 18+</p>
+                <p class="party-name">מסיבה לדוגמה</p>
+                <p class="party-date">תאריך: 26/06/2023</p>
+                <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
+                <p class="party-age">גיל: 14+</p>
                 <div class="party-footer">
-                    <img src="icon.jpg" alt="אייקון ההפקה" class="party-icon">
-                    <span class="party-name">שם ההפקה</span>
+                    <img src="הורדה.png" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">baraka youngs</span>
                 </div>
-                <button onclick="openPopup('party1')">פרטים נוספים</button>
+                <button onclick="openPopup('party1')">  פרטי המסיבה ומנהלות</button>
+                <button onclick="openPopup('party1')"> פרטי ההפקה</button>
+                <button onclick="openPopup('party1')">  לכרטיסים</button>
+
+                
+
             </div>
         </div>
         <!-- Add more parties here -->
@@ -226,7 +234,7 @@
             const popup = document.getElementById('popup');
             const details = document.getElementById('popup-details');
             // Add logic to populate popup with details for the selected party
-            details.innerHTML = `<h2>פרטים על המסיבה ${partyId}</h2><p>פרטי האירוע כאן...</p>`;
+            details.innerHTML = `<h2> המסיבה חלפה ${name}</h2><p>פרטי האירוע כאן...</p>`;
             popup.style.display = 'flex';
         }
 
