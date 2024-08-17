@@ -1,194 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload and Process Excel File</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <title>דף מסיבות</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        .button {
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
+
+        .filter {
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
+            margin: 20px 0;
         }
-        .button:hover {
-            background-color: white;
-            color: black;
-            border: 1px solid #4CAF50;
+
+        .filter button, .filter select, .filter input {
+            padding: 10px;
+            margin: 0 5px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .filter button {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .filter button:hover {
+            background-color: #0056b3;
+        }
+
+        .filter select {
+            background-color: #f0f0f0;
+        }
+
+        .filter input {
+            border: 1px solid #ddd;
+            width: 200px;
+        }
+
+        #parties-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .party {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px;
+            width: 300px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .party-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .party-details {
+            padding: 15px;
+            text-align: right;
+        }
+
+        .party-date, .party-address, .party-age {
+            margin: 5px 0;
+        }
+
+        .party-footer {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .party-icon {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+        }
+
+        .party-name {
+            margin-left: 10px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Upload and Process Excel File</h1>
-    <input type="file" id="upload" />
-    <button class="button" onclick="processFile()">Process File</button>
+    <div class="filter">
+        <input type="text" id="search" placeholder="חפש לפי שם הפקה..." oninput="filterParties()">
+        <select id="ageFilter" onchange="filterParties()">
+            <option value="">סנן לפי גיל</option>
+            <option value="18">18+</option>
+            <option value="21">21+</option>
+            <option value="25">25+</option>
+        </select>
+        <select id="dateFilter" onchange="filterParties()">
+            <option value="">סנן לפי תאריך</option>
+            <option value="2024-08-01">אוגוסט 2024</option>
+            <option value="2024-09-01">ספטמבר 2024</option>
+        </select>
+        <select id="organizerFilter" onchange="filterParties()">
+            <option value="">סנן לפי מפיק</option>
+            <option value="מפיק1">מפיק1</option>
+            <option value="מפיק2">מפיק2</option>
+        </select>
+        <button onclick="showParties('upcoming')">מסיבות קרובות</button>
+        <button onclick="showParties('past')">מסיבות שחלפו</button>
+    </div>
 
-    <h2>Select Column</h2>
-    <select id="column-select">
-        <option value="">Select Column</option>
-    </select>
+    <div id="parties-list">
+        <!-- Example Party -->
+        <div class="party" data-date="2024-08-20" data-age="18" data-organizer="מפיק1">
+            <img src="party1.jpg" alt="תמונה של המסיבה" class="party-image">
+            <div class="party-details">
+                <p class="party-date">תאריך: 20/08/2024</p>
+                <p class="party-address">כתובת: רחוב המסיבה 1, תל אביב</p>
+                <p class="party-age">גיל: 18+</p>
+                <div class="party-footer">
+                    <img src="icon.jpg" alt="אייקון ההפקה" class="party-icon">
+                    <span class="party-name">שם ההפקה</span>
+                </div>
+                <button onclick="openPopup('party1')">פרטים נוספים</button>
+            </div>
+        </div>
+        <!-- Add more parties here -->
+    </div>
 
-    <h2>Data</h2>
-    <table id="data-table">
-        <thead>
-            <tr>
-                <th>Number</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here -->
-        </tbody>
-    </table>
-
-    <button class="button" onclick="generateVCard()">Generate vCard</button>
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup()">&times;</span>
+            <div id="popup-details"></div>
+        </div>
+    </div>
 
     <script>
-        let numbersArray = [];
-        let columnHeaders = [];
+        function filterParties() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const ageFilter = document.getElementById('ageFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const organizerFilter = document.getElementById('organizerFilter').value;
+            const parties = document.querySelectorAll('.party');
 
-        function processFile() {
-            const fileInput = document.getElementById('upload');
-            const file = fileInput.files[0];
+            parties.forEach(party => {
+                const partyName = party.querySelector('.party-name').textContent.toLowerCase();
+                const partyAge = party.getAttribute('data-age');
+                const partyDate = party.getAttribute('data-date');
+                const partyOrganizer = party.getAttribute('data-organizer');
 
-            if (!file) {
-                alert('Please select a file first.');
-                return;
-            }
+                const matchesSearch = partyName.includes(search);
+                const matchesAge = ageFilter === "" || partyAge === ageFilter;
+                const matchesDate = dateFilter === "" || partyDate.startsWith(dateFilter);
+                const matchesOrganizer = organizerFilter === "" || partyOrganizer === organizerFilter;
 
-            const reader = new FileReader();
-
-            reader.onload = function(event) {
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-
-                // Assuming the first sheet contains the data
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json(worksheet);
-
-                if (json.length === 0) {
-                    alert('No data found in the file.');
-                    return;
+                if (matchesSearch && matchesAge && matchesDate && matchesOrganizer) {
+                    party.style.display = 'block';
+                } else {
+                    party.style.display = 'none';
                 }
-
-                // Display column headers
-                columnHeaders = Object.keys(json[0]);
-                const columnSelect = document.getElementById('column-select');
-                columnSelect.innerHTML = '<option value="">Select Column</option>'; // Clear previous options
-
-                columnHeaders.forEach(header => {
-                    const option = document.createElement('option');
-                    option.value = header;
-                    option.textContent = header;
-                    columnSelect.appendChild(option);
-                });
-
-                // Clear previous data and reset numbersArray
-                document.querySelector('#data-table tbody').innerHTML = '';
-                numbersArray = [];
-            };
-
-            reader.readAsArrayBuffer(file);
-        }
-
-        function processSelectedColumn() {
-            const columnSelect = document.getElementById('column-select');
-            const selectedColumn = columnSelect.value;
-
-            if (!selectedColumn) {
-                alert('Please select a column first.');
-                return;
-            }
-
-            const fileInput = document.getElementById('upload');
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function(event) {
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json(worksheet);
-
-                // Extract numbers from the selected column
-                numbersArray = json.map(row => row[selectedColumn]).filter(number => number);
-
-                // Populate the table
-                const tableBody = document.querySelector('#data-table tbody');
-                tableBody.innerHTML = ''; // Clear previous data
-
-                if (numbersArray.length === 0) {
-                    alert('No valid numbers found.');
-                    return;
-                }
-
-                numbersArray.forEach(number => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${number}</td>
-                        <td>
-                            <button class="button" onclick="dialNumber('${number}')">Call</button>
-                            <button class="button" onclick="saveToContact('${number}')">Save to Contact</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            };
-
-            reader.readAsArrayBuffer(file);
-        }
-
-        function dialNumber(number) {
-            window.location.href = `tel:${number}`;
-        }
-
-        function saveToContact(number) {
-            // Placeholder function to simulate saving contact
-            alert(`Number ${number} saved to contact!`);
-        }
-
-        function generateVCard() {
-            if (numbersArray.length === 0) {
-                alert('No numbers to save.');
-                return;
-            }
-
-            let vCardData = '';
-            numbersArray.forEach((number, index) => {
-                vCardData += `BEGIN:VCARD\nVERSION:3.0\nFN:Contact ${index + 1}\nTEL:${number}\nEND:VCARD\n`;
             });
-
-            // Create a Blob and download it
-            const blob = new Blob([vCardData], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'contacts.vcf';
-            a.click();
-            URL.revokeObjectURL(url);
         }
 
-        // Bind processSelectedColumn to column select change
-        document.getElementById('column-select').addEventListener('change', processSelectedColumn);
+        function showParties(type) {
+            const parties = document.querySelectorAll('.party');
+            parties.forEach(party => {
+                if (type === 'upcoming') {
+                    // Add logic to filter upcoming parties
+                    party.style.display = 'block'; // Adjust as necessary
+                } else if (type === 'past') {
+                    // Add logic to filter past parties
+                    party.style.display = 'block'; // Adjust as necessary
+                }
+            });
+        }
+
+        function openPopup(partyId) {
+            const popup = document.getElementById('popup');
+            const details = document.getElementById('popup-details');
+            // Add logic to populate popup with details for the selected party
+            details.innerHTML = `<h2>פרטים על המסיבה ${partyId}</h2><p>פרטי האירוע כאן...</p>`;
+            popup.style.display = 'flex';
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
     </script>
 </body>
 </html>

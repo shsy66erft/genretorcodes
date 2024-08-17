@@ -11,7 +11,7 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #FFEB3B;
+            background-color: #a7cf6791;
             font-family: Arial, sans-serif;
             margin: 0;
         }
@@ -29,7 +29,7 @@
         }
         .container {
             text-align: center;
-            background-color: #FFE082;
+            background-color: #a7cf6791;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -104,7 +104,19 @@
         <a href="login.html">Login</a>
         <a href="policy.html">Privacy Policy</a>
     </div>
-    
+    <div id="bthn" lang="he"></div><script>
+        (function () {
+           var script = document.createElement("script");
+           script.type = "text/javascript";
+           script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+           script.setAttribute(
+             "integrity",
+             "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
+           );
+           script.setAttribute("crossorigin", "anonymous");
+           document.getElementsByTagName("head")[0].appendChild(script);
+         })();
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
         (function() {
@@ -161,7 +173,7 @@
             console.log("Encoded JWT ID token: " + response.credential);
             // Decode the JWT and verify it on the server
             // Redirect to home page upon successful verification
-            window.location.href = 'index.html';
+            window.location.href = 'home.html';
         }
 
         window.onload = function () {
