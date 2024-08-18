@@ -74,7 +74,7 @@
             border-radius: 5px;
             margin: 10px;
             width: 300px;
-            position: relative;
+            position: relative; /* Ensure relative positioning */
             overflow: hidden;
             box-shadow: 0 0 10px rgba(151, 101, 101, 0.1);
         }
@@ -133,22 +133,22 @@
             background-color: #218838;
         }
 
-            .sold-out {
+        .sold-out {
         color: red;
-        font-size: 23px;
-        font-weight: bold;
         font-size: x-large;
+        font-weight: bold;
         position: absolute;
-        top: 34px;
-        left: -12px;
-        transform: rotate(-46deg);
+        top: 110px; /* מרחק מהקצה העליון של התמונה */
+        left: -30px; /* מרחק מהקצה השמאלי של התמונה */
+        transform: rotate(-45deg); /* סיבוב של 45 מעלות */
+        transform-origin: top left; /* נקודת הסיבוב בפינה השמאלית העליונה של האלמנט */
         white-space: nowrap;
-        background: rgb(253, 258, 253);
-        padding: 2px;
-        border-radius: 1px;
+        background: rgba(255, 255, 255, 0.8); /* רקע בהיר עם שקיפות */
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid red; /* קו גבול אדום */
+        z-index: 10; /* ודא שהתווית תופיע מעל התמונה */
     }
-
-
         /* Popup styles */
         .popup {
             display: none;
@@ -228,11 +228,11 @@
         <!-- Party 1 -->
         <div class="party" data-id="1" data-date="2024-08-28" data-age="16" data-organizer="baraka youngs" data-sold-out="  False">
             <img src="2808.png" alt="" class="party-image">
+            <span class="sold-out"> -------עוד 10 ימים!----</span>
             <div class="party-details">
                 <p class="party-date">תאריך: 26/08/2024</p>
                 <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
                 <p class="party-age">גיל: 16+</p>
-                <span class="sold-out">עוד 10 ימים!</span>
                 <div class="party-footer">
                     <img src="הורדה.png" alt="אייקון ההפקה" class="party-icon">
                     <span class="party-name">baraka youngs</span>
@@ -246,12 +246,12 @@
         <!-- Party 2 -->
         <div class="party" data-id="2" data-date="2024-07-15" data-age="18" data-organizer="baraka" data-sold-out="False">
             <img src="pp2.png.jpg" alt="תמונה של המסיבה" class="party-image">
+            <span class="sold-out">עוד ERROE ימים!</span>
             <div class="party-details">
                 <p class="party-name"> בקרוב</p>
                 <p class="party-date">תאריך: בקרוב</p>
                 <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
                 <p class="party-age">גיל: 18+</p>
-                <span class="sold-out">עוד בקרוב ימים</span>
                 <div class="party-footer">
                     <img src="pp2.png.jpg" alt="אייקון ההפקה" class="party-icon">
                     <span class="party-name">baraka</span>
