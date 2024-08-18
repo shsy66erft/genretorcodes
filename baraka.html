@@ -528,6 +528,50 @@
     
     // Call the function when the page loads
     window.onload = updateDaysRemaining;
-    </script>    
+    </script>   
+    <script>function hideEventMessages() {
+        const soldOutElements = document.querySelectorAll('.sold-out');
+        soldOutElements.forEach(element => {
+            element.dataset.originalDisplay = element.style.display; // שמור את ה-display המקורי
+            element.style.display = 'none'; // הסתר את ההודעות
+        });
+    }
+    </script>
+    <script>
+      function showEventMessages() {
+    const soldOutElements = document.querySelectorAll('.sold-out');
+    soldOutElements.forEach(element => {
+        element.style.display = element.dataset.originalDisplay || 'block'; // החזר את ה-display המקורי
+    });
+}
+  
+    </script>
+    <script>// כאשר הפופאפ נפתח
+        function openPopup(popupId) {
+            hideEventMessages();
+            document.getElementById(popupId).style.display = 'block';
+        }
+        
+        // כאשר הפופאפ נסגר
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+            showEventMessages();
+        }
+        
+        // נניח שיש לך כפתורים לפתיחת ו/או סגירת הפופאפים
+        document.querySelectorAll('.open-popup-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const popupId = this.getAttribute('data-popup-id');
+                openPopup(popupId);
+            });
+        });
+        
+        document.querySelectorAll('.close-popup-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const popupId = this.getAttribute('data-popup-id');
+                closePopup(popupId);
+            });
+        });
+        </script>
 </body>
 </html>
