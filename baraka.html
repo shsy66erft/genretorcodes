@@ -228,7 +228,7 @@
         <!-- Party 1 -->
         <div class="party" data-id="1" data-date="2024-08-28" data-age="16" data-organizer="baraka youngs" data-sold-out="  False">
             <img src="2808.png" alt="" class="party-image">
-            <span class="sold-out"> -------עוד 10 ימים!----</span>
+            <span class="sold-out" data-default-text="---עוד  ימים!----"></span>
             <div class="party-details">
                 <p class="party-date">תאריך: 26/08/2024</p>
                 <p class="party-address">כתובת: שלושת בני עין חורד 70, באר שבע</p>
@@ -500,5 +500,34 @@
             }
         }
     </script>
+ <script>
+ function updateDaysRemaining() {
+    const today = new Date();
+    const parties = document.querySelectorAll('.party');
+
+    parties.forEach(party => {
+        const dateStr = party.getAttribute('data-date');
+        const eventDate = new Date(dateStr);
+        const daysRemaining = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+        
+        const soldOutElement = party.querySelector('.sold-out');
+        const defaultText = soldOutElement.getAttribute('data-default-text');
+        
+        if (daysRemaining > 0) {
+            soldOutElement.innerText = defaultText.replace('ימים', daysRemaining + ' ימים');
+            soldOutElement.style.display = 'block';
+        } else if (daysRemaining <= 0 && party.getAttribute('data-sold-out') === 'False') {
+            soldOutElement.innerText = '---האירוע הסתיים!--';
+            soldOutElement.style.display = 'block';
+        } else {
+            soldOutElement.style.display = 'none';
+        }
+    });
+}
+
+    
+    // Call the function when the page loads
+    window.onload = updateDaysRemaining;
+    </script>    
 </body>
 </html>
