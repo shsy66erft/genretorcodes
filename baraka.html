@@ -63,14 +63,11 @@
             justify-content: center;
         }
 
-        .party {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 10px;
-            width: 300px;
+                .party {
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
 
         .party-image {
             width: 100%;
@@ -126,10 +123,20 @@
             background-color: #218838;
         }
 
-        .sold-out {
-            color: red;
-            text-decoration: line-through;
-        }
+            .sold-out {
+        color: red;
+        font-size: 24px;
+        font-weight: bold;
+        position: absolute;
+        top: 30px;
+        left: -8px;
+        transform: rotate(-45deg);
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 5px;
+        border-radius: 5px;
+    }
+
 
         /* Popup styles */
         .popup {
@@ -366,7 +373,7 @@
             <h2>פרטי ההפקה</h2>
             <p>שם המפיק: Baraka youngs
                 <p>טלפון ההפקה: 051-274-2259
-                    <p>אימייל ההפקה: <div Barakayoungs1@gmail.com=""></div>
+                    <p>אימייל ההפקה: Barakayoungs1@gmail.com
                         <p>כתובת: שלושת בני עין חורד 70, באר שבע, ישראל</p>
                        
         </div>
