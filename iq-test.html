@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקת IQ</title>
+    <link rel="icon" href="moach.png" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            direction: rtl;
+        }
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        #submitBtn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בדיקת IQ</h1>
+        <div id="userInfo">
+            <label for="name">שם:</label>
+            <input type="text" id="name"><br><br>
+            <label for="age">גיל:</label>
+            <input type="number" id="age"><br><br>
+            <button onclick="startQuiz()">התחל שאלון</button>
+        </div>
+        
+        <form id="quizForm" style="display:none;">
+            <div class="question">
+                <label for="q1">1. מהו המספר הבא בסדרה: 2, 4, 6, 8, ...?</label><br>
+                <input type="text" id="q1">
+            </div>
+            <div class="question">
+                <label for="q2">2. מהי המילה ההפוכה ל'קל'?</label><br>
+                <input type="text" id="q2">
+            </div>
+            <div class="question">
+                <label for="q3">3. איזו מילה לא שייכת: תפוח, בננה, גזר, תפוז?</label><br>
+                <input type="text" id="q3">
+            </div>
+            <div class="question">
+                <label for="q4">4. כמה זוויות יש למשולש?</label><br>
+                <input type="text" id="q4">
+            </div>
+            <div class="question">
+                <label for="q5">5. מהי המילה המתחרזת עם 'שמש'?</label><br>
+                <input type="text" id="q5">
+            </div>
+            <div class="question">
+                <label for="q6">6. מהי התשובה ל-2+3?</label><br>
+                <input type="text" id="q6">
+            </div>
+            <div class="question">
+g                <label for="q14">14. מהי הצורה הגיאומטרית שיש לה שלושה קווים ישרים?</label><br>
+                <input type="text" id="q14">
+            </div>
+            <div class="question">
+                <label for="q15">15. איזה יום מגיע אחרי יום רביעי?</label><br>
+                <input type="text" id="q15">
+            </div>
+            <div class="question">
+                <label for="q16">16. איזו מילה לא מתאימה: כחול, ירוק, רץ, אדום?</label><br>
+                <input type="text" id="q16">
+            </div>
+            <div class="question">
+                <label for="q17">17. מהו חמש פחות שתיים?</label><br>
+                <input type="text" id="q17">
+            </div>
+            <div class="question">
+                <label for="q18">18. איזו מילה לא שייכת: חתול, כלב, מכונית, סוס?</label><br>
+                <input type="text" id="q18">
+            </div>
+            <button type="button" id="submitBtn" onclick="submitQuiz()">שלח</button>
+        </form>
+
+        <div class="loading">
+            <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="50"><br>
+            מעבד תוצאות...
+        </div>
+
+        <div id="result" style="display:none;">
+            <h2 id="iqResult"></h2>
+        </div>
+    </div>
+
+    <script>
+        function startQuiz() {
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('quizForm').style.display = 'block';
+        }
+
+        function submitQuiz() {
+            document.getElementById('quizForm').style.display = 'none';
+            document.querySelector('.loading').style.display = 'block';
+
+            setTimeout(function() {
+                document.querySelector('.loading').style.display = 'none';
+                const name = document.getElementById('name').value;
+                document.getElementById('iqResult').innerText = `וואו, ${name}, כל חיי לא ראיתי מטומטם ממך!`;
+                document.getElementById('result').style.display = 'block';
+            }, 3000); // השהה ל-3 שניות לפני הצגת התוצאה
+        }
+    </script>
+</body>
+</html>
