@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            background-color: #444;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .cell:hover {
+            background-color: #666;
+        }
+        #status {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        #shop {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #444;
+            border-radius: 5px;
+        }
+        #shop button {
+            margin: 5px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #shop h3 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="status">Player 1's turn (X)</div>
+<div id="board"></div>
+
+<div id="shop">
+    <h3>Shop</h3>
+    <p>Coins: <span id="coinCount">0</span></p>
+    <button onclick="buyColor('X')">Buy X Color</button>
+    <button onclick="buyColor('O')">Buy O Color</button>
+</div>
+
+<button id="toggleShopBtn">Toggle Shop</button>
+<button onclick="startNewGame()">New Game</button>
+
+<script>
+    const boardElement = document.getElementById('board');
+    const statusElement = document.getElementById('status');
+    const coinCountElement = document.getElementById('coinCount');
+    const toggleShopBtn = document.getElementById('toggleShopBtn');
+    
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let isBotEnabled = false;
+    let coins = 0;
+    let xColor = 'white';
+    let oColor = 'white';
+    
+    toggleShopBtn.onclick = () => {
+        const shop = document.getElementById('shop');
+        shop.style.display = shop.style.display === 'none' ? 'block' : 'none';
+    };
+
+    // Initialize the game board
+    function initBoard() {
+        boardElement.innerHTML = '';
+        board.forEach((cell, index) => {
+            const cellElement = document.createElement('div');
+            cellElement.classList.add('cell');
+            cellElement.setAttribute('data-index', index);
+            cellElement.innerText = cell;
+            cellElement.onclick = () => handleCellClick(index);
+            boardElement.appendChild(cellElement);
+        });
+    }
+
+    function handleCellClick(index) {
+        if (board[index] !== '' || checkWinner() || isBotEnabled) return;
+        
+        board[index] = currentPlayer;
+        renderBoard();
+        
+        const winner = checkWinner();
+        if (winner) {
+            statusElement.innerText = `${winner} wins!`;
+            if (winner === 'O' && isBotEnabled) coins += 15; // Bot win
+            updateCoins();
+            return;
+        }
+        
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        statusElement.innerText = `Player ${currentPlayer === 'X' ? '1' : '2'}'s turn (${currentPlayer})`;
+        
+        if (isBotEnabled) {
+            setTimeout(botMove, 500);
+        }
+    }
+
+    function botMove() {
+        const emptyCells = board.map((cell, index) => (cell === '' ? index : null)).filter(val => val !== null);
+        const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        if (randomIndex !== undefined) {
+            board[randomIndex] = 'O';
+            renderBoard();
+            
+            const winner = checkWinner();
+            if (winner) {
+                statusElement.innerText = `${winner} wins!`;
+                if (winner === 'O') coins += 15; // Bot win
+                updateCoins();
+            } else {
+                currentPlayer = 'X';
+                statusElement.innerText = `Player 1's turn (X)`;
+            }
+        }
+    }
+
+    function checkWinner() {
+        const winPatterns = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        
+        for (const pattern of winPatterns) {
+            const [a, b, c] = pattern;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                return board[a];
+            }
+        }
+        return board.includes('') ? null : 'Draw';
+    }
+
+    function renderBoard() {
+        board.forEach((cell, index) => {
+            const cellElement = document.querySelector(`.cell[data-index='${index}']`);
+            cellElement.innerText = cell;
+            cellElement.style.color = cell === 'X' ? xColor : cell === 'O' ? oColor : 'white';
+        });
+    }
+
+    function startNewGame() {
+        board = ['', '', '', '', '', '', '', '', ''];
+        currentPlayer = 'X';
+        statusElement.innerText = `Player 1's turn (X)`;
+        initBoard();
+    }
+
+    function buyColor(type) {
+        if (coins <= 0) {
+            alert('Not enough coins!');
+            return;
+        }
+        
+        if (type === 'X') {
+            xColor = xColor === 'white' ? 'red' : 'white'; // Toggle color between red and white
+        } else {
+            oColor = oColor === 'white' ? 'blue' : 'white'; // Toggle color between blue and white
+        }
+        
+        coins--;
+        updateCoins();
+    }
+
+    function updateCoins() {
+        coinCountElement.innerText = coins;
+    }
+
+    // Start the game
+    initBoard();
+</script>
+
+</body>
+</html>p
