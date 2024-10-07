@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are You Gay Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0f7fa;
+        }
+        .question-container, .loading-container, .result-container, .name-container {
+            display: none;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .active {
+            display: block;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #004d40;
+        }
+        .loading-bar {
+            width: 100%;
+            background-color: #ccc;
+            margin-top: 20px;
+        }
+        .loading-bar-fill {
+            width: 0;
+            height: 30px;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            border-radius: 5px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="nameContainer" class="name-container active">
+        <h2>Enter your name</h2>
+        <input type="text" id="name" placeholder="Enter your name...">
+        <button onclick="saveName()">Next</button>
+    </div>
+
+    <div id="questionContainer" class="question-container">
+        <h2 id="question">Question 1: What is your favorite color?</h2>
+        <input type="text" id="answer" placeholder="Enter your answer...">
+        <div>
+            <button onclick="nextQuestion()">Next</button>
+            <button onclick="skipQuestion()">Skip</button>
+        </div>
+    </div>
+
+    <div id="loadingContainer" class="loading-container">
+        <h2>Processing your answers...</h2>
+        <div class="loading-bar">
+            <div id="loadingBarFill" class="loading-bar-fill">0%</div>
+        </div>
+    </div>
+
+    <div id="resultContainer" class="result-container">
+        <h2 id="resultMessage"></h2>
+    </div>
+
+    <script>
+        const questions = [
+            "What is your favorite color?",
+            "What is your favorite food?",
+            "What is your favorite animal?",
+            "What is your favorite hobby?",
+            "What is your favorite movie?",
+            "What is your favorite song?",
+            "What is your favorite sport?",
+            "What is your dream job?",
+            "What is your favorite season?",
+            "What is your favorite holiday?",
+            "What is your favorite book?"
+        ];
+
+        let currentQuestionIndex = 0;
+        let userName = '';
+
+        function saveName() {
+            userName = document.getElementById('name').value.trim();
+            if (userName === '') return; // Prevent proceeding without a name
+
+            document.getElementById('nameContainer').classList.remove('active');
+            document.getElementById('questionContainer').classList.add('active');
+        }
+
+        function nextQuestion() {
+            const answer = document.getElementById('answer').value;
+            if (answer.trim() === '') return; // Prevent proceeding without an answer
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                document.getElementById('question').innerText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+                document.getElementById('answer').value = '';
+            } else {
+                document.getElementById('questionContainer').classList.remove('active');
+                document.getElementById('loadingContainer').classList.add('active');
+                startLoading();
+            }
+        }
+
+        function skipQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                document.getElementById('question').innerText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+                document.getElementById('answer').value = '';
+            } else {
+                document.getElementById('questionContainer').classList.remove('active');
+                document.getElementById('loadingContainer').classList.add('active');
+                startLoading();
+            }
+        }
+
+        function startLoading() {
+            let progress = 0;
+            const loadingBarFill = document.getElementById('loadingBarFill');
+            const interval = setInterval(() => {
+                progress += 1;
+                loadingBarFill.style.width = progress + '%';
+                loadingBarFill.innerText = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('loadingContainer').classList.remove('active');
+                    document.getElementById('resultContainer').classList.add('active');
+                    showResult();
+                }
+            }, 120);
+        }
+
+        function showResult() {
+            const randomResult = Math.random() < 0.5 ? 
+                `${userName}, based on your answers, you are gay.` : 
+                `${userName}, based on the calculations, you are straight. Get ready, I'm coming for you.`;
+            document.getElementById('resultMessage').innerText = randomResult;
+        }
+    </script>
+
+</body>
+</html>
