@@ -3,147 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Papa John's Crazy Pizza Maker</title>
+    <title>Papa's Pizzeria</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0e68c;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #e8e8e8;
+            text-align: center;
         }
-        canvas {
-            border: 2px solid #8B4513;
-            background-color: #FFE4C4;
+        h1 {
+            color: #f44336;
+        }
+        #gameContainer {
+            display: none;
         }
         #menu {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            width: 300px;
+        }
+        #order {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        #pizza {
+            border: 1px solid #000;
+            border-radius: 50%;
+            background-color: #ffe5b4;
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .topping {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .pepperoni {
+            background-color: red;
+            width: 30px;
+            height: 30px;
+            top: 60px;
+            left: 70px;
+        }
+        .mushrooms {
+            background-color: brown;
+            width: 25px;
+            height: 25px;
+            top: 40px;
+            left: 100px;
+        }
+        .green-peppers {
+            background-color: green;
+            width: 30px;
+            height: 10px;
+            top: 80px;
+            left: 90px;
+            transform: rotate(45deg);
+        }
+        .olives {
+            background-color: black;
+            width: 15px;
+            height: 15px;
+            top: 90px;
+            left: 50px;
         }
         button {
-            padding: 10px 20px;
+            padding: 10px;
             margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #28a745;
-            color: white;
-            border: none;
             border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #45a049;
         }
         #score {
             font-size: 20px;
-            margin-top: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<div id="menu">
-    <h1>Papa John's Crazy Pizza Maker</h1>
-    <button id="startBtn">Start Game</button>
-    <div id="score" style="display: none;">Score: 0</div>
-</div>
+    <h1>Papa's Pizzeria</h1>
+    <div id="menu">
+        <button id="startBtn">Start Game</button>
+    </div>
 
-<canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
+    <div id="gameContainer">
+        <div id="order"></div>
+        <div id="pizza"></div>
+        <div>
+            <button id="addPepperoni">Add Pepperoni</button>
+            <button id="addMushrooms">Add Mushrooms</button>
+            <button id="addGreenPeppers">Add Green Peppers</button>
+            <button id="addOlives">Add Olives</button>
+            <button id="bakePizza">Bake Pizza</button>
+        </div>
+        <div id="score">Score: 0</div>
+    </div>
 
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    let score = 0;
-    let order = [];
-    let ordersCompleted = 0;
-    let gameInterval;
-    let timeLimit = 60; // Game time in seconds
-    let countdown;
-    let customers = [];
+    <script>
+        let score = 0;
+        let currentOrder = [];
+        const toppings = ['pepperoni', 'mushrooms', 'green-peppers', 'olives'];
 
-    const toppingsList = ['Pepperoni', 'Mushrooms', 'Olives', 'Green Peppers', 'Pineapple', 'Cheese'];
-    const pizzaBase = { x: 350, y: 300, radius: 80 };
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('addPepperoni').addEventListener('click', () => addTopping('pepperoni'));
+        document.getElementById('addMushrooms').addEventListener('click', () => addTopping('mushrooms'));
+        document.getElementById('addGreenPeppers').addEventListener('click', () => addTopping('green-peppers'));
+        document.getElementById('addOlives').addEventListener('click', () => addTopping('olives'));
+        document.getElementById('bakePizza').addEventListener('click', bakePizza);
 
-    document.getElementById('startBtn').addEventListener('click', startGame);
+        function startGame() {
+            score = 0;
+            document.getElementById('score').innerText = `Score: ${score}`;
+            currentOrder = generateOrder();
+            document.getElementById('order').innerText = `Order: ${currentOrder.join(', ')}`;
+            document.getElementById('pizza').innerHTML = '';
+            document.getElementById('gameContainer').style.display = 'block';
+            document.getElementById('menu').style.display = 'none';
+        }
 
-    function startGame() {
-        score = 0;
-        ordersCompleted = 0;
-        order = [];
-        document.getElementById('score').innerText = `Score: ${score}`;
-        document.getElementById('score').style.display = 'block';
-        document.getElementById('menu').style.display = 'none';
-        document.getElementById('gameCanvas').style.display = 'block';
-        drawPizza();
-        generateOrder();
-        countdown = setInterval(updateTime, 1000);
-        gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
-    }
+        function generateOrder() {
+            const orderSize = Math.floor(Math.random() * 4) + 1; // Order size between 1 and 4 toppings
+            let order = [];
+            for (let i = 0; i < orderSize; i++) {
+                let topping;
+                do {
+                    topping = toppings[Math.floor(Math.random() * toppings.length)];
+                } while (order.includes(topping));
+                order.push(topping);
+            }
+            return order;
+        }
 
-    function generateOrder() {
-        const randomToppingCount = Math.floor(Math.random() * 3) + 1; // Random number of toppings
-        order = [];
-        for (let i = 0; i < randomToppingCount; i++) {
-            const randomTopping = toppingsList[Math.floor(Math.random() * toppingsList.length)];
-            if (!order.includes(randomTopping)) {
-                order.push(randomTopping);
+        function addTopping(topping) {
+            if (!currentOrder.includes(topping)) {
+                alert(`You need to add ${currentOrder.join(', ')}`);
+                return;
+            }
+            const toppingElement = document.createElement('div');
+            toppingElement.className = `topping ${topping}`;
+            document.getElementById('pizza').appendChild(toppingElement);
+            currentOrder = currentOrder.filter(t => t !== topping);
+            if (currentOrder.length === 0) {
+                alert('All toppings added! Bake your pizza!');
             }
         }
-        alert(`New Order! Make a pizza with: ${order.join(', ')}`);
-    }
 
-    function drawPizza() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-        ctx.fillStyle = '#FFD700'; // Golden crust color
-        ctx.beginPath();
-        ctx.arc(pizzaBase.x, pizzaBase.y, pizzaBase.radius, 0, Math.PI * 2); // Draw pizza base
-        ctx.fill();
-
-        // Draw toppings
-        order.forEach(topping => {
-            drawTopping(topping);
-        });
-    }
-
-    function drawTopping(topping) {
-        ctx.fillStyle = topping === 'Pepperoni' ? 'red' :
-                        topping === 'Mushrooms' ? 'saddlebrown' :
-                        topping === 'Olives' ? 'black' :
-                        topping === 'Green Peppers' ? 'green' :
-                        topping === 'Pineapple' ? 'yellow' : 'white';
-
-        ctx.beginPath();
-        ctx.arc(pizzaBase.x + (Math.random() * 40 - 20), pizzaBase.y + (Math.random() * 40 - 20), 10, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    function gameLoop() {
-        if (timeLimit <= 0) {
-            endGame();
+        function bakePizza() {
+            if (currentOrder.length > 0) {
+                alert(`You still need to add ${currentOrder.join(', ')}`);
+            } else {
+                alert('Pizza is ready!');
+                score += 10;
+                document.getElementById('score').innerText = `Score: ${score}`;
+                startGame(); // Generate a new order
+            }
         }
-    }
-
-    function updateTime() {
-        timeLimit--;
-        if (timeLimit <= 0) {
-            clearInterval(countdown);
-            endGame();
-        }
-    }
-
-    function endGame() {
-        clearInterval(gameInterval);
-        clearInterval(countdown);
-        alert(`Game Over! Your score: ${score}`);
-        document.getElementById('menu').style.display = 'flex';
-        document.getElementById('gameCanvas').style.display = 'none';
-        document.getElementById('score').style.display = 'none';
-    }
-
-</script>
+    </script>
 
 </body>
 </html>
