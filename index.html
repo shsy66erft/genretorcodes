@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שאלון שבודק אם אתה הומו</title>
+    <title>Are You Gay Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +13,6 @@
             height: 100vh;
             margin: 0;
             background-color: #e0f7fa;
-            direction: rtl;
         }
         .question-container, .loading-container, .result-container, .name-container {
             display: none;
@@ -68,22 +67,22 @@
 <body>
 
     <div id="nameContainer" class="name-container active">
-        <h2>הזן את שמך</h2>
-        <input type="text" id="name" placeholder="כתוב את שמך...">
-        <button onclick="saveName()">הבא</button>
+        <h2>Enter your name</h2>
+        <input type="text" id="name" placeholder="Enter your name...">
+        <button onclick="saveName()">Next</button>
     </div>
 
     <div id="questionContainer" class="question-container">
-        <h2 id="question">שאלה 1: מה הצבע האהוב עליך?</h2>
-        <input type="text" id="answer" placeholder="כתוב את תשובתך...">
+        <h2 id="question">Question 1: What is your favorite color?</h2>
+        <input type="text" id="answer" placeholder="Enter your answer...">
         <div>
-            <button onclick="nextQuestion()">הבא</button>
-            <button onclick="skipQuestion()">דלג</button>
+            <button onclick="nextQuestion()">Next</button>
+            <button onclick="skipQuestion()">Skip</button>
         </div>
     </div>
 
     <div id="loadingContainer" class="loading-container">
-        <h2>מעבד את תשובותיך...</h2>
+        <h2>Processing your answers...</h2>
         <div class="loading-bar">
             <div id="loadingBarFill" class="loading-bar-fill">0%</div>
         </div>
@@ -95,17 +94,17 @@
 
     <script>
         const questions = [
-            "מה הצבע האהוב עליך?",
-            "מה המאכל האהוב עליך?",
-            "מה החיה האהובה עליך?",
-            "מה התחביב האהוב עליך?",
-            "מה הסרט האהוב עליך?",
-            "מה השיר האהוב עליך?",
-            "מה הספורט האהוב עליך?",
-            "מה העבודה החלומית שלך?",
-            "מה העונה האהובה עליך?",
-            "מה החג האהוב עליך?",
-            "מה הספר האהוב עליך?"
+            "What is your favorite color?",
+            "What is your favorite food?",
+            "What is your favorite animal?",
+            "What is your favorite hobby?",
+            "What is your favorite movie?",
+            "What is your favorite song?",
+            "What is your favorite sport?",
+            "What is your dream job?",
+            "What is your favorite season?",
+            "What is your favorite holiday?",
+            "What is your favorite book?"
         ];
 
         let currentQuestionIndex = 0;
@@ -126,7 +125,7 @@
             currentQuestionIndex++;
 
             if (currentQuestionIndex < questions.length) {
-                document.getElementById('question').innerText = `שאלה ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+                document.getElementById('question').innerText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
                 document.getElementById('answer').value = '';
             } else {
                 document.getElementById('questionContainer').classList.remove('active');
@@ -139,7 +138,7 @@
             currentQuestionIndex++;
 
             if (currentQuestionIndex < questions.length) {
-                document.getElementById('question').innerText = `שאלה ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+                document.getElementById('question').innerText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
                 document.getElementById('answer').value = '';
             } else {
                 document.getElementById('questionContainer').classList.remove('active');
@@ -166,8 +165,8 @@
 
         function showResult() {
             const randomResult = Math.random() < 0.5 ? 
-                `${userName}, לפי תשובותייך, אתה הומו.` : 
-                `${userName}, לפי החישובים נמצא כי אתה סטרייט. תשמן את עצמך אני מגיע.`;
+                `${userName}, based on your answers, you are gay.` : 
+                `${userName}, based on the calculations, you are straight. Get ready, I'm coming for you.`;
             document.getElementById('resultMessage').innerText = randomResult;
         }
     </script>
