@@ -16,6 +16,10 @@
             background-size: cover;
             background-position: center;
         }
+        h1 {
+            color: #d2691e;
+            margin-bottom: 20px;
+        }
         #pizza {
             width: 200px;
             height: 200px;
@@ -90,45 +94,67 @@
         audio {
             display: none;
         }
+        #mainMenu, #gameOver {
+            display: none;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        #mainMenu button, #gameOver button {
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
 
 <h1>Papa John's Ultimate Pizza Order Game</h1>
-<div id="orderDisplay"></div>
-<div id="score">Score: 0</div>
-<div id="highScore">High Score: 0</div>
-
-<div id="pizza"></div>
-
-<div id="toppings">
-    <button onclick="selectTopping('Pepperoni', 'red')">Pepperoni</button>
-    <button onclick="selectTopping('Mushrooms', 'saddlebrown')">Mushrooms</button>
-    <button onclick="selectTopping('Green Peppers', 'green')">Green Peppers</button>
-    <button onclick="selectTopping('Olives', 'black')">Olives</button>
-    <button onclick="selectTopping('Pineapple', 'gold')">Pineapple</button>
+<div id="mainMenu" class="menu">
+    <h2>Welcome to Papa John's!</h2>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="showInstructions()">Instructions</button>
 </div>
 
-<div id="powerUps">
-    <div class="powerUp" onclick="addTime()">+5 Seconds</div>
-    <div class="powerUp" onclick="freezeTimer()">Freeze Timer</div>
-    <div class="powerUp" onclick="extraPoints()">Extra Points</div>
+<div id="gameContainer" class="game-container">
+    <div id="orderDisplay"></div>
+    <div id="score">Score: 0</div>
+    <div id="highScore">High Score: 0</div>
+
+    <div id="pizza"></div>
+
+    <div id="toppings">
+        <button onclick="selectTopping('Pepperoni', 'red')">Pepperoni</button>
+        <button onclick="selectTopping('Mushrooms', 'saddlebrown')">Mushrooms</button>
+        <button onclick="selectTopping('Green Peppers', 'green')">Green Peppers</button>
+        <button onclick="selectTopping('Olives', 'black')">Olives</button>
+        <button onclick="selectTopping('Pineapple', 'gold')">Pineapple</button>
+    </div>
+
+    <div id="powerUps">
+        <div class="powerUp" onclick="addTime()">+5 Seconds</div>
+        <div class="powerUp" onclick="freezeTimer()">Freeze Timer</div>
+        <div class="powerUp" onclick="extraPoints()">Extra Points</div>
+    </div>
+
+    <button onclick="takeOrder()">Take Order</button>
+
+    <div id="timer">Time left: <span id="timeLeft">10</span> seconds</div>
+    <div id="result"></div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-funkyelement.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="orderCompleteSound">
+        <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wrongToppingSound">
+        <source src="https://www.soundjay.com/button/sounds/button-09.mp3" type="audio/mpeg">
+    </audio>
 </div>
 
-<button onclick="takeOrder()">Take Order</button>
-
-<div id="timer">Time left: <span id="timeLeft">10</span> seconds</div>
-<div id="result"></div>
-
-<audio id="backgroundMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-funkyelement.mp3" type="audio/mpeg">
-</audio>
-<audio id="orderCompleteSound">
-    <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
-</audio>
-<audio id="wrongToppingSound">
-    <source src="https://www.soundjay.com/button/sounds/button-09.mp3" type="audio/mpeg">
-</audio>
+<div id="gameOver">
+    <h2>Game Over!</h2>
+    <div id="finalScore"></div>
+    <button onclick="restartGame()">Restart Game</button>
+</div>
 
 <script>
     let order = [];
@@ -138,14 +164,43 @@
     let maxTime = 10; // Max time for each order
     let timeLeft;
     let isTimerFrozen = false;
+    let customerProfile;
 
-    // Start background music
-    document.getElementById("backgroundMusic").play();
+    const customerNames = ['Tom', 'Jerry', 'Spike', 'Tyke', 'Nibbles', 'Droopy'];
+    const customerFeedback = {
+        happy: ["Great job!", "Delicious!", "This is amazing!", "I'm impressed!"],
+        neutral: ["It's okay.", "Not bad.", "Could be better."],
+        unhappy: ["This is not what I wanted!", "I'm disappointed.", "Too cold!"]
+    };
 
+    // Start the game
+    function startGame() {
+        document.getElementById('mainMenu').style.display = 'none';
+        document.getElementById('gameContainer').style.display = 'block';
+        score = 0;
+        document.getElementById('score').innerText = `Score: ${score}`;
+        takeOrder();
+        document.getElementById("backgroundMusic").play();
+    }
+
+    // Show instructions
+    function showInstructions() {
+        alert("Welcome to Papa John's Ultimate Pizza Order Game! \n\n" +
+              "1. Take orders from customers and make their pizzas.\n" +
+              "2. Select the correct toppings before time runs out.\n" +
+              "3. You have power-ups to help you out!\n" +
+              "4. Try to get the highest score possible!\n");
+    }
+
+    // Take a new order
     function takeOrder() {
         const toppings = ['Pepperoni', 'Mushrooms', 'Green Peppers', 'Olives', 'Pineapple'];
         const randomToppingCount = Math.floor(Math.random() * 3) + 1; // Random number of toppings between 1 and 3
         order = [];
+        customerProfile = {
+            name: customerNames[Math.floor(Math.random() * customerNames.length)],
+            mood: 'neutral'
+        };
 
         for (let i = 0; i < randomToppingCount; i++) {
             const randomTopping = toppings[Math.floor(Math.random() * toppings.length)];
@@ -154,13 +209,14 @@
             }
         }
 
-        document.getElementById('orderDisplay').innerText = `Customer Order: ${order.join(', ')}`;
+        document.getElementById('orderDisplay').innerText = `${customerProfile.name} orders: ${order.join(', ')}`;
         document.getElementById('pizza').style.display = 'block';
         document.getElementById('pizza').innerHTML = ''; // Clear previous toppings
         document.getElementById('result').innerText = '';
         startTimer();
     }
 
+    // Select a topping
     function selectTopping(name, color) {
         if (order.includes(name)) {
             const topping = document.createElement('div');
@@ -170,53 +226,78 @@
             topping.style.height = '20px';
             topping.style.top = `${Math.random() * 80}%`;
             topping.style.left = `${Math.random() * 80}%`;
-            topping.innerText = name;
+            topping.style.display = 'block';
+            topping.style.opacity = '1';
             document.getElementById('pizza').appendChild(topping);
 
-            // Show topping with fade-in effect
-            setTimeout(() => {
-                topping.style.display = 'block';
-                topping.style.opacity = 1;
-            }, 100);
-            
-            order.splice(order.indexOf(name), 1); // Remove the topping from the order
-
-            if (order.length === 0) {
-                clearInterval(timerInterval);
-                score += 10; // Increment score for successful order
-                document.getElementById('score').innerText = `Score: ${score}`;
-                document.getElementById('orderCompleteSound').play();
-                document.getElementById('result').innerText = "You've completed the order! Pizza is ready!";
-                if (score > highScore) {
-                    highScore = score;
-                    document.getElementById('highScore').innerText = `High Score: ${highScore}`;
+            // Check if the topping is correct
+            const index = order.indexOf(name);
+            if (index > -1) {
+                order.splice(index, 1);
+                if (order.length === 0) {
+                    completeOrder();
                 }
-                setTimeout(takeOrder, 2000); // Take another order after 2 seconds
             }
         } else {
             document.getElementById('wrongToppingSound').play();
-            alert(`${name} is not part of the order!`);
+            alert("Wrong topping! Try again.");
         }
     }
 
+    // Complete the order
+    function completeOrder() {
+        clearInterval(timerInterval);
+        score += 10; // Increment score
+        document.getElementById('score').innerText = `Score: ${score}`;
+        document.getElementById('orderCompleteSound').play();
+        customerProfile.mood = 'happy'; // Customer mood after completing order
+        document.getElementById('result').innerText = getFeedback(customerProfile.mood);
+        takeOrder(); // Take a new order after completing
+    }
+
+    // Start the timer
     function startTimer() {
         timeLeft = maxTime;
         document.getElementById('timeLeft').innerText = timeLeft;
 
-        timerInterval = setInterval(function() {
+        timerInterval = setInterval(() => {
             if (!isTimerFrozen) {
                 timeLeft--;
-            }
-            document.getElementById('timeLeft').innerText = timeLeft;
-
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById('result').innerText = "Time's up! You didn't complete the order in time.";
-                score -= 5; // Deduct score for missed order
-                document.getElementById('score').innerText = `Score: ${score}`;
-                setTimeout(takeOrder, 2000); // Take another order after 2 seconds
+                document.getElementById('timeLeft').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    gameOver();
+                }
             }
         }, 1000);
+    }
+
+    // Handle game over
+    function gameOver() {
+        clearInterval(timerInterval);
+        document.getElementById('gameContainer').style.display = 'none';
+        document.getElementById('gameOver').style.display = 'block';
+        document.getElementById('finalScore').innerText = `Final Score: ${score}`;
+        document.getElementById("backgroundMusic").pause();
+        if (score > highScore) {
+            highScore = score;
+            document.getElementById('highScore').innerText = `High Score: ${highScore}`;
+        }
+    }
+
+    // Restart the game
+    function restartGame() {
+        document.getElementById('gameOver').style.display = 'none';
+        startGame();
+    }
+
+    function getFeedback(mood) {
+        if (mood === 'happy') {
+            return customerFeedback.happy[Math.floor(Math.random() * customerFeedback.happy.length)];
+        } else if (mood === 'neutral') {
+            return customerFeedback.neutral[Math.floor(Math.random() * customerFeedback.neutral.length)];
+        } else {
+            return customerFeedback.unhappy[Math.floor(Math.random() * customerFeedback.unhappy.length)];
+        }
     }
 
     function addTime() {
