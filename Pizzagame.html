@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papa John's Ultimate Pizza Order Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            background-image: url('https://www.pngall.com/wp-content/uploads/5/Pizza-PNG-Image.png');
+            background-size: cover;
+            background-position: center;
+        }
+        #pizza {
+            width: 200px;
+            height: 200px;
+            border: 5px solid #d2691e;
+            border-radius: 50%;
+            background-color: #fff8dc;
+            position: relative;
+            margin: 20px auto;
+            display: none;
+            overflow: hidden;
+            transition: transform 0.5s;
+        }
+        .topping {
+            position: absolute;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #toppings {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #orderDisplay {
+            margin: 20px 0;
+            font-size: 20px;
+        }
+        #timer {
+            font-size: 20px;
+            color: red;
+            margin-top: 20px;
+        }
+        #score {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        #result {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #d9534f;
+        }
+        #powerUps {
+            margin: 20px 0;
+        }
+        .powerUp {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #ffc107;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .powerUp:hover {
+            background-color: #e0a800;
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Papa John's Ultimate Pizza Order Game</h1>
+<div id="orderDisplay"></div>
+<div id="score">Score: 0</div>
+<div id="highScore">High Score: 0</div>
+
+<div id="pizza"></div>
+
+<div id="toppings">
+    <button onclick="selectTopping('Pepperoni', 'red')">Pepperoni</button>
+    <button onclick="selectTopping('Mushrooms', 'saddlebrown')">Mushrooms</button>
+    <button onclick="selectTopping('Green Peppers', 'green')">Green Peppers</button>
+    <button onclick="selectTopping('Olives', 'black')">Olives</button>
+    <button onclick="selectTopping('Pineapple', 'gold')">Pineapple</button>
+</div>
+
+<div id="powerUps">
+    <div class="powerUp" onclick="addTime()">+5 Seconds</div>
+    <div class="powerUp" onclick="freezeTimer()">Freeze Timer</div>
+    <div class="powerUp" onclick="extraPoints()">Extra Points</div>
+</div>
+
+<button onclick="takeOrder()">Take Order</button>
+
+<div id="timer">Time left: <span id="timeLeft">10</span> seconds</div>
+<div id="result"></div>
+
+<audio id="backgroundMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-funkyelement.mp3" type="audio/mpeg">
+</audio>
+<audio id="orderCompleteSound">
+    <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
+</audio>
+<audio id="wrongToppingSound">
+    <source src="https://www.soundjay.com/button/sounds/button-09.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    let order = [];
+    let score = 0;
+    let highScore = 0;
+    let timerInterval;
+    let maxTime = 10; // Max time for each order
+    let timeLeft;
+    let isTimerFrozen = false;
+
+    // Start background music
+    document.getElementById("backgroundMusic").play();
+
+    function takeOrder() {
+        const toppings = ['Pepperoni', 'Mushrooms', 'Green Peppers', 'Olives', 'Pineapple'];
+        const randomToppingCount = Math.floor(Math.random() * 3) + 1; // Random number of toppings between 1 and 3
+        order = [];
+
+        for (let i = 0; i < randomToppingCount; i++) {
+            const randomTopping = toppings[Math.floor(Math.random() * toppings.length)];
+            if (!order.includes(randomTopping)) {
+                order.push(randomTopping);
+            }
+        }
+
+        document.getElementById('orderDisplay').innerText = `Customer Order: ${order.join(', ')}`;
+        document.getElementById('pizza').style.display = 'block';
+        document.getElementById('pizza').innerHTML = ''; // Clear previous toppings
+        document.getElementById('result').innerText = '';
+        startTimer();
+    }
+
+    function selectTopping(name, color) {
+        if (order.includes(name)) {
+            const topping = document.createElement('div');
+            topping.className = 'topping';
+            topping.style.backgroundColor = color;
+            topping.style.width = '20px';
+            topping.style.height = '20px';
+            topping.style.top = `${Math.random() * 80}%`;
+            topping.style.left = `${Math.random() * 80}%`;
+            topping.innerText = name;
+            document.getElementById('pizza').appendChild(topping);
+
+            // Show topping with fade-in effect
+            setTimeout(() => {
+                topping.style.display = 'block';
+                topping.style.opacity = 1;
+            }, 100);
+            
+            order.splice(order.indexOf(name), 1); // Remove the topping from the order
+
+            if (order.length === 0) {
+                clearInterval(timerInterval);
+                score += 10; // Increment score for successful order
+                document.getElementById('score').innerText = `Score: ${score}`;
+                document.getElementById('orderCompleteSound').play();
+                document.getElementById('result').innerText = "You've completed the order! Pizza is ready!";
+                if (score > highScore) {
+                    highScore = score;
+                    document.getElementById('highScore').innerText = `High Score: ${highScore}`;
+                }
+                setTimeout(takeOrder, 2000); // Take another order after 2 seconds
+            }
+        } else {
+            document.getElementById('wrongToppingSound').play();
+            alert(`${name} is not part of the order!`);
+        }
+    }
+
+    function startTimer() {
+        timeLeft = maxTime;
+        document.getElementById('timeLeft').innerText = timeLeft;
+
+        timerInterval = setInterval(function() {
+            if (!isTimerFrozen) {
+                timeLeft--;
+            }
+            document.getElementById('timeLeft').innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('result').innerText = "Time's up! You didn't complete the order in time.";
+                score -= 5; // Deduct score for missed order
+                document.getElementById('score').innerText = `Score: ${score}`;
+                setTimeout(takeOrder, 2000); // Take another order after 2 seconds
+            }
+        }, 1000);
+    }
+
+    function addTime() {
+        timeLeft += 5;
+        document.getElementById('timeLeft').innerText = timeLeft;
+        alert("Added 5 seconds to your timer!");
+    }
+
+    function freezeTimer() {
+        isTimerFrozen = !isTimerFrozen;
+        alert(isTimerFrozen ? "Timer is frozen!" : "Timer is resumed!");
+    }
+
+    function extraPoints() {
+        score += 5;
+        document.getElementById('score').innerText = `Score: ${score}`;
+        alert("You received extra points!");
+    }
+
+    // Random event simulation
+    setInterval(() => {
+        if (Math.random() < 0.2) {
+            alert("A delivery truck zoomed by! Focus on your order!");
+        }
+    }, 3000); // Random event every 3 seconds
+
+</script>
+
+</body>
+</html>
