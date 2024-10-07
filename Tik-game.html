@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Tac-Toe</title>
+    <title>Tic-Tac-Toe with Bot Simulation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,11 +56,26 @@
         #shop h3 {
             margin: 0;
         }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #004d40;
+        }
     </style>
 </head>
 <body>
 
-<div id="status">Player 1's turn (X)</div>
+<div id="status">Choose mode: Player vs Player or Player vs Bot</div>
+<button onclick="startGame('playerVsPlayer')">Player vs Player</button>
+<button onclick="startGame('playerVsBot')">Player vs Bot</button>
 <div id="board"></div>
 
 <div id="shop">
@@ -70,8 +85,8 @@
     <button onclick="buyColor('O')">Buy O Color</button>
 </div>
 
-<button id="toggleShopBtn">Toggle Shop</button>
-<button onclick="startNewGame()">New Game</button>
+<button id="toggleShopBtn" style="display:none;">Toggle Shop</button>
+<button onclick="startNewGame()" style="display:none;">New Game</button>
 
 <script>
     const boardElement = document.getElementById('board');
@@ -85,11 +100,7 @@
     let coins = 0;
     let xColor = 'white';
     let oColor = 'white';
-    
-    toggleShopBtn.onclick = () => {
-        const shop = document.getElementById('shop');
-        shop.style.display = shop.style.display === 'none' ? 'block' : 'none';
-    };
+    let botThinkingTime = 2000; // Time for bot to think in milliseconds
 
     // Initialize the game board
     function initBoard() {
@@ -105,7 +116,7 @@
     }
 
     function handleCellClick(index) {
-        if (board[index] !== '' || checkWinner() || isBotEnabled) return;
+        if (board[index] !== '' || checkWinner()) return;
         
         board[index] = currentPlayer;
         renderBoard();
@@ -113,16 +124,17 @@
         const winner = checkWinner();
         if (winner) {
             statusElement.innerText = `${winner} wins!`;
-            if (winner === 'O' && isBotEnabled) coins += 15; // Bot win
-            updateCoins();
+            updateCoins(winner);
             return;
         }
         
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        statusElement.innerText = `Player ${currentPlayer === 'X' ? '1' : '2'}'s turn (${currentPlayer})`;
-        
-        if (isBotEnabled) {
-            setTimeout(botMove, 500);
+        if (isBotEnabled && currentPlayer === 'X') {
+            currentPlayer = 'O';
+            statusElement.innerText = `Bot's turn (O)`;
+            setTimeout(botMove, botThinkingTime); // Simulate thinking time for the bot
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            statusElement.innerText = `Player ${currentPlayer === 'X' ? '1' : '2'}'s turn (${currentPlayer})`;
         }
     }
 
@@ -136,8 +148,7 @@
             const winner = checkWinner();
             if (winner) {
                 statusElement.innerText = `${winner} wins!`;
-                if (winner === 'O') coins += 15; // Bot win
-                updateCoins();
+                updateCoins(winner);
             } else {
                 currentPlayer = 'X';
                 statusElement.innerText = `Player 1's turn (X)`;
@@ -174,11 +185,28 @@
         });
     }
 
+    function startGame(mode) {
+        isBotEnabled = mode === 'playerVsBot';
+        currentPlayer = 'X';
+        statusElement.innerText = `Player 1's turn (X)`;
+        board = ['', '', '', '', '', '', '', '', ''];
+        initBoard();
+        document.getElementById('shop').style.display = 'block';
+        toggleShopBtn.style.display = 'block';
+    }
+
     function startNewGame() {
         board = ['', '', '', '', '', '', '', '', ''];
         currentPlayer = 'X';
         statusElement.innerText = `Player 1's turn (X)`;
         initBoard();
+    }
+
+    function updateCoins(winner) {
+        if (winner === 'O' && isBotEnabled) {
+            coins += 15; // Bot win
+        }
+        coinCountElement.innerText = coins;
     }
 
     function buyColor(type) {
@@ -194,10 +222,6 @@
         }
         
         coins--;
-        updateCoins();
-    }
-
-    function updateCoins() {
         coinCountElement.innerText = coins;
     }
 
@@ -206,4 +230,4 @@
 </script>
 
 </body>
-</html>p
+</html>
