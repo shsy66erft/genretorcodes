@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Reading Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .hidden {
+            display: none;
+        }
+        #loadingBar {
+            width: 0%;
+            height: 20px;
+            background-color: #4caf50;
+            margin: 20px 0;
+            transition: width 2s;
+        }
+        #loadingContainer {
+            width: 100%;
+            max-width: 300px;
+            height: 20px;
+            border: 1px solid #ccc;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mind Reading Game</h1>
+    <div id="step1">
+        <p>Choose a number:</p>
+        <input type="number" id="chosenNumber" placeholder="Enter a number">
+        <br><br>
+        <button onclick="startMindReading()">Read My Mind</button>
+    </div>
+
+    <div id="step2" class="hidden">
+        <p>Reading your mind...</p>
+        <div id="loadingContainer">
+            <div id="loadingBar"></div>
+        </div>
+    </div>
+
+    <div id="step3" class="hidden">
+        <h2>The number you chose is:</h2>
+        <p id="revealedNumber"></p>
+        <button onclick="restart()">Try Again</button>
+    </div>
+
+    <script>
+        function startMindReading() {
+            const chosenNumber = document.getElementById('chosenNumber').value;
+            if (chosenNumber === "") {
+                alert("Please choose a number!");
+                return;
+            }
+
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+
+            // Simulate the "reading your mind" process
+            let loadingBar = document.getElementById('loadingBar');
+            loadingBar.style.width = '100%'; // Simulate loading bar
+
+            setTimeout(() => {
+                document.getElementById('step2').classList.add('hidden');
+                document.getElementById('step3').classList.remove('hidden');
+                document.getElementById('revealedNumber').textContent = chosenNumber;
+            }, 2000); // Simulate 2 seconds loading time
+        }
+
+        function restart() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('chosenNumber').value = "";
+            document.getElementById('loadingBar').style.width = '0%'; // Reset loading bar
+        }
+    </script>
+
+</body>
+</html>
