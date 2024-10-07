@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hungry Cube Game</title>
+    <title>Color Cube Solver Game</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
+            background-color: #282c34;
         }
         canvas {
             display: block;
@@ -18,6 +19,10 @@
             left: 10px;
             color: white;
             font-family: Arial, sans-serif;
+            z-index: 10;
+        }
+        #status {
+            margin-bottom: 10px;
         }
         #shop {
             display: none;
@@ -33,12 +38,12 @@
 <body>
 
 <div id="ui">
-    <div id="level">Level: 1</div>
-    <div id="coins">Coins: 0</div>
+    <div id="status">Level: 1 | Coins: 0</div>
     <button onclick="toggleShop()">Shop</button>
     <div id="shop">
         <h3>Shop</h3>
-        <button onclick="buyUpgrade()">Buy Upgrade (10 coins)</button>
+        <button onclick="skipLevel()">Skip Level (20 coins)</button>
+        <button onclick="addCoins()">Add 5 Coins (5 coins)</button>
         <div id="upgradeMessage"></div>
     </div>
 </div>
@@ -50,38 +55,18 @@
     let previousMousePosition = { x: 0, y: 0 };
     let level = 1;
     let coins = 0;
-    let upgradePurchased = false;
+    let cubeColors = [
+        0xff0000, // Red
+        0x00ff00, // Green
+        0x0000ff, // Blue
+        0xffff00, // Yellow
+        0xffa500, // Orange
+        0xffffff  // White
+    ];
 
-    // Load saved data from cookies
-    function loadGameData() {
-        const savedLevel = getCookie("level");
-        const savedCoins = getCookie("coins");
-
-        if (savedLevel) {
-            level = parseInt(savedLevel);
-        }
-
-        if (savedCoins) {
-            coins = parseInt(savedCoins);
-        }
-    }
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    }
-
-    function setCookie(name, value, days) {
-        const expires = new Date(Date.now() + days * 864e5).toUTCString();
-        document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
-    }
+    let targetColors = [...cubeColors]; // Track target colors for solving
 
     function init() {
-        // Load saved data
-        loadGameData();
-        
         // Create scene
         scene = new THREE.Scene();
         
@@ -94,11 +79,8 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Create cube
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x0077ff });
-        cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        // Create cube with random colors
+        createCube();
 
         // Event listeners
         window.addEventListener('mousedown', onMouseDown, false);
@@ -112,34 +94,24 @@
         // Start the game loop
         animate();
         updateUI();
-        setInterval(collectCoins, 3000); // Collect coins every 3 seconds
     }
 
-    function collectCoins() {
-        if (level <= 5) {
-            coins += Math.floor(Math.random() * 5) + 1; // Random coins between 1 and 5
-            updateUI();
-        } else {
-            levelUp();
-        }
+    function createCube() {
+        const geometry = new THREE.BoxGeometry();
+        const materials = cubeColors.map(color => new THREE.MeshBasicMaterial({ color }));
+        cube = new THREE.Mesh(geometry, materials);
+        scene.add(cube);
+        randomizeCubeColors();
     }
 
-    function levelUp() {
-        level++;
-        if (level <= 10) {
-            alert(`Congratulations! You leveled up to Level ${level}!`);
-        } else {
-            alert("You've reached the maximum level!");
-        }
-        updateUI();
+    function randomizeCubeColors() {
+        // Randomly shuffle the target colors for the cube
+        targetColors = [...cubeColors].sort(() => Math.random() - 0.5);
+        cube.material = new THREE.MeshFaceMaterial(targetColors.map(color => new THREE.MeshBasicMaterial({ color })));
     }
 
     function updateUI() {
-        document.getElementById('level').innerText = `Level: ${level}`;
-        document.getElementById('coins').innerText = `Coins: ${coins}`;
-        // Save game data in cookies
-        setCookie("level", level, 7);
-        setCookie("coins", coins, 7);
+        document.getElementById('status').innerText = `Level: ${level} | Coins: ${coins}`;
     }
 
     function toggleShop() {
@@ -147,18 +119,38 @@
         shop.style.display = shop.style.display === 'none' ? 'block' : 'none';
     }
 
-    function buyUpgrade() {
-        if (coins >= 10 && !upgradePurchased) {
-            coins -= 10;
-            upgradePurchased = true;
-            cube.material.color.set(0xff0000); // Change cube color to red as an upgrade
-            document.getElementById('upgradeMessage').innerText = 'Upgrade Purchased!';
-        } else if (upgradePurchased) {
-            document.getElementById('upgradeMessage').innerText = 'Upgrade already purchased!';
+    function skipLevel() {
+        if (coins >= 20) {
+            coins -= 20; // Deduct coins for skipping level
+            level++; // Move to the next level
+            randomizeCubeColors(); // Randomize the colors for the new level
+            updateUI();
+            document.getElementById('upgradeMessage').innerText = 'Skipped to the next level!';
         } else {
             document.getElementById('upgradeMessage').innerText = 'Not enough coins!';
         }
-        updateUI();
+    }
+
+    function addCoins() {
+        if (coins >= 5) {
+            coins -= 5; // Deduct coins to add coins
+            coins += 5; // Add 5 more coins
+            updateUI();
+            document.getElementById('upgradeMessage').innerText = 'Added 5 coins!';
+        } else {
+            document.getElementById('upgradeMessage').innerText = 'Not enough coins!';
+        }
+    }
+
+    function checkCubeSolved() {
+        const solved = targetColors.every((color, index) => color === cube.material.materials[index].color.getHex());
+        if (solved) {
+            level++;
+            coins += 5;
+            alert(`Congratulations! You solved the cube! Level: ${level}`);
+            randomizeCubeColors();
+            updateUI();
+        }
     }
 
     function onMouseDown(event) {
@@ -183,6 +175,7 @@
 
     function onMouseUp() {
         isDragging = false;
+        checkCubeSolved(); // Check if the cube is solved after dragging
     }
 
     function onTouchStart(event) {
@@ -207,6 +200,7 @@
 
     function onTouchEnd() {
         isDragging = false;
+        checkCubeSolved(); // Check if the cube is solved after dragging
     }
 
     function onWindowResize() {
