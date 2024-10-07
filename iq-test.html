@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>בדיקת IQ</title>
+    <title>IQ Test</title>
     <link rel="icon" href="moach.png" type="image/x-icon">
 
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            direction: rtl;
         }
         .container {
             width: 60%;
@@ -39,66 +38,66 @@
 </head>
 <body>
     <div class="container">
-        <h1>בדיקת IQ</h1>
+        <h1>IQ Test</h1>
         <div id="userInfo">
-            <label for="name">שם:</label>
+            <label for="name">Name:</label>
             <input type="text" id="name"><br><br>
-            <label for="age">גיל:</label>
+            <label for="age">Age:</label>
             <input type="number" id="age"><br><br>
-            <button onclick="startQuiz()">התחל שאלון</button>
+            <button onclick="startQuiz()">Start Quiz</button>
         </div>
         
         <form id="quizForm" style="display:none;">
             <div class="question">
-                <label for="q1">1. מהו המספר הבא בסדרה: 2, 4, 6, 8, ...?</label><br>
+                <label for="q1">1. What is the next number in the sequence: 2, 4, 6, 8, ...?</label><br>
                 <input type="text" id="q1">
             </div>
             <div class="question">
-                <label for="q2">2. מהי המילה ההפוכה ל'קל'?</label><br>
+                <label for="q2">2. What is the opposite of 'light'?</label><br>
                 <input type="text" id="q2">
             </div>
             <div class="question">
-                <label for="q3">3. איזו מילה לא שייכת: תפוח, בננה, גזר, תפוז?</label><br>
+                <label for="q3">3. Which word doesn't belong: apple, banana, carrot, orange?</label><br>
                 <input type="text" id="q3">
             </div>
             <div class="question">
-                <label for="q4">4. כמה זוויות יש למשולש?</label><br>
+                <label for="q4">4. How many angles does a triangle have?</label><br>
                 <input type="text" id="q4">
             </div>
             <div class="question">
-                <label for="q5">5. מהי המילה המתחרזת עם 'שמש'?</label><br>
+                <label for="q5">5. What word rhymes with 'sun'?</label><br>
                 <input type="text" id="q5">
             </div>
             <div class="question">
-                <label for="q6">6. מהי התשובה ל-2+3?</label><br>
+                <label for="q6">6. What is the answer to 2 + 3?</label><br>
                 <input type="text" id="q6">
             </div>
             <div class="question">
-g                <label for="q14">14. מהי הצורה הגיאומטרית שיש לה שלושה קווים ישרים?</label><br>
+                <label for="q14">14. What geometric shape has three straight lines?</label><br>
                 <input type="text" id="q14">
             </div>
             <div class="question">
-                <label for="q15">15. איזה יום מגיע אחרי יום רביעי?</label><br>
+                <label for="q15">15. What day comes after Wednesday?</label><br>
                 <input type="text" id="q15">
             </div>
             <div class="question">
-                <label for="q16">16. איזו מילה לא מתאימה: כחול, ירוק, רץ, אדום?</label><br>
+                <label for="q16">16. Which word doesn't belong: blue, green, running, red?</label><br>
                 <input type="text" id="q16">
             </div>
             <div class="question">
-                <label for="q17">17. מהו חמש פחות שתיים?</label><br>
+                <label for="q17">17. What is five minus two?</label><br>
                 <input type="text" id="q17">
             </div>
             <div class="question">
-                <label for="q18">18. איזו מילה לא שייכת: חתול, כלב, מכונית, סוס?</label><br>
+                <label for="q18">18. Which word doesn't belong: cat, dog, car, horse?</label><br>
                 <input type="text" id="q18">
             </div>
-            <button type="button" id="submitBtn" onclick="submitQuiz()">שלח</button>
+            <button type="button" id="submitBtn" onclick="submitQuiz()">Submit</button>
         </form>
 
         <div class="loading">
             <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading..." width="50"><br>
-            מעבד תוצאות...
+            Processing results...
         </div>
 
         <div id="result" style="display:none;">
@@ -119,9 +118,9 @@ g                <label for="q14">14. מהי הצורה הגיאומטרית ש�
             setTimeout(function() {
                 document.querySelector('.loading').style.display = 'none';
                 const name = document.getElementById('name').value;
-                document.getElementById('iqResult').innerText = `וואו, ${name}, כל חיי לא ראיתי מטומטם ממך!`;
+                document.getElementById('iqResult').innerText = `Wow, ${name}, I've never seen someone as dumb as you in my life!`;
                 document.getElementById('result').style.display = 'block';
-            }, 3000); // השהה ל-3 שניות לפני הצגת התוצאה
+            }, 3000); // Pause for 3 seconds before showing the result
         }
     </script>
 </body>
