@@ -85,7 +85,7 @@
     <button onclick="buyColor('O')">Buy O Color</button>
 </div>
 
-<button id="toggleShopBtn" style="display:none;">Toggle Shop</button>
+<button id="toggleShopBtn" style="display:none;" onclick="toggleShop()">Toggle Shop</button>
 <button onclick="startNewGame()" style="display:none;">New Game</button>
 
 <script>
@@ -101,6 +101,23 @@
     let xColor = 'white';
     let oColor = 'white';
     let botThinkingTime = 2000; // Time for bot to think in milliseconds
+
+    // Load coins from cookies
+    function loadCoins() {
+        const cookies = document.cookie.split(';');
+        cookies.forEach(cookie => {
+            const [name, value] = cookie.split('=');
+            if (name.trim() === 'coins') {
+                coins = parseInt(value) || 0;
+            }
+        });
+        coinCountElement.innerText = coins;
+    }
+
+    // Save coins to cookies
+    function saveCoins() {
+        document.cookie = `coins=${coins}; path=/;`;
+    }
 
     // Initialize the game board
     function initBoard() {
@@ -123,8 +140,8 @@
         
         const winner = checkWinner();
         if (winner) {
-            statusElement.innerText = `${winner} wins!`;
             updateCoins(winner);
+            statusElement.innerText = `${winner} wins!`;
             return;
         }
         
@@ -147,8 +164,8 @@
             
             const winner = checkWinner();
             if (winner) {
-                statusElement.innerText = `${winner} wins!`;
                 updateCoins(winner);
+                statusElement.innerText = `${winner} wins!`;
             } else {
                 currentPlayer = 'X';
                 statusElement.innerText = `Player 1's turn (X)`;
@@ -203,10 +220,13 @@
     }
 
     function updateCoins(winner) {
-        if (winner === 'O' && isBotEnabled) {
-            coins += 15; // Bot win
+        if (winner === 'X') {
+            coins += 10; // Player X wins
+        } else if (winner === 'O' && isBotEnabled) {
+            // No coins for player if bot wins
         }
         coinCountElement.innerText = coins;
+        saveCoins();
     }
 
     function buyColor(type) {
@@ -223,9 +243,16 @@
         
         coins--;
         coinCountElement.innerText = coins;
+        saveCoins();
     }
 
-    // Start the game
+    function toggleShop() {
+        const shop = document.getElementById('shop');
+        shop.style.display = shop.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Load coins on startup
+    loadCoins();
     initBoard();
 </script>
 
