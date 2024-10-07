@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's Your Spirit Animal?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>What's Your Spirit Animal?</h1>
+    <p>Answer a few questions and find out!</p>
+    <button onclick="startQuiz()">Start Quiz</button>
+    <div id="questionContainer" style="display: none;">
+        <h2 id="question"></h2>
+        <input type="text" id="answer" placeholder="Enter your answer...">
+        <div>
+            <button onclick="nextQuestion()">Next</button>
+        </div>
+    </div>
+    <div id="resultContainer" style="display: none;">
+        <h2 id="resultMessage"></h2>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        "What's your favorite time of day?",
+        "What's your favorite type of weather?",
+        "Do you like to be alone or in groups?",
+        "What's your ideal weekend activity?"
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function startQuiz() {
+        document.querySelector("button").style.display = "none";
+        document.getElementById('questionContainer').style.display = 'block';
+        document.getElementById('question').innerText = `Question 1: ${questions[currentQuestionIndex]}`;
+    }
+
+    function nextQuestion() {
+        const answer = document.getElementById('answer').value;
+        if (answer.trim() === '') return;
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            document.getElementById('question').innerText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+            document.getElementById('answer').value = '';
+        } else {
+            document.getElementById('questionContainer').style.display = 'none';
+            showResult();
+        }
+    }
+
+    function showResult() {
+        const animals = ["Lion", "Wolf", "Dolphin", "Eagle", "Bear"];
+        const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+        document.getElementById('resultMessage').innerText = `Your spirit animal is: ${randomAnimal}`;
+        document.getElementById('resultContainer').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
