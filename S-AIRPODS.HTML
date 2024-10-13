@@ -1,96 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="LOGO.PNG" type="image/png">
-    <meta name="S-AirPods" content="אצלנו תמצאו את המוצרם הכי איכותיים במחיר לכל כיס">
-
+    <!-- Favicon -->
+    <link rel="icon" href="LOGO.PNG" type="image/png" sizes="32x32">
+    
+    <meta name="S-AirPods" content="אצלנו תמצאו את המוצרים הכי איכותיים במחיר לכל כיס">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Reproduction Items</title>
+
     <style>
+        /* עיצוב כללי */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             text-align: center;
-            background-color: #f7f7f7;
+            background-color: #f0f0f5;
             margin: 0;
             padding: 0;
-        }
-        h1 {
-            margin-top: 20px;
             color: #333;
         }
-        .product {
-            border: 1px solid #ccc;
-            margin: 20px auto;
+
+        header {
+            background-color: #111;
             padding: 20px;
-            width: 300px;
+            margin-bottom: 40px;
+        }
+
+        header img {
+            display: block;
+            margin: 0 auto;
+            max-width: 180px;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #444;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        /* עיצוב רשת המוצרים */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product {
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        .product h2 {
-            color: #555;
+
+        .product:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
         }
+
         .product img {
-            max-width: 100%;
+            width: 100%;
             height: auto;
-            margin-bottom: 15px;
+            transition: all 0.3s ease;
         }
-        .unavailable { 
+
+        .product:hover img {
+            transform: scale(1.1);
+        }
+
+        .product h2 {
+            font-size: 24px;
+            color: #222;
+            margin: 20px 0;
+            padding: 0 15px;
+        }
+
+        .product p {
+            font-size: 18px;
+            color: #555;
+            padding: 0 15px;
+            margin: 10px 0;
+        }
+
+        .available {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .unavailable {
             color: red;
             text-decoration: line-through;
+            font-weight: bold;
         }
-        .available {
-            color: green;
-        }
+
+        /* כפתור קנייה */
         .buy-now {
             display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #28a745;
+            margin: 20px 0;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
             color: white;
+            font-size: 18px;
+            text-transform: uppercase;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 50px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
+
         .buy-now:hover {
-            background-color: #218838;
+            background: linear-gradient(135deg, #fda085 0%, #f6d365 100%);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #111;
+            color: white;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Airpods-S</h1>
+    <!-- לוגו בראש הדף -->
+    <header>
+        <img src="LOGO.PNG" alt="Airpods-S Logo">
+    </header>
 
-    <!-- AirPods 3 Pro - Available -->
-    <div class="product">
-        <img src="PRU1.PNG" alt="AirPods 3 Pro">
-        <h2>AirPods 3 Pro</h2>
-        <p class="available">Price: 450₪ + Delivery</p>
-        <a class="buy-now" href="https://wa.me/972504882095">Buy Now</a>
+    <h1>AirPods-S</h1>
+
+    <!-- רשת המוצרים -->
+    <div class="products-grid">
+        <!-- AirPods 3 Pro - זמין -->
+        <div class="product">
+            <img src="PRU1.PNG" alt="AirPods 3 Pro">
+            <h2>AirPods 2 Pro</h2>
+            <p class="available">Price: 450₪ + Delivery</p>
+            <a class="buy-now" href="https://wa.me/972504882095">Buy Now</a>
+        </div>
+
+        <!-- AirPods 4 - יהיה זמין ב-29/11/2024 -->
+        <div class="product">
+            <img src="PRU2.PNG" alt="AirPods 4">
+            <h2>AirPods 4</h2>
+            <p class="available">יהיה זמין: 29/11/2024</p>
+            <a class="buy-now" href="https://wa.me/972504882095">Pre-order Now</a>
+        </div>
+
+        <!-- Apple Watch - לא זמין -->
+        <div class="product">
+            <img src="PRU3.PNG" alt="Apple Watch SE">
+            <h2>Apple Watch SE</h2>
+            <p class="unavailable">המוצר לא במלאי</p>
+        </div>
+
+        <!-- iPhone Charger - לא זמין -->
+        <div class="product">
+            <img src="PRU4.PNG" alt="מטען אייפון 20W">
+            <h2>מטען אייפון 20W</h2>
+            <p class="unavailable">לא במלאי</p>
+        </div>
     </div>
 
-    <!-- AirPods 4 - Available on 29/11/2  02J4 -->
-    <div class="product">
-        <img src="PRU2.PNG" alt="AirPods 4">
-        <h2>AirPods 4</h2>
-        <p class="available">יהיה זמין: 29/11/2024</p>
-        <a class="buy-now" href="https://wa.me/972504882095">הזמנה מוקדמת</a>
-
-    </div>
-
-    <!-- Apple Watch (Unavailable) -->
-    <div class="product">
-        <img src="PRU3.PNG" alt="Apple Watch SE">
-        <h2>Apple Watch SE</h2>
-        <p class="unavailable">המוצר לא במלאי</p>
-    </div>
-
-
-    <div class="product">
-        <img src="pru4.png" alt="מטען אייפון 20W">
-        <h2>מטען אייפון 20W</h2>
-        <p class="unavailable">לא במלאי</p>
-    </div>
-
+    <!-- תחתית -->
+    <footer>
+        <p>© 2024 AirPods-S - כל הזכויות שמורות</p>
+    </footer>
 
 </body>
 </html>
