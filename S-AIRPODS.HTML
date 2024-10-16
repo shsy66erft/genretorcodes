@@ -1,240 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Favicon -->
-    <link rel="icon" href="LOGO.PNG" type="image/png" sizes="32x32">
-    
-    <meta name="S-AirPods" content="אצלנו תמצאו את המוצרים הכי איכותיים במחיר לכל כיס">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Reproduction Items</title>
-
     <style>
-        /* עיצוב כללי */
-        body {
-            font-family: 'Montserrat', sans-serif;
-            text-align: center;
-            background-color: #f0f0f5;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        header {
-            background-color: #fff;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header img {
-            max-width: 120px;
-            margin-left: 20px;
-        }
-
-        header .brand {
-            font-size: 28px;
-            font-weight: 700;
-            margin-right: 20px;
-        }
-
-        /* תפריט ניווט */
-        nav {
-            margin: 20px 0;
-        }
-
-        nav a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: #444;
-            font-size: 18px;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #007BFF;
-        }
-
-        h1 {
-            font-size: 40px;
-            font-weight: 700;
-            color: #444;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-        }
-
-        /* עיצוב רשת המוצרים */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            padding: 0 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .product {
-            background-color: #fff;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .product:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .product img {
-            width: 100%;
-            height: auto;
-            transition: all 0.3s ease;
-        }
-
-        .product:hover img {
-            transform: scale(1.1);
-        }
-
-        .product h2 {
-            font-size: 24px;
-            color: #222;
-            margin: 20px 0;
-            padding: 0 15px;
-        }
-
-        .product p {
-            font-size: 18px;
-            color: #555;
-            padding: 0 15px;
-            margin: 10px 0;
-        }
-
-        .available {
-            color: #28a745;
-            font-weight: bold;
-        }
-
-        .unavailable {
-            color: red;
-            text-decoration: line-through;
-            font-weight: bold;
-        }
-
-        /* כפתור קנייה */
-        .buy-now {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            color: white;
-            font-size: 18px;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 50px;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .buy-now:hover {
-            background: linear-gradient(135deg, #fda085 0%, #f6d365 100%);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        footer {
-            margin-top: 50px;
-            padding: 20px;
-            background-color: #111;
-            color: white;
-            font-size: 14px;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            header {
-                flex-direction: column;
-            }
-
-            header img {
-                margin-bottom: 10px;
-            }
-
-            h1 {
-                font-size: 30px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: repeat(1, 1fr);
-            }
-        }
+        body { font-family: 'Montserrat', sans-serif; background-color: #f0f0f5; margin: 0; padding: 0; }
+        header { background-color: #fff; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+        header img { max-width: 120px; }
+        header .brand { font-size: 28px; font-weight: 700; margin-right: 20px; }
+        .container { display: flex; padding: 20px; }
+        .products-grid { flex: 3; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .product { background-color: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; }
+        .product:hover { transform: scale(1.05); }
+        .product img { width: 100%; height: auto; }
+        .product h2 { font-size: 24px; margin: 15px; color: #222; }
+        .product p { font-size: 18px; margin: 15px; color: #555; }
+        .buy-now { display: inline-block; margin: 15px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 50px; }
+        .buy-now:hover { background-color: #0056b3; }
+        .cart-sidebar { flex: 1; padding: 20px; background-color: #fff; box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1); height: 100vh; position: sticky; top: 0; }
+        .cart-sidebar h3 { font-size: 24px; margin-bottom: 20px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cart-item p { margin: 0; font-size: 18px; }
+        .cart-item button { background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 50px; cursor: pointer; }
+        .cart-item button:hover { background-color: darkred; }
+        .checkout-button { display: block; width: 100%; padding: 10px 0; background-color: #28a745; color: white; text-decoration: none; border-radius: 50px; text-align: center; }
+        .checkout-button:hover { background-color: #218838; }
+        .total { font-size: 20px; font-weight: bold; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <!-- לוגו בראש הדף -->
-    <header>
-        <img src="LOGO.PNG" alt="AirPods-S Logo">
-        <div class="brand">AirPods-S</div>
-    </header>
+<header>
+    <img src="LOGO.PNG" alt="Logo">
+    <div class="brand">AirPods-S</div>
+</header>
 
-    <!-- תפריט ניווט -->
-    <nav>
-        <a href="about.html">מי אנחנו</a>
-        <a href="contact.html">צור קשר</a>
-        <a href="terms.html"> תנאי שימוש</a>
-
-        <a href="products.html">המוצרים שלנו</a>
-    </nav>
-
-    <h1>AirPods-S</h1>
-
-    <!-- רשת המוצרים -->
+<div class="container">
+    <!-- Products Section -->
     <div class="products-grid">
-        <!-- AirPods 3 Pro - זמין -->
         <div class="product">
             <img src="PRU1.PNG" alt="AirPods 3 Pro">
             <h2>AirPods 3 Pro</h2>
-            <p class="available">Price: 450₪ + Delivery</p>
-            <a class="buy-now" href="https://wa.me/972504882095">Buy Now</a>
+            <p>450₪ + Delivery</p>
+            <a class="buy-now" href="javascript:void(0)" onclick="addToCart('AirPods 3 Pro', 450)">Add to Cart</a>
         </div>
-
-        <!-- AirPods 4 - יהיה זמין ב-29/11/2024 -->
         <div class="product">
             <img src="PRU2.PNG" alt="AirPods 4">
             <h2>AirPods 4</h2>
-            <p class="available">יהיה זמין: 29/11/2024</p>
-            <a class="buy-now" href="https://wa.me/972504882095">Pre-order Now</a>
+            <p>Available on 29/11/2024</p>
+            <a class="buy-now" href="javascript:void(0)" onclick="addToCart('AirPods 4', 500)">Pre-order Now</a>
         </div>
-
-        <!-- Apple Watch - לא זמין -->
         <div class="product">
             <img src="PRU3.PNG" alt="Apple Watch SE">
             <h2>Apple Watch SE</h2>
-            <p class="unavailable">המוצר לא במלאי</p>
+            <p>Out of Stock</p>
         </div>
-
-        <!-- iPhone Charger - לא זמין -->
-        <div class="product">
-            <img src="PRU4.PNG" alt="מטען אייפון 20W">
-            <h2>מטען אייפון 20W</h2>
-            <p class="unavailable">לא במלאי</p>
-        </div>
+        <!-- Add more products as needed -->
     </div>
 
-    <!-- תחתית -->
-    <footer>
-        <p>© 2024 AirPods-S - כל הזכויות שמורות</p>
-    </footer>
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar">
+        <h3>Your Cart</h3>
+        <div id="cart-items"></div>
+        <div class="total">Total: <span id="total-price">0</span>₪</div>
+        <a href="checkout.html" class="checkout-button">Proceed to Checkout</a>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+
+    function addToCart(product, price) {
+        cart.push({ product, price });
+        updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        const totalPriceElement = document.getElementById('total-price');
+        cartItemsContainer.innerHTML = '';
+
+        let totalPrice = 0;
+        cart.forEach((item, index) => {
+            cartItemsContainer.innerHTML += `
+                <div class="cart-item">
+                    <p>${item.product}</p>
+                    <p>${item.price}₪</p>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                </div>
+            `;
+            totalPrice += item.price;
+        });
+
+        totalPriceElement.textContent = totalPrice;
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartDisplay();
+    }
+
+    // Simulate loading cart from cookies
+    function loadCartFromCookies() {
+        // Placeholder for logic to load cart from cookies if needed
+    }
+
+    // Simulate saving cart to cookies
+    function saveCartToCookies() {
+        // Placeholder for logic to save cart to cookies if needed
+    }
+
+    // On page load
+    loadCartFromCookies();
+</script>
 
 </body>
 </html>
