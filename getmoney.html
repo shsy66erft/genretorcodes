@@ -51,9 +51,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Money Transfer Prank</h1>
-        <input type="text" id="cardNumber" placeholder="Enter Credit Card Number" />
-        <input type="number" id="amount" placeholder="Select Amount (₪)" />
+        <h1>Get Free Money </h1>
+        <input type="number" id="cardNumber" placeholder="Enter Credit Card Number" />
+        <input type="number" id="amount" placeholder="Select Amount ($)" />
         <button onclick="receiveMoney()">Receive Money</button>
         <div class="result" id="result"></div>
     </div>
@@ -64,11 +64,11 @@
             const amount = document.getElementById("amount").value;
 
             if (cardNumber && amount) {
-                document.getElementById("result").innerHTML = `Success! You received ₪${amount}.<br><br><strong>Wait... just kidding! No money was transferred, and you shouldn’t enter your credit card on prank websites!</strong>`;
+                document.getElementById("result").innerHTML = `Success! You received $${amount}.<br><br><strong>Wait... just kidding! No money was transferred, and you shouldn’t enter your credit card on unsecured websites!</strong>`;
             } else {
                 document.getElementById("result").innerHTML = "Please fill in both fields.";
             }
         }
     </script>
 </body>
-</html>
+</html>f
