@@ -105,7 +105,11 @@
         function hashCode(code) {
             return CryptoJS.SHA256(code).toString();
         }
-
+        function login() {
+            // ביצוע התחברות...
+            localStorage.setItem("loggedIn", "true");
+            window.location.href = "home.html";
+        }
         document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -152,6 +156,9 @@
             );
             google.accounts.id.prompt(); // Show the One Tap dialog
         };
+        // קוד זה נמצא בדף ההתחברות
+
     </script>
+    
 </body>
 </html>
