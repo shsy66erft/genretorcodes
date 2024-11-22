@@ -1,142 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Code</title>
+    <title>אימות קוד</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            block-size: 100vh;
-            background-color: #FFEB3B;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f7f7f7;
             font-family: Arial, sans-serif;
+            margin: 0;
         }
+
         .container {
             text-align: center;
-            background-color: #FFE082;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            inline-size: 300px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
         }
-        input {
-            display: block;
-            inline-size: 80%;
-            margin: 10px auto;
-            padding: 10px;
+
+        h1 {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 40px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
         }
+
         .button {
-            background-color: #FF7043;
+            background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            margin-block-start: 10px;
+            width: 100%;
         }
+
         .button:hover {
-            background-color: #F4511E;
+            background-color: #0056b3;
         }
-        .section {
-            margin-block-start: 20px;
+
+        .resend {
+            margin-top: 15px;
+            color: #007bff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .resend:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Verify Code</h1>
-        <form id="verify-form">
-            <input type="text" placeholder="Enter verification code" required>
-            <button class="button" type="submit">Verify</button>
-        </form>
-        <button class="button" id="resend-button">Resend Code</button>
+        <h1>אימות קוד</h1>
 
-        <!-- Admin Verification Section -->
-        <div class="section">
-            <h2>Admin Verification</h2>
-            <form id="admin-verify-form">
-                <input type="text" id="admin-code" placeholder="Enter admin code" required>
-                <button class="button" type="submit">Verify Admin Code</button>
-            </form>
+        <div class="input-group" id="code-inputs">
+            <input type="text" maxlength="1" id="digit-1">
+            <input type="text" maxlength="1" id="digit-2">
+            <input type="text" maxlength="1" id="digit-3">
+            <input type="text" maxlength="1" id="digit-4">
+            <input type="text" maxlength="1" id="digit-5">
+            <input type="text" maxlength="1" id="digit-6">
         </div>
+
+        <button class="button" id="verify-button">אמת קוד</button>
+        <div class="resend" id="resend-button">שלח קוד חדש</div>
+        <div class="message" id="message-box"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
-        function num4() {
-            return Math.floor(1000 + Math.random() * 9000); // Generates a random 4-digit number
+        (function() {
+            emailjs.init("REvVlGrHOuI_NS26I"); // User ID שלך מ-EmailJS
+        })();
+
+        let verificationCode = null;
+        const messageBox = document.getElementById("message-box");
+        const userEmail = "example@example.com"; // כאן תחליף את זה באימייל שאתה מקבל בהרשמה
+
+        function sendVerificationCode() {
+            verificationCode = Math.floor(100000 + Math.random() * 900000); // קוד אקראי
+            emailjs.send("service_zuhohgv", "template_8bbgngg", {
+                code: verificationCode,
+                to_email: userEmail
+            })
+            .then(() => {
+                messageBox.textContent = "הקוד נשלח בהצלחה!";
+                messageBox.classList.remove("error");
+                messageBox.classList.add("success");
+            })
+            .catch((error) => {
+                console.error(error);
+                messageBox.textContent = "שגיאה בשליחת הקוד. נסה שוב.";
+                messageBox.classList.add("error");
+            });
         }
 
-        function hashCode(code) {
-            return CryptoJS.SHA256(code).toString();
+        function verifyCode() {
+            const inputs = [
+                document.getElementById("digit-1").value,
+                document.getElementById("digit-2").value,
+                document.getElementById("digit-3").value,
+                document.getElementById("digit-4").value,
+                document.getElementById("digit-5").value,
+                document.getElementById("digit-6").value
+            ];
+            const enteredCode = inputs.join("");
+
+            if (parseInt(enteredCode) === verificationCode) {
+                messageBox.textContent = "הקוד אומת בהצלחה!";
+                messageBox.classList.remove("error");
+                messageBox.classList.add("success");
+
+                // הפנייה ל-Home.html אחרי הצלחה
+                setTimeout(() => {
+                    window.location.href = "home.html"; // הפנה לדף ה-Home
+                }, 1000); // המתן שנייה לפני הפנייה
+            } else {
+                messageBox.textContent = "קוד שגוי. נסה שוב.";
+                messageBox.classList.add("error");
+            }
         }
 
-        // User verification
-        document.getElementById('verify-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const enteredCode = document.querySelector('input').value;
-            const hashedEnteredCode = hashCode(enteredCode);
-            const storedHashedCode = localStorage.getItem('verificationHashCode');
-
-            if (hashedEnteredCode === storedHashedCode) {
-                alert('Verification successful!');
-                window.location.href = 'home.html'; // Redirect to home.html after successful verification
-            } else {
-                alert('Invalid code. Please try again.');
-            }
-        });
-
-        // Resend code
-        document.getElementById('resend-button').addEventListener('click', function() {
-            const email = localStorage.getItem('userEmail'); // Retrieve the email from localStorage
-
-            if (!email) {
-                alert('Email not found. Please sign up again.');
-                return;
-            }
-
-            const code = num4(); // Generate a new 4-digit code
-            const hashedCode = hashCode(code.toString());
-            localStorage.setItem('verificationHashCode', hashedCode); // Store the hashed code in localStorage
-
-            const templateParams = {
-                to_email: email,
-                code: code
-            };
-
-            emailjs.send('service_zuhohgv', 'template_8bbgngg', templateParams)
-                .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
-                    alert('Verification code resent. Please check your email.');
-                })
-                .catch(function(error) {
-                    console.error('FAILED...', error);
-                    alert('Error resending email. Please try again.');
-                });
-        });
-
-        // Admin verification
-        document.getElementById('admin-verify-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const enteredAdminCode = document.getElementById('admin-code').value;
-            const hashedAdminCode = hashCode(enteredAdminCode);
-            const storedHashedAdminCode = localStorage.getItem('adminVerificationHashCode');
-
-            if (hashedAdminCode === storedHashedAdminCode) {
-                alert('Admin verification successful!');
-                window.location.href = 'admin_dashboard.html'; // Redirect to admin dashboard after successful verification
-            } else {
-                alert('Invalid admin code. Please try again.');
-            }
-        });
+        document.getElementById("verify-button").addEventListener("click", verifyCode);
+        document.getElementById("resend-button").addEventListener("click", sendVerificationCode);
     </script>
 </body>
 </html>
+
+
