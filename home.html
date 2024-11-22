@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>אתר בבנייה</title>
     <style>
-
         body {
             font-family: 'David', 'Noto Sans Hebrew', sans-serif;
             margin: 0;
@@ -57,11 +56,27 @@
     </div>
 
     <script>
-        // שליפת השם מהמקומי localStorage
-        const userName = localStorage.getItem("userName") || "משתמש";
+        // שליפת שם המשתמש מהתחברות גוגל ושמירה ב-localStorage
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            const googleUserName = profile.getName(); // מקבלים את שם המשתמש מהתחברות
+            localStorage.setItem("userName", googleUserName); // שמירה ב-localStorage
+            displayUserName(); // הצגת שם המשתמש
+        }
 
-        // הצגת השם בדף
-        document.getElementById("user-name").innerText = `שלום, ${userName}!`;
+        // הצגת שם המשתמש בדף
+        function displayUserName() {
+            const userName = localStorage.getItem("userName") || "משתמש";
+            document.getElementById("user-name").innerText = `שלום, ${userName}!`;
+        }
+
+        // קריאה לפונקציה להצגת שם המשתמש
+        displayUserName();
     </script>
+
+    <!-- Google Sign-In Button -->
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
 </html>

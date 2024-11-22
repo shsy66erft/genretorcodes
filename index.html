@@ -158,14 +158,12 @@
             const userName = decoded.name || "משתמש"; // שם המשתמש (ברירת מחדל 'משתמש')
             const userEmail = decoded.email; // אימייל המשתמש
 
-            // שמירת הפרטים ב-localStorage
+            // שמירת השם ב-localStorage בקידוד UTF-8
             localStorage.setItem("userName", userName);
-            localStorage.setItem("userEmail", userEmail);
 
             // ניתוב לדף הבית
             window.location.href = 'home.html';
         }
-    
 
 
         window.onload = function () {
