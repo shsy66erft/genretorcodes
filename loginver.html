@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Code</title>
+    <title>אימות קוד</title>
     <style>
         body {
             display: flex;
@@ -11,7 +11,7 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #b9f39e;
+            background-color: #FFFF33; /* צבע הרקע הצהוב */
             font-family: Arial, sans-serif;
             margin: 0;
         }
@@ -29,24 +29,34 @@
         }
         .container {
             text-align: center;
-            background-color: #FFE082;
+            background-color: #FFFBBD;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            margin-top: 20px;
+            width: 320px;
+        }
+        h1 {
+            color: #FF5722;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
         input {
-            display: block;
-            width: 80%;
-            margin: 10px auto;
-            padding: 10px;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            text-align: center;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 18px;
+        }
+        p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
         }
         .button {
-            background-color: #FF7043;
+            background-color: #FF5722;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -58,21 +68,37 @@
         .button:hover {
             background-color: #F4511E;
         }
+        .resend {
+            background: none;
+            color: #FF5722;
+            border: none;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="menu">
-        <a href="index.html">Home</a>
-        <a href="contact.html">Contact Us</a>
-        <a href="signup.html">Sign Up</a>
-        <a href="login.html">Login</a>
+        <a href="index.html">בית</a>
+        <a href="contact.html">צור קשר</a>
+        <a href="signup.html">הרשמה</a>
+        <a href="login.html">התחברות</a>
     </div>
     <div class="container">
-        <h1>Verify Code</h1>
+        <h1>אימות קוד</h1>
+        <p>הזן את הקוד שנשלח לכתובת האימייל שלך</p>
         <form id="verify-form">
-            <input type="num" id="verification-code" placeholder="Verification Code" required>
-            <button class="button" type="submit">Verify</button>
+            <input type="text" maxlength="1" required>
+            <input type="text" maxlength="1" required>
+            <input type="text" maxlength="1" required>
+            <input type="text" maxlength="1" required>
+            <input type="text" maxlength="1" required>
+            <input type="text" maxlength="1" required>
+            <button class="button" type="submit">אמת קוד</button>
         </form>
+        <p>קוד חדש יהיה זמין בעוד 00:00</p>
+        <button class="resend" onclick="alert('קוד חדש נשלח!');">שלח קוד חדש</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -80,11 +106,25 @@
         function hashCode(code) {
             return CryptoJS.SHA256(code).toString();
         }
+        const verificationCode = generateVerificationCode(); // יצירת קוד בן 5 ספרות
+
+            emailjs.send("service_zuhohgv", "template_rkg9tjl", {
+                to_name: "שם המשתמש",
+                code: verificationCode, // הקוד בן 5 ספרות
+                to_email: "example@example.com"
+            }, "user_api_key")
+            .then((response) => {
+                console.log("Email sent successfully!", response.status, response.text);
+            })
+            .catch((error) => {
+                console.error("Failed to send email", error);
+            });
+
 
         document.getElementById('verify-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            
-            const enteredCode = document.getElementById('verification-code').value;
+            const inputs = document.querySelectorAll('input[type="text"]');
+            const enteredCode = Array.from(inputs).map(input => input.value).join('');
             const hashedEnteredCode = hashCode(enteredCode);
             const storedHashedCode = localStorage.getItem('verificationHashCode');
 

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta name="google-site-verification" content="hyQcru-EMCBElKe1q0cl45iQFK7EIZ6LnSAM9ZmEPWs" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כניסה</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #FFEB3B;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .menu {
+            width: 100%;
+            background-color: #FF7043;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .menu a:hover {
+            color: #F4511E;
+        }
+        .container {
+            text-align: center;
+            background-color: #FFE082;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: 320px;
+            margin-top: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input {
+            display: block;
+            width: 90%;
+            margin: 10px auto;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #FF7043;
+            outline: none;
+        }
+        .button {
+            background-color: #FF7043;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #F4511E;
+        }
+        .g_id_signin {
+            margin: 20px auto;
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">בית</a>
+        <a href="contact.html">צור קשר</a>
+        <a href="signup.html">הרשמה</a>
+        <a href="policy.html">מדיניות פרטיות</a>
+    </div>
+    
+    <div class="container">
+        <h1>כניסה</h1>
+        <form id="login-form" aria-label="טופס כניסה">
+            <input type="email" id="login-email" placeholder="אימייל" required aria-required="true">
+            <input type="password" id="login-password" placeholder="סיסמה" required aria-required="true">
+            <button class="button" type="submit">כניסה</button>
+        </form>
+        <div id="g_id_login" class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="התחבר עם Google"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+    </div>
+    
+    <script>
+        (function () {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+            script.setAttribute("integrity", "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne");
+            script.setAttribute("crossorigin", "anonymous");
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })();
+        
+                // Initialize EmailJS
+                (function() {
+            emailjs.init("REvVlGrHOuI_NS26I"); // Replace with your actual User ID from EmailJS
+        })();
+
+        // Generate a random 6-digit number
+        function num6() {
+            return Math.floor(100000 + Math.random() * 900000);
+        }
+
+        // Hash the code using SHA256
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
+
+        // Handle login form submission
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Here you should verify the email and password (e.g., by checking a database).
+            // This example assumes verification is always successful.
+
+            const code = num6(); // Generate a 6-digit code
+            const hashedCode = hashCode(code.toString());
+            localStorage.setItem('verificationHashCode', hashedCode); // Store the hashed code in localStorage
+
+            const templateParams = {
+                to_email: email,
+                code: code
+            };
+
+            // Send the email with the verification code
+            emailjs.send('service_zuhohgv', 'template_rkg9tjl', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    window.location.href = 'loginver.html'; // Redirect to verification page
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('שגיאה בשליחת האימייל. אנא נסה שוב.');
+                });
+        });
+
+        // Handle Google Sign-In response
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+
+            // Decode the JWT to get user details
+            const decoded = JSON.parse(atob(response.credential.split('.')[1])); // Decode the JWT
+            const userName = decoded.name || "משתמש"; // Default user name
+            const userEmail = decoded.email; // User email
+
+            // Store the user name in localStorage
+            localStorage.setItem("userName", userName);
+
+            // Redirect to home page
+            window.location.href = 'home.html';
+        }
+
+        // Initialize Google Sign-In
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com", // Replace with your actual Client ID
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("g_id_login"),
+                { theme: "outline", size: "large" } // customization attributes
+            );
+            google.accounts.id.prompt(); // Show the One Tap dialog
+        };
+    </script>
+</body>
+</html>
