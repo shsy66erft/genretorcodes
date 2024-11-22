@@ -34,18 +34,32 @@
             font-size: 24px;
             margin-top: 20px;
         }
+
+        .user-name {
+            font-size: 20px;
+            color: #FF7043;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-
-
     <div class="container">
         <img src="https://geo.img.pmdstatic.net/pad/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fgeo.2F2019.2F08.2F29.2Fb1aa5b11-c4fa-4455-b1bd-b00c82a5f15e.2Egif/650x364/quality/80/b1aa5b11-c4fa-4455-b1bd-b00c82a5f15e-gif.gif" 
              alt="מנוף בבנייה" class="crane-gif">
         <div class="message">
             אנחנו עדיין בונים פה! <br> האתר יהיה מוכן בקרוב.
         </div>
+        <div class="user-name" id="user-name">
+            טוען נתונים...
+        </div>
     </div>
 
+    <script>
+        // שליפת השם מהמקומי localStorage
+        const userName = localStorage.getItem("userName") || "משתמש";
+
+        // הצגת השם בדף
+        document.getElementById("user-name").innerText = `שלום, ${userName}!`;
+    </script>
 </body>
 </html>

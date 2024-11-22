@@ -89,6 +89,7 @@
              data-logo_alignment="left">
         </div>
     </div>
+    
         <script>
     (function () {
            var script = document.createElement("script");
@@ -149,12 +150,23 @@
                 });
         });
 
-        function handleCredentialResponse(response) {
+                function handleCredentialResponse(response) {
             console.log("Encoded JWT ID token: " + response.credential);
-            // Decode the JWT and verify it on the server
-            // Redirect to home page upon successful verification
+
+            // פענוח ה-JWT כדי לקבל את פרטי המשתמש
+            const decoded = JSON.parse(atob(response.credential.split('.')[1])); // מפענח את ה-JWT
+            const userName = decoded.name || "משתמש"; // שם המשתמש (ברירת מחדל 'משתמש')
+            const userEmail = decoded.email; // אימייל המשתמש
+
+            // שמירת הפרטים ב-localStorage
+            localStorage.setItem("userName", userName);
+            localStorage.setItem("userEmail", userEmail);
+
+            // ניתוב לדף הבית
             window.location.href = 'home.html';
         }
+    
+
 
         window.onload = function () {
             google.accounts.id.initialize({
