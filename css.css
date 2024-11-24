@@ -372,4 +372,39 @@
     }
   
   }
+  #followers-section {
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* צבע רקע נעים */
+    border: 1px solid #ddd; /* מסגרת עדינה */
+    border-radius: 8px; /* פינות מעוגלות */
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  #followers-section label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333; /* צבע טקסט */
+  }
+  
+  #followers-amount {
+    margin-left: 10px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 120px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease; /* אפקט מעבר */
+  }
+  
+  #followers-amount:hover {
+    border-color: #888; /* צבע מסגרת על ריחוף */
+    background-color: #f0f0f0; /* שינוי צבע רקע */
+  }
+  
   
