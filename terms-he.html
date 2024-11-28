@@ -5,45 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תנאי שימוש</title>
     <style>
+        /* Reset basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #F0F0F0;
-            text-align: right;
-        }
-        h1 {
+            font-family: 'Open Sans', Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
             color: #333;
+            text-align: right;
+            padding: 20px;
         }
+
+        h1 {
+            color: #222;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
         .container {
             max-width: 800px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        p strong {
+            color: #555;
+        }
+
         .button {
-            background-color: #FF7043;
+            background-color: #007BFF;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 25px;
+            border-radius: 25px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             margin-top: 20px;
         }
+
         .button:hover {
-            background-color: #F4511E;
+            background-color: #0056b3;
+            transform: scale(1.05);
         }
+
         a {
-            color: #FF7043;
+            color: #007BFF;
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* Add spacing to the last paragraph */
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
         }
     </style>
+
 </head>
 <body>
     <div class="container">
