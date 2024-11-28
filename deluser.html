@@ -68,7 +68,7 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
         (function() {
-            emailjs.init("nx_k9rwaSlhTMgKIx"); // Replace with your actual User ID from EmailJS
+            emailjs.init("2T_CaMbAN4-h9rTjA"); // Replace with your actual User ID from EmailJS
         })();
 
         document.getElementById('delete-request-form').addEventListener('submit', function(event) {
@@ -84,7 +84,7 @@
                 message: message
             };
 
-            emailjs.send('service_bd418it', 'template_jszic0f', templateParams)
+            emailjs.send('service_zuhohgv', 'template_1wpdy5y', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     document.getElementById('delete-request-form').reset(); // Reset the form
