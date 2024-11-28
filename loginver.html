@@ -35,7 +35,7 @@
         .input-group {
             display: flex;
             justify-content: center;
-            gap: 5px;
+            gap: 10px;
             margin-bottom: 20px;
         }
 
@@ -46,6 +46,12 @@
             font-size: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         .button {
@@ -93,12 +99,12 @@
         <h1>אימות קוד</h1>
 
         <div class="input-group" id="code-inputs">
-            <input type="text" maxlength="1" id="digit-1">
-            <input type="text" maxlength="1" id="digit-2">
-            <input type="text" maxlength="1" id="digit-3">
-            <input type="text" maxlength="1" id="digit-4">
-            <input type="text" maxlength="1" id="digit-5">
-            <input type="text" maxlength="1" id="digit-6">
+            <input type="text" maxlength="1" id="digit-1" autocomplete="off">
+            <input type="text" maxlength="1" id="digit-2" autocomplete="off">
+            <input type="text" maxlength="1" id="digit-3" autocomplete="off">
+            <input type="text" maxlength="1" id="digit-4" autocomplete="off">
+            <input type="text" maxlength="1" id="digit-5" autocomplete="off">
+            <input type="text" maxlength="1" id="digit-6" autocomplete="off">
         </div>
 
         <button class="button" id="verify-button">אמת קוד</button>
@@ -110,7 +116,7 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
         (function() {
-            emailjs.init("REvVlGrHOuI_NS26I"); // User ID שלך מ-EmailJS
+            emailjs.init("2T_CaMbAN4-h9rTjA"); // User ID שלך מ-EmailJS
         })();
 
         let verificationCode = null;
@@ -136,15 +142,8 @@
         }
 
         function verifyCode() {
-            const inputs = [
-                document.getElementById("digit-1").value,
-                document.getElementById("digit-2").value,
-                document.getElementById("digit-3").value,
-                document.getElementById("digit-4").value,
-                document.getElementById("digit-5").value,
-                document.getElementById("digit-6").value
-            ];
-            const enteredCode = inputs.join("");
+            const inputs = Array.from(document.querySelectorAll('.input-group input'));
+            const enteredCode = inputs.map(input => input.value).join("");
 
             if (parseInt(enteredCode) === verificationCode) {
                 messageBox.textContent = "הקוד אומת בהצלחה!";
@@ -161,8 +160,22 @@
             }
         }
 
+        // מעבר אוטומטי לשדה הבא
+        document.querySelectorAll('.input-group input').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                } else if (e.target.value.length === 0 && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
         document.getElementById("verify-button").addEventListener("click", verifyCode);
         document.getElementById("resend-button").addEventListener("click", sendVerificationCode);
+
+        // שליחה אוטומטית בעת טעינה ראשונית
+        sendVerificationCode();
     </script>
 </body>
 </html>

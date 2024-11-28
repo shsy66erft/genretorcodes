@@ -159,10 +159,10 @@
                 code: code
             };
 
-            emailjs.send('service_zuhohgv', 'template_1wpdy5y', templateParams)
+            emailjs.send('service_zuhohgv', 'template_rkg9tjl', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
-                    window.location.href = 'verify.html';
+                    window.location.href = 'loginver.html';
                 }, function(error) {
                     console.log('FAILED...', error);
                     alert('Error sending email. Please try again.');
