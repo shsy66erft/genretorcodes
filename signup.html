@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,18 +16,21 @@
             font-family: Arial, sans-serif;
             margin: 0;
         }
+
         .menu {
             width: 100%;
             background-color: #FF7043;
             padding: 10px 0;
             text-align: center;
         }
+
         .menu a {
             color: white;
             margin: 0 15px;
             text-decoration: none;
             font-size: 16px;
         }
+
         .container {
             text-align: center;
             background-color: #1a9bce91;
@@ -36,6 +40,7 @@
             width: 300px;
             margin-top: 20px;
         }
+
         input {
             display: block;
             width: 80%;
@@ -45,6 +50,7 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         .button {
             background-color: #5043ff;
             color: white;
@@ -55,23 +61,29 @@
             cursor: pointer;
             margin-top: 10px;
         }
+
         .button:hover {
             background-color: #e4896e;
         }
+
         .g_id_signin {
             margin: 10px auto;
         }
+
         .note {
             font-size: 12px;
             color: #201c1c;
         }
+
         .terms-container {
             text-align: left;
             margin-top: 10px;
         }
+
         .terms-container input[type="checkbox"] {
             margin-right: 10px;
         }
+
         .terms-container a {
             color: hsl(166, 42%, 34%);
             text-decoration: none;
@@ -79,6 +91,7 @@
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+
 <body>
 
     <div class="container">
@@ -91,41 +104,43 @@
             <p class="note">at lesat 6 numbers and latters.<br>At least 6 characters</p>
             <div class="terms-container">
                 <input type="checkbox" id="terms-checkbox" required>
-                <label for="terms-checkbox">I accept the <a href="terms-en.html" target="_blank">terms and conditions</a>.</label>
+                <label for="terms-checkbox">I accept the <a href="terms-en.html" target="_blank">terms and
+                        conditions</a>.</label>
             </div>
             <button class="button" type="submit">Sign Up</button>
         </form>
         <div id="g_id_signup" class="g_id_signin"></div>
     </div>
-        <div class="menu">
+    <div class="menu">
         <a href="index.html">Home</a>
         <a href="contact.html">Contact Us</a>
         <a href="signup.html">Sign Up</a>
         <a href="login.html">Login</a>
         <a href="policy.html">Privacy Policy</a>
     </div>
-    <div id="bthn" lang="he"></div><script>
+    <div id="bthn" lang="he"></div>
+    <script>
         (function () {
-           var script = document.createElement("script");
-           script.type = "text/javascript";
-           script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
-           script.setAttribute(
-             "integrity",
-             "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
-           );
-           script.setAttribute("crossorigin", "anonymous");
-           document.getElementsByTagName("head")[0].appendChild(script);
-         })();
-        </script>
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+            script.setAttribute(
+                "integrity",
+                "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
+            );
+            script.setAttribute("crossorigin", "anonymous");
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script>
-        (function() {
+        (function () {
             emailjs.init("2T_CaMbAN4-h9rTjA"); // Replace 'YOUR_USER_ID' with your actual User ID from EmailJS
         })();
 
         async function sha256(message) {
             // encode as UTF-8
-            const msgBuffer = new TextEncoder().encode(message);                    
+            const msgBuffer = new TextEncoder().encode(message);
 
             // hash the message
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -138,9 +153,9 @@
             return hashHex;
         }
 
-        document.getElementById('signup-form').addEventListener('submit', async function(event) {
+        document.getElementById('signup-form').addEventListener('submit', async function (event) {
             event.preventDefault();
-            
+
             const email = document.getElementById('email').value;
             const termsCheckbox = document.getElementById('terms-checkbox');
 
@@ -160,10 +175,10 @@
             };
 
             emailjs.send('service_zuhohgv', 'template_rkg9tjl', templateParams)
-                .then(function(response) {
+                .then(function (response) {
                     console.log('SUCCESS!', response.status, response.text);
                     window.location.href = 'loginver.html';
-                }, function(error) {
+                }, function (error) {
                     console.log('FAILED...', error);
                     alert('Error sending email. Please try again.');
                 });
@@ -189,4 +204,5 @@
         };
     </script>
 </body>
+
 </html>
