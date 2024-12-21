@@ -1,53 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>צ'אט שבוז</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #FFEB3B;
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', monospace;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
         }
-        .menu {
-            width: 100%;
-            background-color: #FF7043;
-            padding: 10px 0;
-            text-align: center;
+        h1 {
+            color: #ff4444;
         }
-        .menu a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .container {
-            text-align: center;
-            background-color: #FFE082;
-            padding: 20px;
+        #chatBox {
+            width: 80%;
+            height: 300px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ff4444;
+            background-color: #222;
+            overflow-y: auto;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            margin-top: 20px;
+        }
+        #inputBox {
+            width: 80%;
+            margin: 0 auto;
+            display: flex;
+        }
+        #inputBox input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            background-color: #555;
+            color: #fff;
+        }
+        #inputBox button {
+            width: 20%;
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background-color: #ff4444;
+            color: #fff;
+            cursor: pointer;
+        }
+        #inputBox button:hover {
+            background-color: #ff0000;
         }
     </style>
 </head>
 <body>
-    <div class="menu">
-        <a href="index.html">Home</a>
-        <a href="contact.html">Contact Us</a>
-        <a href="signup.html">Sign Up</a>
-        <a href="login.html">Login</a>
+    <h1>צ'אט שבוז</h1>
+    <div id="chatBox"></div>
+    <div id="inputBox">
+        <input type="text" id="userInput" placeholder="כתוב משהו עלוב...">
+        <button onclick="sendMessage()">שלח</button>
     </div>
-    <div class="container">
-        <h1>Contact Us</h1>
-        <p>You can reach us at <a href="mailto:SHAY053713@GMAIL.COM">coustemrserver@neonapp.co.il</a></p>
-    </div>
+
+    <script>
+        const chatBox = document.getElementById("chatBox");
+        const responses = [
+            "מה זה השטויות האלה?",
+            "זה הכי טוב שיש לך?",
+            "באמת? זה מה שאתה חושב לכתוב?",
+            "לך תנסה שוב, אולי תצליח להבריק.",
+            "כל מילה שאתה כותב מורידה לי את האינטליגנציה.",
+            "תפסיק לבזבז את הזמן שלי.",
+            "אתה משעמם, כמו כל החיים שלך.",
+            "איזה תותח אתה... סתם, צוחק איתך, אתה אפס."
+        ];
+
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            if (userInput.trim() === "") {
+                alert("אפילו לכתוב משפט נורמלי אתה לא מסוגל?");
+                return;
+            }
+
+            const userMessage = `<p><strong>אתה:</strong> ${userInput}</p>`;
+            const botMessage = `<p><strong>צ'אט שבוז:</strong> ${
+                responses[Math.floor(Math.random() * responses.length)]
+            }</p>`;
+
+            chatBox.innerHTML += userMessage + botMessage;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            document.getElementById("userInput").value = "";
+        }
+    </script>
 </body>
 </html>
