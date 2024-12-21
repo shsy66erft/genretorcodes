@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אפליקציית באסה מתקדמת</title>
+    <title>באסה אולטימטיבית</title>
     <style>
         body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #222, #555);
-            color: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            background: radial-gradient(circle, #222, #111);
+            color: #fff;
             text-align: center;
             margin: 0;
             padding: 0;
@@ -16,56 +16,91 @@
             flex-direction: column;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
         }
         h1 {
-            font-size: 2.5em;
-            text-shadow: 2px 2px #000;
+            font-size: 3em;
+            color: #ff6666;
+            text-shadow: 0 0 20px #ff0000;
             margin-bottom: 20px;
         }
         button {
-            background: #ff4444;
+            background: linear-gradient(135deg, #ff4444, #ff0000);
             color: #fff;
-            font-size: 1.2em;
-            padding: 15px 30px;
+            font-size: 1.5em;
+            padding: 15px 40px;
             border: none;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 50px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
             cursor: pointer;
-            transition: transform 0.3s, background 0.3s;
+            transition: all 0.3s ease;
         }
         button:hover {
-            background: #ff0000;
+            background: linear-gradient(135deg, #ff0000, #990000);
             transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 1);
         }
         p {
-            font-size: 1.5em;
-            margin-top: 30px;
-            background: rgba(0, 0, 0, 0.5);
+            font-size: 1.8em;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.6);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         }
     </style>
 </head>
 <body>
-    <h1>באסה ברמה אחרת</h1>
-    <button onclick="showSentence()">באסה!</button>
+    <h1>באסה אינסופית</h1>
+    <button onclick="showSentence()">תן לי באסה</button>
     <p id="sentence"></p>
 
     <script>
         const depressingSentences = [
-            "אתה כמו באג בקוד - אף אחד לא רוצה אותך.",
-            "מזל טוב, הרגע בזבזת עוד שנייה מהחיים שלך.",
-            "אולי תוותר כבר, אתה גם ככה לא תצליח.",
-            "האינטרנט לא ישכח כמה אתה גרוע.",
-            "מה שאתה עושה עכשיו? זה לא משנה לאף אחד."
+            "כל יום שעובר אתה מתקרב עוד קצת לכישלון.",
+            "הזמן שאתה משקיע בזה? סתם בזבוז חיים.",
+            "כולם מצליחים חוץ ממך. זה כבר מגוחך.",
+            "מה עשית בחיים שלך שאפשר להתגאות בו? כלום.",
+            "נשארת בדיוק באותו מקום כמו לפני עשור.",
+            "אתה אפילו לא זוכר למה התחלת בכלל.",
+            "מישהו אי פעם אמר לך שאתה מועיל? כנראה שלא.",
+            "אף אחד לא מחכה לך, ואף אחד גם לא ישים לב אם תיעלם.",
+            "הדבר הכי טוב שעשית זה לבזבז מקום.",
+            "אתה כמו אפליקציה שנתקעה – אין לך שום שימוש.",
+            "האנשים שסביבך? הם פשוט מנומסים מדי להגיד את האמת.",
+            "כל מה שאתה נוגע בו – נהיה גרוע יותר.",
+            "למה אתה בכלל טורח? גם ככה זה חסר טעם.",
+            "אתה עובר דרך החיים כמו באג בקוד, ואף אחד לא מתקן.",
+            "זה מדהים איך אתה ממשיך לנסות למרות שאין תקווה.",
+            "כל מה שאתה עושה, זה פשוט להכביד על כולם.",
+            "החלומות שלך? שווים לתחת.",
+            "מישהו ביקש ממך משהו? ברור שלא.",
+            "כל פעולה שלך מייצרת עוד כישלון.",
+            "אתה כמו תירוץ גרוע – אף אחד לא קונה את זה.",
+            "גם כשאתה מתאמץ, אתה נשאר גרוע.",
+            "בוא נגיד ככה, זה אפילו לא שווה לכתוב על זה.",
+            "אם היה פרס ל'בזבוז פוטנציאל', היית מקום ראשון.",
+            "אין לך מה להציע לעולם הזה.",
+            "אנשים זוכרים רק כמה אתה לא מוצלח.",
+            "כל דבר שאתה מתחיל, נכשל.",
+            "אין לך שום ערך מוסף, אפס מוחלט.",
+            "כולם כבר המשיכו הלאה, ורק אתה נתקעת.",
+            "אם אתה מחפש הכרה, תחפש במקום אחר.",
+            "החיים שלך הם סוג של פארודיה.",
+            "היכולת שלך להיכשל? מרשימה, באמת.",
+            "אולי פשוט תוותר, תעשה טובה לכולם.",
+            "אפילו הרעיונות שלך עלובים.",
+            "אתה כמו פיקסל שרוף – כולם רואים, ואף אחד לא אוהב.",
+            "כל צעד שלך נראה כמו בדיחה על החיים.",
+            "אתה חי במציאות שלך, ואף אחד לא רוצה להיכנס לשם.",
+            "אין שום דבר מעניין בך, וזה נאמר בעדינות.",
+            "הדבר היחיד שאתה מצליח בו זה באסה."
         ];
 
         function showSentence() {
             const randomIndex = Math.floor(Math.random() * depressingSentences.length);
             const sentence = depressingSentences[randomIndex];
-            const sentenceElement = document.getElementById("sentence");
-            sentenceElement.innerText = sentence;
+            document.getElementById("sentence").innerText = sentence;
         }
     </script>
 </body>
