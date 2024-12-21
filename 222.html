@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צ'אט שבוז</title>
+    <title>אל תלחץ על הכפתור!</title>
     <style>
         body {
-            font-family: 'Courier New', monospace;
-            background-color: #333;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #222, #555);
             color: #fff;
             text-align: center;
             margin: 0;
@@ -18,83 +18,68 @@
             height: 100vh;
         }
         h1 {
+            font-size: 2.8em;
             color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
         }
-        #chatBox {
-            width: 80%;
-            height: 300px;
-            margin: 20px auto;
-            padding: 10px;
-            border: 2px solid #ff4444;
-            background-color: #222;
-            overflow-y: auto;
+        button {
+            background: #ff4444;
+            color: #fff;
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border: none;
             border-radius: 10px;
-        }
-        #inputBox {
-            width: 80%;
-            margin: 0 auto;
-            display: flex;
-        }
-        #inputBox input {
-            width: 80%;
-            padding: 10px;
-            font-size: 1em;
-            border: none;
-            border-radius: 5px 0 0 5px;
-            background-color: #555;
-            color: #fff;
-        }
-        #inputBox button {
-            width: 20%;
-            padding: 10px;
-            font-size: 1em;
-            border: none;
-            border-radius: 0 5px 5px 0;
-            background-color: #ff4444;
-            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        #inputBox button:hover {
-            background-color: #ff0000;
+        button:hover {
+            background: #ff0000;
+            transform: scale(1.1);
+        }
+        p {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
-    <h1>צ'אט שבוז</h1>
-    <div id="chatBox"></div>
-    <div id="inputBox">
-        <input type="text" id="userInput" placeholder="כתוב משהו עלוב...">
-        <button onclick="sendMessage()">שלח</button>
-    </div>
+    <h1>אל תלחץ על הכפתור האדום!</h1>
+    <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
+    <p id="message"></p>
 
     <script>
-        const chatBox = document.getElementById("chatBox");
-        const responses = [
-            "מה זה השטויות האלה?",
-            "זה הכי טוב שיש לך?",
-            "באמת? זה מה שאתה חושב לכתוב?",
-            "לך תנסה שוב, אולי תצליח להבריק.",
-            "כל מילה שאתה כותב מורידה לי את האינטליגנציה.",
-            "תפסיק לבזבז את הזמן שלי.",
-            "אתה משעמם, כמו כל החיים שלך.",
-            "איזה תותח אתה... סתם, צוחק איתך, אתה אפס."
+        let clickCount = 0;
+        const messages = [
+            "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
+            "לחצת שוב? וואו, אתה ממש גרוע בציות להוראות.",
+            "זה שאתה ממשיך ללחוץ רק מראה כמה אתה עקשן ולא חכם.",
+            "מה אתה חושב שיקרה? קסם? שום דבר לא יקרה.",
+            "מדהים, אתה מוכן להמשיך ללחוץ כמו רובוט חסר מוח.",
+            "ברצינות, תמצא תחביב יותר טוב.",
+            "מה אתה מנסה להוכיח פה? זה נהיה פתטי.",
+            "אתה לא מתעייף מלחיצה על כפתור שלא עושה כלום?",
+            "תמשיך ללחוץ. זה רק מזכיר לי למה אני פה כדי ללעוג לך.",
+            "החיים שלך כנראה משעממים מאוד אם זה מה שאתה עושה עכשיו.",
+            "כמה לחיצות צריך כדי להבין שאין פה שום דבר?",
+            "כל לחיצה שלך רק גורמת לי לאבד אמונה באנשים.",
+            "הכפתור לא יעשה שום דבר מדהים. תניח לזה.",
+            "אתה מתעקש להמשיך? זה באמת עצוב.",
+            "די, באמת, זה כבר לא מצחיק. אתה מביך.",
+            "תאר לך שאנשים אחרים היו רואים אותך עכשיו. איזה בושות.",
+            "ככל שאתה לוחץ יותר, אני מעריך אותך פחות.",
+            "אוקיי, אתה כנראה פשוט נהנה מבזבוז זמן.",
+            "בכנות? הכפתור הזה יותר מעניין ממך.",
+            "אין לי כבר מה להגיד. תמשיך ללחוץ, אפס."
         ];
 
-        function sendMessage() {
-            const userInput = document.getElementById("userInput").value;
-            if (userInput.trim() === "") {
-                alert("אפילו לכתוב משפט נורמלי אתה לא מסוגל?");
-                return;
-            }
-
-            const userMessage = `<p><strong>אתה:</strong> ${userInput}</p>`;
-            const botMessage = `<p><strong>צ'אט שבוז:</strong> ${
-                responses[Math.floor(Math.random() * responses.length)]
-            }</p>`;
-
-            chatBox.innerHTML += userMessage + botMessage;
-            chatBox.scrollTop = chatBox.scrollHeight;
-            document.getElementById("userInput").value = "";
+        function pressButton() {
+            const messageIndex = Math.min(clickCount, messages.length - 1);
+            const message = messages[messageIndex] || "נמאס לי ממך, לך תעשה משהו מועיל.";
+            document.getElementById("message").innerText = message;
+            clickCount++;
         }
     </script>
 </body>
