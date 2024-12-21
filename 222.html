@@ -19,6 +19,7 @@
             background-size: cover;
             color: #fff;
             text-align: center;
+            overflow: hidden;
         }
         h1 {
             font-size: 2.8em;
@@ -28,6 +29,8 @@
         }
         .button-container {
             position: relative;
+            width: 100%;
+            height: 100%;
         }
         button {
             background: #ff4444;
@@ -40,63 +43,75 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: absolute;
-            bottom: 50px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         button:hover {
             background: #ff0000;
             transform: scale(1.1);
         }
-        p {
-            font-size: 1.5em;
-            margin-top: 20px;
-            color: #fff;
-            text-shadow: 0 0 5px #000;
-        }
-        .chair {
-            width: 200px;
-            height: auto;
-            margin: 0 auto;
+        .speech-bubble {
+            position: absolute;
+            bottom: 120px;
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 1.2em;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
     <h1>אל תלחץ על הכפתור האדום!</h1>
     <div class="button-container">
-        <img src="https://i.imgur.com/FP8AoN9.png" alt="כיסא נוח" class="chair">
+        <div class="speech-bubble" id="bubble">אל תלחץ עליי!</div>
         <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
     </div>
     <p id="message"></p>
 
     <script>
         let clickCount = 0;
+        let hasHidden = false;
+
         const messages = [
             "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
-            "מה אתה חושב שזה ייתן לך?",
-            "ברצינות, הכפתור הזה רק מקלקל את הכיף.",
+            "אתה באמת לא מסוגל להחזיק מעמד?",
             "לחצת שוב? וואו, אתה ממש עקשן.",
-            "אולי תעשה משהו מועיל עם הזמן שלך?",
-            "די, זה מביך. הכפתור הזה לא יעשה כלום.",
-            "אני מרגיש שאתה פשוט אוהב לעשות ההפך.",
-            "איזה עוד דברים אתה עושה בניגוד להוראות?",
-            "לחיצה על הכפתור הזה לא תעשה אותך מיוחד.",
-            "תמשיך, תמשיך... זה רק מראה שאתה לא מקשיב.",
-            "די, באמת, זה כבר לא מצחיק.",
-            "כל לחיצה גורמת לי להרגיש חכם יותר ממך.",
-            "האם אתה נהנה לבזבז זמן על זה?",
-            "תאמין לי, עדיף לך לעצור עכשיו.",
-            "מה עם קצת משמעת עצמית?",
-            "ככל שאתה לוחץ, הכפתור נהיה פחות מעניין.",
-            "החיים שלך כנראה משעממים אם זה מה שאתה עושה.",
-            "תשאל את עצמך: למה אתה עושה את זה?",
-            "אוקיי, אני מוותר. אתה לא תעצור, נכון?",
-            "הבושה היא כולה שלך."
+            "הנה מגיע משהו מיוחד...",
+            "עכשיו אני מתחבא! בוא נראה אותך מוצא אותי!"
         ];
 
         function pressButton() {
+            const bubble = document.getElementById("bubble");
+            const message = document.getElementById("message");
+            const button = document.getElementById("redButton");
+
+            if (hasHidden) {
+                // אם הכפתור כבר התחבא, להחזיר הודעה ולסיים
+                bubble.innerText = "מצאת אותי! תמשיך לנסות את מזלך.";
+                bubble.style.display = "block";
+                button.style.display = "block";
+                hasHidden = false;
+                return;
+            }
+
             const messageIndex = Math.min(clickCount, messages.length - 1);
-            const message = messages[messageIndex] || "נמאס לי ממך, לך תעשה משהו מועיל.";
-            document.getElementById("message").innerText = message;
+            bubble.innerText = messages[messageIndex];
+            bubble.style.display = "block";
             clickCount++;
+
+            if (clickCount === 5) {
+                // הכפתור מתחבא אחרי 5 לחיצות
+                hasHidden = true;
+                button.style.top = `${Math.random() * 80 + 10}vh`;
+                button.style.left = `${Math.random() * 80 + 10}vw`;
+                button.style.display = "none";
+                bubble.innerText = "בוא נראה אותך מוצא אותי עכשיו!";
+            }
         }
     </script>
 </body>
