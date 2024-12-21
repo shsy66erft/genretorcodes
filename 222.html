@@ -28,13 +28,6 @@
             text-shadow: 0 0 10px #ff0000;
             position: relative;
         }
-        h1 span {
-            position: relative;
-        }
-        h1 .letter-a {
-            position: relative;
-            display: inline-block;
-        }
         .button-container {
             position: relative;
         }
@@ -49,21 +42,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: absolute;
+            top: 0;
+            left: 0;
+            display: none; /* הכפתור מתחבא בהתחלה */
         }
         button:hover {
             background: #ff0000;
             transform: scale(1.1);
-        }
-        .small-button {
-            width: 20px;
-            height: 20px;
-            font-size: 0.8em;
-            padding: 5px;
-            top: 0;
-            left: 0;
-            position: absolute;
-            transform: translate(-50%, -50%);
-            display: none;
         }
         .speech-bubble {
             position: absolute;
@@ -75,65 +60,83 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             font-size: 1.2em;
             text-align: center;
-            display: none;
+            display: block;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>אל תלחץ על הכפתור <span class="letter-a">האדום!</span></h1>
+    <h1>אל תלחץ על הכפתור האדום!</h1>
     <div class="button-container">
-        <div class="speech-bubble" id="bubble">אל תלחץ עליי!</div>
+        <div class="speech-bubble" id="bubble" onclick="showButton()">אל תלחץ עליי!</div>
         <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
-        <button id="smallButton" class="small-button" onclick="pressSmallButton()">🔴</button>
     </div>
     <p id="message"></p>
 
     <script>
         let clickCount = 0;
-        let hasShrunk = false;
 
         const messages = [
             "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
-            "אתה באמת לא מסוגל להחזיק מעמד?",
-            "לחצת שוב? וואו, אתה ממש עקשן.",
-            "הנה זה בא... תיזהר...",
-            "עכשיו אני קטן מאוד! תמצא אותי בתוך ה-'א'!"
+            "לחצת שוב? וואו, אתה ממש גרוע בציות להוראות.",
+            "זה שאתה ממשיך ללחוץ רק מראה כמה אתה עקשן ולא חכם.",
+            "מה אתה חושב שיקרה? קסם? שום דבר לא יקרה.",
+            "מדהים, אתה מוכן להמשיך ללחוץ כמו רובוט חסר מוח.",
+            "ברצינות, תמצא תחביב יותר טוב.",
+            "מה אתה מנסה להוכיח פה? זה נהיה פתטי.",
+            "אתה לא מתעייף מלחיצה על כפתור שלא עושה כלום?",
+            "תמשיך ללחוץ. זה רק מזכיר לי למה אני פה כדי ללעוג לך.",
+            "החיים שלך כנראה משעממים מאוד אם זה מה שאתה עושה עכשיו.",
+            "כמה לחיצות צריך כדי להבין שאין פה שום דבר?",
+            "כל לחיצה שלך רק גורמת לי לאבד אמונה באנשים.",
+            "הכפתור לא יעשה שום דבר מדהים. תניח לזה.",
+            "אתה מתעקש להמשיך? זה באמת עצוב.",
+            "די, באמת, זה כבר לא מצחיק. אתה מביך.",
+            "תאר לך שאנשים אחרים היו רואים אותך עכשיו. איזה בושות.",
+            "ככל שאתה לוחץ יותר, אני מעריך אותך פחות.",
+            "אוקיי, אתה כנראה פשוט נהנה מבזבוז זמן.",
+            "בכנות? הכפתור הזה יותר מעניין ממך.",
+            "אין לי כבר מה להגיד. תמשיך ללחוץ, אפס.",
+            "אתה לא יודע מתי להפסיק, נכון?",
+            "אתה לא חושב שזו התנהגות ילדותית?",
+            "אני רק רוצה להבין, מה אתה מקווה שיקרה?",
+            "לחצת! אבל תדע לך שאין לך סיבה לחגוג.",
+            "למה אתה לא שומע לי? זה כבר משעמם.",
+            "אתה יודע שהכפתור לא יעשה כלום, נכון?",
+            "הפעם לא תצליח לשגע אותי.",
+            "נראה שאתה נהנה להתעמת עם כפתור חסר תועלת.",
+            "מה תעשה אם תדע שאין כאן סוד נחשף?",
+            "כמה עוד פעמים תמשיך ללחוץ כדי להבין את זה?",
+            "הכפתור הזה לא יגלה לך סוד מהיקום.",
+            "למה כל כך קשה לך פשוט לוותר?",
+            "אני מבין שאתה אוהב אתגר, אבל זה ממש לא מרגש אותי.",
+            "כמובן, אתה ממשיך... אתה לא מתעייף?",
+            "הכפתור לא מבצע קסמים, אתה לא מתגעגע למציאות?",
+            "אני מבקש שתפסיק, אבל ברור לי שזה לא יקרה.",
+            "כל עוד תמשיך ללחוץ, אתה רק מזכיר לי כמה קשה לשנות הרגלים.",
+            "די, באמת. הכפתור הזה לא יגלה לך כלום.",
+            "אתה מתעקש, אבל תדע שהכפתור לא ישנה את המציאות.",
+            "אני מתחיל לחשוב אולי יש לך תחביבים מוזרים.",
+            "אני בטוח שאין לך מושג מה אתה עושה כאן.",
+            "בוא תמצא אותי עכשיו!"
         ];
 
-        function pressButton() {
-            const bubble = document.getElementById("bubble");
-            const button = document.getElementById("redButton");
-            const smallButton = document.getElementById("smallButton");
+        function showButton() {
+            if (clickCount >= 5 && clickCount < 6) {
+                const button = document.getElementById("redButton");
+                const bubble = document.getElementById("bubble");
 
-            if (hasShrunk) {
-                bubble.innerText = "כבר לחצת עליי! תמצא מישהו אחר ללחוץ עליו!";
-                bubble.style.display = "block";
-                return;
-            }
-
-            const messageIndex = Math.min(clickCount, messages.length - 1);
-            bubble.innerText = messages[messageIndex];
-            bubble.style.display = "block";
-            clickCount++;
-
-            if (clickCount === 5) {
-                // הכפתור קטן ומזיזים אותו למיקום האות "א"
-                const letterA = document.querySelector(".letter-a");
-                const rect = letterA.getBoundingClientRect();
-
-                button.style.display = "none";
-                smallButton.style.display = "block";
-                smallButton.style.top = `${rect.top + rect.height / 2}px`;
-                smallButton.style.left = `${rect.left + rect.width / 2}px`;
-                bubble.innerText = "בוא נראה אותך מוצא אותי עכשיו!";
-                hasShrunk = true;
+                bubble.innerText = "בוא תמצא אותי עכשיו!";
+                bubble.style.display = "none"; // הבועה נעלמת
+                button.style.display = "block"; // הכפתור מתגלה
             }
         }
 
-        function pressSmallButton() {
-            const bubble = document.getElementById("bubble");
-            bubble.innerText = "מצאת אותי! עכשיו מה? תעזוב אותי בשקט!";
-            bubble.style.display = "block";
+        function pressButton() {
+            const messageElement = document.getElementById("message");
+            const messageIndex = Math.min(clickCount, messages.length - 1);
+            messageElement.innerText = messages[messageIndex];
+            clickCount++;
         }
     </script>
 </body>
