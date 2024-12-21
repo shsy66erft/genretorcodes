@@ -19,14 +19,12 @@
             background-size: cover;
             color: #fff;
             text-align: center;
-            overflow: hidden;
         }
         h1 {
             font-size: 2.8em;
             color: #ff4444;
             margin-bottom: 20px;
             text-shadow: 0 0 10px #ff0000;
-            position: relative;
         }
         .button-container {
             position: relative;
@@ -42,81 +40,62 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: absolute;
-            top: 0;
-            left: 0;
-            display: none; /* הכפתור מתחבא בהתחלה */
+            bottom: 50px;
         }
         button:hover {
             background: #ff0000;
             transform: scale(1.1);
         }
-        .speech-bubble {
-            position: absolute;
-            bottom: 120px;
-            background: #fff;
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            font-size: 1.2em;
-            text-align: center;
-            display: block;
-            cursor: pointer;
+        p {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+        }
+        .chair {
+            width: 200px;
+            height: auto;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
     <h1>אל תלחץ על הכפתור האדום!</h1>
     <div class="button-container">
-        <div class="speech-bubble" id="bubble" onclick="startHideAndSeek()">בוא נשחק מחבואים!</div>
+        <img src="https://i.imgur.com/FP8AoN9.png" alt="כיסא נוח" class="chair">
         <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
     </div>
     <p id="message"></p>
 
     <script>
         let clickCount = 0;
-
         const messages = [
             "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
-            "אתה באמת לא מסוגל להחזיק מעמד?",
+            "מה אתה חושב שזה ייתן לך?",
+            "ברצינות, הכפתור הזה רק מקלקל את הכיף.",
             "לחצת שוב? וואו, אתה ממש עקשן.",
-            "הנה זה בא... תיזהר...",
-            "עכשיו אני קטן מאוד! תמצא אותי בתוך ה-'א'!",
-            "אהההה, עוד פעם לחצת, אתה ממש לא מבין?",
-            "חיים קלים עליך, נכון? כי אני לא עושה כלום.",
-            "די, לא יקרה שום קסם. תפסיק לחכות לשום דבר.",
-            "אולי תנסה לחפש משהו אחר שיעניין אותך?",
-            "הכפתור לא יעשה כלום, אתה לא מתעייף?",
-            "אני בטוח שתוכל למצוא תחביבים יותר טובים.",
-            "אבל נראה שאתה ממש נהנה מכך.",
-            "אתה לא חושב שהגיע הזמן להפסיק?",
-            "הכפתור הזה לא יגלה לך שום סוד מהיקום.",
-            "אולי כדאי שתנסה דברים אחרים.",
-            "אתה לא עייף מלחיצה על כפתור חסר תועלת?",
-            "אני לא מבין למה אתה לא עוצר.",
-            "הכפתור הזה לא עונה לך, אז למה אתה מתעקש?",
-            "מה אני יכול לומר לך? תפסיק לחכות כאן."
+            "אולי תעשה משהו מועיל עם הזמן שלך?",
+            "די, זה מביך. הכפתור הזה לא יעשה כלום.",
+            "אני מרגיש שאתה פשוט אוהב לעשות ההפך.",
+            "איזה עוד דברים אתה עושה בניגוד להוראות?",
+            "לחיצה על הכפתור הזה לא תעשה אותך מיוחד.",
+            "תמשיך, תמשיך... זה רק מראה שאתה לא מקשיב.",
+            "די, באמת, זה כבר לא מצחיק.",
+            "כל לחיצה גורמת לי להרגיש חכם יותר ממך.",
+            "האם אתה נהנה לבזבז זמן על זה?",
+            "תאמין לי, עדיף לך לעצור עכשיו.",
+            "מה עם קצת משמעת עצמית?",
+            "ככל שאתה לוחץ, הכפתור נהיה פחות מעניין.",
+            "החיים שלך כנראה משעממים אם זה מה שאתה עושה.",
+            "תשאל את עצמך: למה אתה עושה את זה?",
+            "אוקיי, אני מוותר. אתה לא תעצור, נכון?",
+            "הבושה היא כולה שלך."
         ];
 
-        function startHideAndSeek() {
-            const button = document.getElementById("redButton");
-            const bubble = document.getElementById("bubble");
-
-            bubble.innerText = "חפש אותי עכשיו!";
-            bubble.style.display = "none"; // הבועה נעלמת
-            button.style.display = "block"; // הכפתור מתגלה
-        }
-
         function pressButton() {
-            const messageElement = document.getElementById("message");
-
-            if (clickCount === 5) {
-                // לאחר 5 לחיצות הכפתור הופך למתוחכם יותר
-                messageElement.innerText = "אתה מצאת אותי! עכשיו תמשיך.";
-            } else {
-                const messageIndex = Math.min(clickCount, messages.length - 1);
-                messageElement.innerText = messages[messageIndex];
-            }
+            const messageIndex = Math.min(clickCount, messages.length - 1);
+            const message = messages[messageIndex] || "נמאס לי ממך, לך תעשה משהו מועיל.";
+            document.getElementById("message").innerText = message;
             clickCount++;
         }
     </script>
