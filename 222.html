@@ -26,11 +26,17 @@
             color: #ff4444;
             margin-bottom: 20px;
             text-shadow: 0 0 10px #ff0000;
+            position: relative;
+        }
+        h1 span {
+            position: relative;
+        }
+        h1 .letter-a {
+            position: relative;
+            display: inline-block;
         }
         .button-container {
             position: relative;
-            width: 100%;
-            height: 100%;
         }
         button {
             background: #ff4444;
@@ -43,13 +49,21 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
         button:hover {
             background: #ff0000;
             transform: scale(1.1);
+        }
+        .small-button {
+            width: 20px;
+            height: 20px;
+            font-size: 0.8em;
+            padding: 5px;
+            top: 0;
+            left: 0;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: none;
         }
         .speech-bubble {
             position: absolute;
@@ -66,36 +80,34 @@
     </style>
 </head>
 <body>
-    <h1>אל תלחץ על הכפתור האדום!</h1>
+    <h1>אל תלחץ על הכפתור <span class="letter-a">האדום!</span></h1>
     <div class="button-container">
         <div class="speech-bubble" id="bubble">אל תלחץ עליי!</div>
         <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
+        <button id="smallButton" class="small-button" onclick="pressSmallButton()">🔴</button>
     </div>
     <p id="message"></p>
 
     <script>
         let clickCount = 0;
-        let hasHidden = false;
+        let hasShrunk = false;
 
         const messages = [
             "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
             "אתה באמת לא מסוגל להחזיק מעמד?",
             "לחצת שוב? וואו, אתה ממש עקשן.",
-            "הנה מגיע משהו מיוחד...",
-            "עכשיו אני מתחבא! בוא נראה אותך מוצא אותי!"
+            "הנה זה בא... תיזהר...",
+            "עכשיו אני קטן מאוד! תמצא אותי בתוך ה-'א'!"
         ];
 
         function pressButton() {
             const bubble = document.getElementById("bubble");
-            const message = document.getElementById("message");
             const button = document.getElementById("redButton");
+            const smallButton = document.getElementById("smallButton");
 
-            if (hasHidden) {
-                // אם הכפתור כבר התחבא, להחזיר הודעה ולסיים
-                bubble.innerText = "מצאת אותי! תמשיך לנסות את מזלך.";
+            if (hasShrunk) {
+                bubble.innerText = "כבר לחצת עליי! תמצא מישהו אחר ללחוץ עליו!";
                 bubble.style.display = "block";
-                button.style.display = "block";
-                hasHidden = false;
                 return;
             }
 
@@ -105,13 +117,23 @@
             clickCount++;
 
             if (clickCount === 5) {
-                // הכפתור מתחבא אחרי 5 לחיצות
-                hasHidden = true;
-                button.style.top = `${Math.random() * 80 + 10}vh`;
-                button.style.left = `${Math.random() * 80 + 10}vw`;
+                // הכפתור קטן ומזיזים אותו למיקום האות "א"
+                const letterA = document.querySelector(".letter-a");
+                const rect = letterA.getBoundingClientRect();
+
                 button.style.display = "none";
+                smallButton.style.display = "block";
+                smallButton.style.top = `${rect.top + rect.height / 2}px`;
+                smallButton.style.left = `${rect.left + rect.width / 2}px`;
                 bubble.innerText = "בוא נראה אותך מוצא אותי עכשיו!";
+                hasShrunk = true;
             }
+        }
+
+        function pressSmallButton() {
+            const bubble = document.getElementById("bubble");
+            bubble.innerText = "מצאת אותי! עכשיו מה? תעזוב אותי בשקט!";
+            bubble.style.display = "block";
         }
     </script>
 </body>
