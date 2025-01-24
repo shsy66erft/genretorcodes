@@ -58,3 +58,106 @@
     </div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אל תלחץ על הכפתור!</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.8em;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        .button-container {
+            position: relative;
+        }
+        button {
+            background: #ff4444;
+            color: #fff;
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 50px;
+        }
+        button:hover {
+            background: #ff0000;
+            transform: scale(1.1);
+        }
+        p {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+        }
+        .chair {
+            width: 200px;
+            height: auto;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>אל תלחץ על הכפתור האדום!</h1>
+    <div class="button-container">
+        <img src="https://i.imgur.com/FP8AoN9.png" alt="כיסא נוח" class="chair">
+        <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
+    </div>
+    <p id="message"></p>
+
+    <script>
+        let clickCount = 0;
+        const messages = [
+            "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
+            "מה אתה חושב שזה ייתן לך?",
+            "ברצינות, הכפתור הזה רק מקלקל את הכיף.",
+            "לחצת שוב? וואו, אתה ממש עקשן.",
+            "אולי תעשה משהו מועיל עם הזמן שלך?",
+            "די, זה מביך. הכפתור הזה לא יעשה כלום.",
+            "אני מרגיש שאתה פשוט אוהב לעשות ההפך.",
+            "איזה עוד דברים אתה עושה בניגוד להוראות?",
+            "לחיצה על הכפתור הזה לא תעשה אותך מיוחד.",
+            "תמשיך, תמשיך... זה רק מראה שאתה לא מקשיב.",
+            "די, באמת, זה כבר לא מצחיק.",
+            "כל לחיצה גורמת לי להרגיש חכם יותר ממך.",
+            "האם אתה נהנה לבזבז זמן על זה?",
+            "תאמין לי, עדיף לך לעצור עכשיו.",
+            "מה עם קצת משמעת עצמית?",
+            "ככל שאתה לוחץ, הכפתור נהיה פחות מעניין.",
+            "החיים שלך כנראה משעממים אם זה מה שאתה עושה.",
+            "תשאל את עצמך: למה אתה עושה את זה?",
+            "אוקיי, אני מוותר. אתה לא תעצור, נכון?",
+            "הבושה היא כולה שלך."
+        ];
+
+        function pressButton() {
+            const messageIndex = Math.min(clickCount, messages.length - 1);
+            const message = messages[messageIndex] || "נמאס לי ממך, לך תעשה משהו מועיל.";
+            document.getElementById("message").innerText = message;
+            clickCount++;
+        }
+    </script>
+</body>
+</html>
