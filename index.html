@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta name="google-site-verification" content="hyQcru-EMCBElKe1q0cl45iQFK7EIZ6LnSAM9ZmEPWs" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התחברות</title>
+    <style>
+        :root {
+            --primary-color: #80b6e2;
+            --secondary-color: #FFE082;
+            --background-color: #5574575b;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-block-size: 100vh;
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            direction: rtl;
+            position: relative;
+        }
+
+        .menu {
+            inline-size: 100%;
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            text-align: center;
+            position: fixed;
+            inset-block-start: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .menu a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            inline-size: 100%;
+            max-inline-size: 400px;
+            margin: 80px auto 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-block-end: 25px;
+            font-size: 2em;
+        }
+
+        .form-group {
+            position: relative;
+            margin-block-end: 20px;
+        }
+
+        label {
+            position: absolute;
+            inset-inline-end: 10px;
+            inset-block-start: -10px;
+            background-color: white;
+            padding: 0 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        input {
+            inline-size: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            inline-size: 100%;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-block-start: 20px;
+        }
+
+        .button:hover {
+            background-color: #F4511E;
+            transform: translateY(-1px);
+        }
+
+        .button:active {
+            transform: translateY(1px);
+        }
+
+        .additional-options {
+            margin-block-start: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #666;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-block-end: 1px solid #ddd;
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        .password-strength {
+            margin-block-start: 5px;
+            block-size: 4px;
+            background-color: #ddd;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            block-size: 100%;
+            inline-size: 0;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-block-start: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 14px;
+            margin-block-start: 5px;
+            display: none;
+        }
+
+        .g_id_signin {
+            margin-block-start: 20px;
+            inline-size: 100% !important;
+        }
+
+        @media (max-inline-size: 480px) {
+            .container {
+                margin: 60px 15px 20px;
+                padding: 20px;
+            }
+
+            .menu a {
+                margin: 0 8px;
+                font-size: 14px;
+            }
+        }
+
+        /* נגישות */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+            }
+        }
+
+        .skip-link {
+            position: absolute;
+            inset-block-start: -40px;
+            inset-inline-start: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            inset-block-start: 0;
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="signup.html">Sign Up</a>
+        <a href="policy.html">Privacy Policy</a>
+    </div>
+    
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button class="button" type="submit">Login</button>
+        </form>
+        <div class="additional-options">
+            <label class="remember-me">
+                <input type="checkbox" id="remember-me" name="remember-me">
+                זכור אותי
+            </label>
+            <a href="forgot-password.html" class="forgot-password">שכחת סיסמה?</a>
+        </div>
+        <div class="divider">
+            <span>או</span>
+        </div>
+        <div id="g_id_login" class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+    </div>
+    
+    <script>
+        (function () {
+           var script = document.createElement("script");
+           script.type = "text/javascript";
+           script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+           script.setAttribute(
+             "integrity",
+             "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
+           );
+           script.setAttribute("crossorigin", "anonymous");
+           document.getElementsByTagName("head")[0].appendChild(script);
+         })();
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("2T_CaMbAN4-h9rTjA"); // Replace 'YOUR_USER_ID' with your actual User ID from EmailJS
+        })();
+
+        function num6() {
+            return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit number
+        }
+
+        function hashCode(code) {
+            return CryptoJS.SHA256(code).toString();
+        }
+        function login() {
+            // ביצוע התחברות...
+            localStorage.setItem("loggedIn", "true");
+            window.location.href = "home.html";
+        }
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Here you should verify the email and password (e.g., by checking a database).
+            // This example assumes verification is always successful.
+
+            const code = num6(); // Generate a 6-digit code
+            const hashedCode = hashCode(code.toString());
+            localStorage.setItem('verificationHashCode', hashedCode); // Store the hashed code in localStorage
+
+            const templateParams = {
+                to_email: email,
+                code: code
+            };
+
+            emailjs.send('service_zuhohgv', 'template_rkg9tjl', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    window.location.href = 'loginver.html';
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('Error sending email. Please try again.');
+                });
+        });
+
+                function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+
+            // פענוח ה-JWT כדי לקבל את פרטי המשתמש
+            const decoded = JSON.parse(atob(response.credential.split('.')[1])); // מפענח את ה-JWT
+            const userName = decoded.name || "משתמש"; // שם המשתמש (ברירת מחדל 'משתמש')
+            const userEmail = decoded.email; // אימייל המשתמש
+
+            // שמירת השם ב-localStorage בקידוד UTF-8
+            localStorage.setItem("userName", userName);
+
+            // ניתוב לדף הבית
+            window.location.href = 'home.html';
+        }
+
+
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com", // Replace with your actual Client ID
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("g_id_login"),
+                { theme: "outline", size: "large" } // customization attributes
+            );
+            google.accounts.id.prompt(); // Show the One Tap dialog
+        };
+
+    </script>
+    
+</body>
+</html>
