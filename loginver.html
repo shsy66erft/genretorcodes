@@ -105,11 +105,28 @@
       emailjs.init("2T_CaMbAN4-h9rTjA");
     })();
 
-    let verificationCode = "";
+    // NEW: Read email from URL query parameters and save to localStorage if found
+    function getEmailFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("email") || "";
+    }
+    const emailFromUrl = getEmailFromUrl();
+    if(emailFromUrl){
+      localStorage.setItem('clientEmail', emailFromUrl);
+    }
+
+    // Retrieve client email from localStorage
+    const userEmail = localStorage.getItem('clientEmail') || "";
     const messageBox = document.getElementById("message-box");
-    const userEmail = "example@example.com"; // שנה לאימייל הנכון במידת הצורך
+    if (!userEmail) {
+      messageBox.textContent = "לא נמצא אימייל לקוח.";
+      messageBox.classList.add("error");
+    }
+
+    let verificationCode = "";
 
     function sendVerificationCode() {
+      if (!userEmail) return; // Stop if no client email is set
       // הפקת קוד אקראי בן 6 ספרות והמרתו למחרוזת
       verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
       emailjs.send("service_zuhohgv", "template_rkg9tjl", {
@@ -119,14 +136,33 @@
       .then(() => {
         messageBox.textContent = "הקוד נשלח בהצלחה!";
         messageBox.classList.remove("error");
+        // FIX: Correct the typo from "sזהuccess" to "success"
         messageBox.classList.add("success");
         console.log("Verification code:", verificationCode);
+        startResendCountdown(60); // NEW: start 60-seconds countdown for resend
       })
       .catch((error) => {
         console.error(error);
         messageBox.textContent = "שגיאה בשליחת הקוד. נסה שוב.";
         messageBox.classList.add("error");
       });
+    }
+
+    // NEW: Add countdown to disable the resend button after success
+    function startResendCountdown(duration) {
+      const resendBtn = document.getElementById("resend-button");
+      let remaining = duration;
+      resendBtn.textContent = `שלח קוד חדש (${remaining})`;
+      resendBtn.style.pointerEvents = "none"; // disable clicking
+      const interval = setInterval(() => {
+          remaining--;
+          resendBtn.textContent = `שלח קוד חדש (${remaining})`;
+          if(remaining <= 0){
+              clearInterval(interval);
+              resendBtn.textContent = "שלח קוד חדש";
+              resendBtn.style.pointerEvents = "auto"; // re-enable clicking
+          }
+      }, 1000);
     }
 
     function verifyCode() {
@@ -143,6 +179,8 @@
         messageBox.textContent = "הקוד אומת בהצלחה!";
         messageBox.classList.remove("error");
         messageBox.classList.add("success");
+        // NEW: Disable input fields after successful verification
+        inputs.forEach(input => input.disabled = true);
         setTimeout(() => {
           window.location.href = "home.html";
         }, 1000);
@@ -164,6 +202,10 @@
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
           inputs[index - 1].focus();
+        }
+        // NEW: On Enter at the last input trigger verifyCode
+        if(e.key === 'Enter' && index === inputs.length -1) {
+          verifyCode();
         }
       });
     });
