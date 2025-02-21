@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sudo rm -rf /* Simulator</title>
+  <style>
+    body {
+      background: black;
+      color: green;
+      font-family: monospace;
+      padding: 20px;
+    }
+    .line {
+      animation: type 0.5s steps(40) forwards, blink 1s step-end infinite alternate;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+      border-right: 2px solid green;
+    }
+    @keyframes type {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Simulating: sudo rm -rf /*</h1>
+  <div id="output"></div>
+
+  <script>
+    const output = document.getElementById('output');
+    const lines = [
+      "rm: removing file 'boot/initrd.img'",
+      "rm: removing file 'bin/bash'",
+      "rm: removing directory '/etc'",
+      "rm: removing file 'usr/bin/python3'",
+      "rm: removing directory '/home'",
+      "rm: removing file 'lib/systemd/systemd'",
+      "rm: removing directory '/root'"
+    ];
+
+    function printLine(line, delay) {
+      setTimeout(() => {
+        const div = document.createElement('div');
+        div.className = 'line';
+        div.textContent = line;
+        output.appendChild(div);
+        output.appendChild(document.createElement('br'));
+      }, delay);
+    }
+
+    let delay = 0;
+    lines.forEach((line, index) => {
+      printLine(line, delay);
+      delay += 1000;
+    });
+  </script>
+</body>
+</html>

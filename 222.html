@@ -1,53 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>אל תלחץ על הכפתור!</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
-            background-color: #FFEB3B;
-            font-family: Arial, sans-serif;
-            margin: 0;
-        }
-        .menu {
-            width: 100%;
-            background-color: #FF7043;
-            padding: 10px 0;
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
             text-align: center;
+            overflow: hidden;
         }
-        .menu a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-size: 16px;
+        h1 {
+            font-size: 2.8em;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
+            position: relative;
         }
-        .container {
-            text-align: center;
-            background-color: #FFE082;
-            padding: 20px;
+        .button-container {
+            position: relative;
+        }
+        button {
+            background: #ff4444;
+            color: #fff;
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border: none;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none; /* הכפתור מתחבא בהתחלה */
+        }
+        button:hover {
+            background: #ff0000;
+            transform: scale(1.1);
+        }
+        .speech-bubble {
+            position: absolute;
+            bottom: 120px;
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 1.2em;
+            text-align: center;
+            display: block;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="menu">
-        <a href="index.html">Home</a>
-        <a href="contact.html">Contact Us</a>
-        <a href="signup.html">Sign Up</a>
-        <a href="login.html">Login</a>
+    <h1>אל תלחץ על הכפתור האדום!</h1>
+    <div class="button-container">
+        <div class="speech-bubble" id="bubble" onclick="showButton()">אל תלחץ עליי!</div>
+        <button id="redButton" onclick="pressButton()">אל תלחץ!</button>
     </div>
-    <div class="container">
-        <h1>Contact Us</h1>
-        <p>You can reach us at <a href="mailto:SHAY053713@GMAIL.COM">coustemrserver@neonapp.co.il</a></p>
-    </div>
+    <p id="message"></p>
+
+    <script>
+        let clickCount = 0;
+
+        const messages = [
+            "אמרתי לך לא ללחוץ! אתה לא מבין עברית?",
+            "לחצת שוב? וואו, אתה ממש גרוע בציות להוראות.",
+            "זה שאתה ממשיך ללחוץ רק מראה כמה אתה עקשן ולא חכם.",
+            "מה אתה חושב שיקרה? קסם? שום דבר לא יקרה.",
+            "מדהים, אתה מוכן להמשיך ללחוץ כמו רובוט חסר מוח.",
+            "ברצינות, תמצא תחביב יותר טוב.",
+            "מה אתה מנסה להוכיח פה? זה נהיה פתטי.",
+            "אתה לא מתעייף מלחיצה על כפתור שלא עושה כלום?",
+            "תמשיך ללחוץ. זה רק מזכיר לי למה אני פה כדי ללעוג לך.",
+            "החיים שלך כנראה משעממים מאוד אם זה מה שאתה עושה עכשיו.",
+            "כמה לחיצות צריך כדי להבין שאין פה שום דבר?",
+            "כל לחיצה שלך רק גורמת לי לאבד אמונה באנשים.",
+            "הכפתור לא יעשה שום דבר מדהים. תניח לזה.",
+            "אתה מתעקש להמשיך? זה באמת עצוב.",
+            "די, באמת, זה כבר לא מצחיק. אתה מביך.",
+            "תאר לך שאנשים אחרים היו רואים אותך עכשיו. איזה בושות.",
+            "ככל שאתה לוחץ יותר, אני מעריך אותך פחות.",
+            "אוקיי, אתה כנראה פשוט נהנה מבזבוז זמן.",
+            "בכנות? הכפתור הזה יותר מעניין ממך.",
+            "אין לי כבר מה להגיד. תמשיך ללחוץ, אפס.",
+            "אתה לא יודע מתי להפסיק, נכון?",
+            "אתה לא חושב שזו התנהגות ילדותית?",
+            "אני רק רוצה להבין, מה אתה מקווה שיקרה?",
+            "לחצת! אבל תדע לך שאין לך סיבה לחגוג.",
+            "למה אתה לא שומע לי? זה כבר משעמם.",
+            "אתה יודע שהכפתור לא יעשה כלום, נכון?",
+            "הפעם לא תצליח לשגע אותי.",
+            "נראה שאתה נהנה להתעמת עם כפתור חסר תועלת.",
+            "מה תעשה אם תדע שאין כאן סוד נחשף?",
+            "כמה עוד פעמים תמשיך ללחוץ כדי להבין את זה?",
+            "הכפתור הזה לא יגלה לך סוד מהיקום.",
+            "למה כל כך קשה לך פשוט לוותר?",
+            "אני מבין שאתה אוהב אתגר, אבל זה ממש לא מרגש אותי.",
+            "כמובן, אתה ממשיך... אתה לא מתעייף?",
+            "הכפתור לא מבצע קסמים, אתה לא מתגעגע למציאות?",
+            "אני מבקש שתפסיק, אבל ברור לי שזה לא יקרה.",
+            "כל עוד תמשיך ללחוץ, אתה רק מזכיר לי כמה קשה לשנות הרגלים.",
+            "די, באמת. הכפתור הזה לא יגלה לך כלום.",
+            "אתה מתעקש, אבל תדע שהכפתור לא ישנה את המציאות.",
+            "אני מתחיל לחשוב אולי יש לך תחביבים מוזרים.",
+            "אני בטוח שאין לך מושג מה אתה עושה כאן.",
+            "בוא תמצא אותי עכשיו!"
+        ];
+
+        function showButton() {
+            if (clickCount >= 5 && clickCount < 6) {
+                const button = document.getElementById("redButton");
+                const bubble = document.getElementById("bubble");
+
+                bubble.innerText = "בוא תמצא אותי עכשיו!";
+                bubble.style.display = "none"; // הבועה נעלמת
+                button.style.display = "block"; // הכפתור מתגלה
+            }
+        }
+
+        function pressButton() {
+            const messageElement = document.getElementById("message");
+            const messageIndex = Math.min(clickCount, messages.length - 1);
+            messageElement.innerText = messages[messageIndex];
+            clickCount++;
+        }
+    </script>
 </body>
 </html>
