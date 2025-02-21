@@ -1,181 +1,178 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אימות קוד</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f7f7f7;
-            font-family: Arial, sans-serif;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        h1 {
-            font-size: 24px;
-            color: #007bff;
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .input-group input {
-            width: 40px;
-            height: 50px;
-            text-align: center;
-            font-size: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .resend {
-            margin-top: 15px;
-            color: #007bff;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .resend:hover {
-            text-decoration: underline;
-        }
-
-        .message {
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .error {
-            color: red;
-        }
-
-        .success {
-            color: green;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אימות קוד</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f7f7f7;
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .input-group input {
+      width: 40px;
+      height: 50px;
+      text-align: center;
+      font-size: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+    }
+    .input-group input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    .button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .resend {
+      margin-top: 15px;
+      color: #007bff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .resend:hover {
+      text-decoration: underline;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>אימות קוד</h1>
-
-        <div class="input-group" id="code-inputs">
-            <input type="text" maxlength="1" id="digit-1" autocomplete="off">
-            <input type="text" maxlength="1" id="digit-2" autocomplete="off">
-            <input type="text" maxlength="1" id="digit-3" autocomplete="off">
-            <input type="text" maxlength="1" id="digit-4" autocomplete="off">
-            <input type="text" maxlength="1" id="digit-5" autocomplete="off">
-            <input type="text" maxlength="1" id="digit-6" autocomplete="off">
-        </div>
-
-        <button class="button" id="verify-button">אמת קוד</button>
-        <div class="resend" id="resend-button">שלח קוד חדש</div>
-        <div class="message" id="message-box"></div>
+  <div class="container">
+    <h1>אימות קוד</h1>
+    <div class="input-group" id="code-inputs">
+      <input type="text" maxlength="1" id="digit-1" autocomplete="off">
+      <input type="text" maxlength="1" id="digit-2" autocomplete="off">
+      <input type="text" maxlength="1" id="digit-3" autocomplete="off">
+      <input type="text" maxlength="1" id="digit-4" autocomplete="off">
+      <input type="text" maxlength="1" id="digit-5" autocomplete="off">
+      <input type="text" maxlength="1" id="digit-6" autocomplete="off">
     </div>
+    <button class="button" id="verify-button">אמת קוד</button>
+    <div class="resend" id="resend-button">שלח קוד חדש</div>
+    <div class="message" id="message-box"></div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
-    <script>
-        (function() {
-            emailjs.init("2T_CaMbAN4-h9rTjA"); // User ID שלך מ-EmailJS
-        })();
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("2T_CaMbAN4-h9rTjA");
+    })();
 
-        let verificationCode = null;
-        const messageBox = document.getElementById("message-box");
-        const userEmail = "example@example.com"; // כאן תחליף את זה באימייל שאתה מקבל בהרשמה
+    let verificationCode = "";
+    const messageBox = document.getElementById("message-box");
+    const userEmail = "example@example.com"; // שנה לאימייל הנכון במידת הצורך
 
-        function sendVerificationCode() {
-            verificationCode = Math.floor(100000 + Math.random() * 900000); // קוד אקראי
-            emailjs.send("service_zuhohgv", "template_rkg9tjl", {
-                code: verificationCode,
-                to_email: userEmail
-            })
-            .then(() => {
-                messageBox.textContent = "הקוד נשלח בהצלחה!";
-                messageBox.classList.remove("error");
-                messageBox.classList.add("success");
-            })
-            .catch((error) => {
-                console.error(error);
-                messageBox.textContent = "שגיאה בשליחת הקוד. נסה שוב.";
-                messageBox.classList.add("error");
-            });
+    function sendVerificationCode() {
+      // הפקת קוד אקראי בן 6 ספרות והמרתו למחרוזת
+      verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+      emailjs.send("service_zuhohgv", "template_rkg9tjl", {
+        code: verificationCode,
+        to_email: userEmail
+      })
+      .then(() => {
+        messageBox.textContent = "הקוד נשלח בהצלחה!";
+        messageBox.classList.remove("error");
+        messageBox.classList.add("success");
+        console.log("Verification code:", verificationCode);
+      })
+      .catch((error) => {
+        console.error(error);
+        messageBox.textContent = "שגיאה בשליחת הקוד. נסה שוב.";
+        messageBox.classList.add("error");
+      });
+    }
+
+    function verifyCode() {
+      const inputs = Array.from(document.querySelectorAll('.input-group input'));
+      const enteredCode = inputs.map(input => input.value).join("");
+
+      if (enteredCode.length < 6) {
+        messageBox.textContent = "יש להזין 6 ספרות.";
+        messageBox.classList.add("error");
+        return;
+      }
+
+      if (enteredCode === verificationCode) {
+        messageBox.textContent = "הקוד אומת בהצלחה!";
+        messageBox.classList.remove("error");
+        messageBox.classList.add("success");
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 1000);
+      } else {
+        messageBox.textContent = "קוד שגוי. נסה שוב.";
+        messageBox.classList.add("error");
+        console.log("Entered code:", enteredCode, "Expected code:", verificationCode);
+      }
+    }
+
+    // ניהול מעבר בין השדות
+    const inputs = document.querySelectorAll('.input-group input');
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
         }
-
-        function verifyCode() {
-            const inputs = Array.from(document.querySelectorAll('.input-group input'));
-            const enteredCode = inputs.map(input => input.value).join("");
-
-            if (parseInt(enteredCode) === verificationCode) {
-                messageBox.textContent = "הקוד אומת בהצלחה!";
-                messageBox.classList.remove("error");
-                messageBox.classList.add("success");
-
-                // הפנייה ל-Home.html אחרי הצלחה
-                setTimeout(() => {
-                    window.location.href = "home.html"; // הפנה לדף ה-Home
-                }, 1000); // המתן שנייה לפני הפנייה
-            } else {
-                messageBox.textContent = "קוד שגוי. נסה שוב.";
-                messageBox.classList.add("error");
-            }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+          inputs[index - 1].focus();
         }
+      });
+    });
 
-        // מעבר אוטומטי לשדה הבא
-        document.querySelectorAll('.input-group input').forEach((input, index, inputs) => {
-            input.addEventListener('input', (e) => {
-                if (e.target.value.length === 1 && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                } else if (e.target.value.length === 0 && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
-        });
+    document.getElementById("verify-button").addEventListener("click", verifyCode);
+    document.getElementById("resend-button").addEventListener("click", sendVerificationCode);
 
-        document.getElementById("verify-button").addEventListener("click", verifyCode);
-        document.getElementById("resend-button").addEventListener("click", sendVerificationCode);
-
-        // שליחה אוטומטית בעת טעינה ראשונית
-        sendVerificationCode();
-    </script>
+    // שליחה אוטומטית של הקוד בעת טעינת הדף
+    sendVerificationCode();
+  </script>
 </body>
 </html>
