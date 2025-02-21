@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ultimate Game Hub</title>
+  <title>מרכז המשחקים</title>
   <style>
-    /* General Styles */
+    /* סגנונות כלליים */
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #2c3e50, #4ca1af);
@@ -43,28 +43,29 @@
     h2, h3, h4 {
       text-align: center;
     }
-    /* Tic Tac Toe Section */
-    #tic-tac-toe-section {
+    /* ----- טיק-טק-טו ----- */
+    #ttt-section {
+      display: none;
       background: rgba(0, 0, 0, 0.2);
       border-radius: 10px;
       padding: 20px;
       margin-bottom: 30px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
-    #status {
+    #ttt-status {
       text-align: center;
       margin-bottom: 10px;
       font-size: 24px;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
-    #board {
+    #ttt-board {
       display: grid;
       grid-template-columns: repeat(3, 100px);
       gap: 5px;
       justify-content: center;
       margin-bottom: 20px;
     }
-    .cell {
+    .ttt-cell {
       width: 100px;
       height: 100px;
       background-color: #444;
@@ -75,12 +76,12 @@
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
     }
-    .cell:hover {
+    .ttt-cell:hover {
       background-color: #666;
       transform: scale(1.05);
     }
-    /* Shop (Tic Tac Toe Shop) & Controls */
-    #shop {
+    /* חנות טיק-טק-טו */
+    #ttt-shop {
       display: none;
       background-color: #444;
       padding: 10px;
@@ -88,18 +89,126 @@
       text-align: center;
       margin-bottom: 10px;
     }
-    #shop button {
+    #ttt-shop button {
       margin: 5px;
       padding: 5px 10px;
       font-size: 16px;
       cursor: pointer;
     }
-    #toggleShopBtn, #newGameBtn {
+    #ttt-toggleShopBtn, #ttt-newGameBtn {
       display: none;
       margin: 5px auto;
       background-color: #00796b;
     }
-    /* Modal Rating */
+    /* ----- משחק נחש ----- */
+    #snake-section {
+      display: none;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    #snake-canvas {
+      background-color: #222;
+      display: block;
+      margin: 10px auto;
+      border: 2px solid #555;
+    }
+    #snake-status {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+    /* ----- משחק זיכרון ----- */
+    #memory-section {
+      display: none;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    #memory-board {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .memory-card {
+      width: 80px;
+      height: 80px;
+      background-color: #555;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .memory-card.flipped {
+      background-color: #fff;
+      color: #333;
+    }
+    /* ----- משחק אונליין ----- */
+    #online-section {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    /* ----- חנות אונליין ----- */
+    #shop-section {
+      display: none;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    #shop-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .shop-item {
+      background-color: #444;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
+    }
+    .shop-item:hover {
+      transform: scale(1.05);
+    }
+    .shop-item button {
+      background-color: #00796b;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .shop-item button:hover {
+      background-color: #004d40;
+    }
+    /* חבילות מטבעות */
+    #coin-packages {
+      margin-top: 30px;
+    }
+    #coin-packages h3 {
+      margin-bottom: 15px;
+    }
+    #coin-packages-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    /* ----- מודל דירוג ----- */
     .modal {
       display: none;
       position: fixed;
@@ -108,7 +217,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0,0,0,0.7);
     }
     .modal-content {
       background-color: #fefefe;
@@ -140,204 +249,115 @@
     .star-rating label:hover ~ label {
       color: #f39c12;
     }
-    /* More Games Section */
-    #more-games-section {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-    #more-games-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .game-card {
-      background-color: #444;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      transition: transform 0.3s;
-    }
-    .game-card:hover {
-      transform: scale(1.05);
-    }
-    .game-card button {
-      background-color: #00796b;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .game-card button:hover {
-      background-color: #004d40;
-    }
-    /* Online Shop Section */
-    #online-shop-section {
-      display: none;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-    #online-shop-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .shop-item {
-      background-color: #444;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      transition: transform 0.3s;
-    }
-    .shop-item:hover {
-      transform: scale(1.05);
-    }
-    .shop-item button {
-      background-color: #00796b;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .shop-item button:hover {
-      background-color: #004d40;
-    }
-    /* Coin Packages Section (Real Money) */
-    #coin-packages {
-      margin-top: 30px;
-    }
-    #coin-packages h3 {
-      margin-bottom: 15px;
-    }
-    #coin-packages-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
   </style>
 </head>
 <body>
-  <!-- Navigation Menu -->
+  <!-- תפריט ניווט -->
   <header>
-    <button onclick="showSection('ticTacToe')">Tic Tac Toe</button>
-    <button onclick="showSection('moreGames')">More Games</button>
-    <button onclick="showSection('onlineShop')">Online Shop</button>
+    <button onclick="showSection('ttt-section')">טיק-טק-טו</button>
+    <button onclick="showSection('snake-section')">נחש</button>
+    <button onclick="showSection('memory-section')">זיכרון</button>
+    <button onclick="showSection('online-section')">משחק אונליין</button>
+    <button onclick="showSection('shop-section')">חנות אונליין</button>
   </header>
 
   <main>
-    <!-- Tic Tac Toe Section -->
-    <section id="tic-tac-toe-section">
-      <div id="status">Choose mode: Player vs Player, Player vs Bot, or Online Game</div>
+    <!-- טיק-טק-טו -->
+    <section id="ttt-section">
+      <div id="ttt-status">בחר מצב: שחקן מול שחקן, שחקן מול בוט או משחק אונליין (לא זמין)</div>
       <div style="text-align:center; margin-bottom:15px;">
-        <button onclick="startGame('playerVsPlayer')">Player vs Player</button>
-        <button onclick="startGame('playerVsBot')">Player vs Bot</button>
-        <button style="background-color: gray; cursor: not-allowed;" disabled>Online Game</button>
+        <button onclick="startTTTGame('playerVsPlayer')">שחקן מול שחקן</button>
+        <button onclick="startTTTGame('playerVsBot')">שחקן מול בוט</button>
+        <button style="background-color: gray; cursor: not-allowed;" disabled>משחק אונליין</button>
       </div>
-      <div id="board"></div>
-      <div id="shop">
-        <h3>Tic Tac Toe Shop</h3>
-        <p>Coins: <span id="coinCount">0</span></p>
-        <button onclick="buyColor('X')">Buy X Color</button>
-        <button onclick="buyColor('O')">Buy O Color</button>
+      <div id="ttt-board"></div>
+      <div id="ttt-shop">
+        <h3>חנות טיק-טק-טו</h3>
+        <p>מטבעות: <span id="ttt-coinCount">0</span></p>
+        <button onclick="buyTTTColor('X')">קנה צבע ל-X</button>
+        <button onclick="buyTTTColor('O')">קנה צבע ל-O</button>
       </div>
-      <button id="toggleShopBtn" onclick="toggleShop()">Toggle Shop</button>
-      <button id="newGameBtn" onclick="startNewGame()">New Game</button>
+      <button id="ttt-toggleShopBtn" onclick="toggleTTTShop()">הצג/הסתר חנות</button>
+      <button id="ttt-newGameBtn" onclick="startNewTTTGame()">משחק חדש</button>
     </section>
 
-    <!-- More Games Section -->
-    <section id="more-games-section" style="display:none;">
-      <h2>More Games</h2>
-      <div id="more-games-container">
-        <div class="game-card">
-          <h3>Snake</h3>
-          <p>Enjoy the classic Snake game!</p>
-          <button onclick="comingSoon()">Play Snake</button>
-        </div>
-        <div class="game-card">
-          <h3>Memory</h3>
-          <p>Test your memory skills.</p>
-          <button onclick="comingSoon()">Play Memory</button>
-        </div>
-        <div class="game-card">
-          <h3>Online Multiplayer</h3>
-          <p style="color: gray;">Coming Soon</p>
-          <button style="background-color: gray; cursor: not-allowed;" disabled>Play Online</button>
-        </div>
-        <div class="game-card">
-          <h3>Coin Shop</h3>
-          <p>Visit the online shop to buy cool items!</p>
-          <button onclick="showSection('onlineShop')">Visit Shop</button>
-        </div>
-      </div>
+    <!-- משחק נחש -->
+    <section id="snake-section">
+      <h2>משחק נחש</h2>
+      <canvas id="snake-canvas" width="400" height="400"></canvas>
+      <div id="snake-status">המשחק התחיל!</div>
+      <button onclick="startSnakeGame()">התחל משחק חדש</button>
     </section>
 
-    <!-- Online Shop Section -->
-    <section id="online-shop-section" style="display:none;">
-      <h2>Online Shop</h2>
-      <div id="online-shop-container">
+    <!-- משחק זיכרון -->
+    <section id="memory-section">
+      <h2>משחק זיכרון</h2>
+      <div id="memory-board"></div>
+      <button onclick="startMemoryGame()">התחל משחק חדש</button>
+    </section>
+
+    <!-- משחק אונליין (לא זמין) -->
+    <section id="online-section">
+      <h2>משחק אונליין</h2>
+      <p style="font-size:20px; color:gray;">משחק זה לא זמין כרגע.</p>
+    </section>
+
+    <!-- חנות אונליין -->
+    <section id="shop-section">
+      <h2>חנות אונליין</h2>
+      <div id="shop-container">
         <div class="shop-item">
-          <h3>Exclusive Tic Tac Toe Theme</h3>
-          <p>Cost: 50 coins</p>
-          <button onclick="buyItem('theme', 50)">Buy Theme</button>
+          <h3>ערכת נושא ייחודית לטיק-טק-טו</h3>
+          <p>מחיר: 50 מטבעות</p>
+          <button onclick="buyItem('ערכת נושא', 50)">קנה</button>
         </div>
         <div class="shop-item">
-          <h3>Special Avatar</h3>
-          <p>Cost: 30 coins</p>
-          <button onclick="buyItem('avatar', 30)">Buy Avatar</button>
+          <h3>אווטר מיוחד</h3>
+          <p>מחיר: 30 מטבעות</p>
+          <button onclick="buyItem('אווטר', 30)">קנה</button>
         </div>
         <div class="shop-item">
-          <h3>Extra Move</h3>
-          <p>Cost: 20 coins</p>
-          <button onclick="buyItem('extraMove', 20)">Buy Extra Move</button>
+          <h3>תנועה נוספת</h3>
+          <p>מחיר: 20 מטבעות</p>
+          <button onclick="buyItem('תנועה נוספת', 20)">קנה</button>
         </div>
       </div>
-      <!-- Real Money Coin Packages -->
+      <!-- חבילות מטבעות אמיתיות -->
       <div id="coin-packages">
-        <h3>Buy Coins with Real Money</h3>
+        <h3>קנה מטבעות בכסף אמיתי</h3>
         <div id="coin-packages-container">
           <div class="shop-item">
-            <h4>Small Pack</h4>
-            <p>50 coins - ₪5</p>
-            <button onclick="buyRealCoins(50, 5)">Buy Now</button>
+            <h4>חבילה קטנה</h4>
+            <p>50 מטבעות - 5₪</p>
+            <button onclick="buyRealCoins(50,5)">קנה עכשיו</button>
           </div>
           <div class="shop-item">
-            <h4>Medium Pack</h4>
-            <p>120 coins - ₪10</p>
-            <button onclick="buyRealCoins(120, 10)">Buy Now</button>
+            <h4>חבילה בינונית</h4>
+            <p>120 מטבעות - 10₪</p>
+            <button onclick="buyRealCoins(120,10)">קנה עכשיו</button>
           </div>
           <div class="shop-item">
-            <h4>Large Pack</h4>
-            <p>250 coins - ₪20</p>
-            <button onclick="buyRealCoins(250, 20)">Buy Now</button>
+            <h4>חבילה גדולה</h4>
+            <p>250 מטבעות - 20₪</p>
+            <button onclick="buyRealCoins(250,20)">קנה עכשיו</button>
           </div>
           <div class="shop-item">
-            <h4>Mega Pack</h4>
-            <p>600 coins - ₪45</p>
-            <button onclick="buyRealCoins(600, 45)">Buy Now</button>
+            <h4>חבילה מאגית</h4>
+            <p>600 מטבעות - 45₪</p>
+            <button onclick="buyRealCoins(600,45)">קנה עכשיו</button>
           </div>
         </div>
       </div>
       <div style="text-align:center; margin-top:15px;">
-        <button onclick="showSection('moreGames')">Back to More Games</button>
+        <button onclick="showSection('moreGames')">חזרה למשחקים נוספים</button>
       </div>
     </section>
   </main>
 
-  <!-- Rating Modal -->
+  <!-- מודל דירוג -->
   <div id="rating-modal" class="modal">
     <div class="modal-content">
-      <h2>Rate Your Game Experience</h2>
+      <h2>דרג את חווית המשחק שלך</h2>
       <div class="star-rating">
         <input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label>
         <input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label>
@@ -345,260 +365,300 @@
         <input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label>
         <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label>
       </div>
-      <button id="submit-rating">Submit Rating</button>
+      <button id="submit-rating">שלח דירוג</button>
     </div>
   </div>
 
   <script>
-    /* -------- Global Variables -------- */
-    const boardElement = document.getElementById('board');
-    const statusElement = document.getElementById('status');
-    const coinCountElement = document.getElementById('coinCount');
-    const toggleShopBtn = document.getElementById('toggleShopBtn');
-    const newGameBtn = document.getElementById('newGameBtn');
-
-    let board = ['', '', '', '', '', '', '', '', ''];
-    let currentPlayer = 'X';
-    let isBotEnabled = false;
+    /* -------------- ניהול מטבעות -------------- */
     let coins = 0;
-    let xColor = 'white';
-    let oColor = 'white';
-    let botThinkingTime = 2000; // in milliseconds
-
-    /* -------- Coin Management -------- */
     function loadCoins() {
       const cookies = document.cookie.split(';');
       cookies.forEach(cookie => {
         const [name, value] = cookie.split('=');
-        if (name.trim() === 'coins') {
+        if(name.trim() === 'coins') {
           coins = parseInt(value) || 0;
         }
       });
-      coinCountElement.innerText = coins;
+      updateCoinDisplays();
     }
-
     function saveCoins() {
       document.cookie = `coins=${coins}; path=/;`;
+      updateCoinDisplays();
+    }
+    function updateCoinDisplays() {
+      document.getElementById('ttt-coinCount').innerText = coins;
     }
 
-    /* -------- Tic Tac Toe Board Initialization -------- */
-    function initBoard() {
-      boardElement.innerHTML = '';
-      board.forEach((cell, index) => {
-        const cellElement = document.createElement('div');
-        cellElement.classList.add('cell');
-        cellElement.setAttribute('data-index', index);
-        cellElement.innerText = cell;
-        cellElement.onclick = () => handleCellClick(index);
-        boardElement.appendChild(cellElement);
+    /* -------------- ניווט בין חלקים -------------- */
+    function showSection(sectionId) {
+      const sections = ['ttt-section','snake-section','memory-section','online-section','shop-section'];
+      sections.forEach(id => {
+        document.getElementById(id).style.display = (id === sectionId) ? 'block' : 'none';
       });
     }
 
-    /* -------- Handling Cell Clicks -------- */
-    function handleCellClick(index) {
-      if (board[index] !== '' || checkWinner()) return;
-
-      board[index] = currentPlayer;
-      renderBoard();
-
-      const winner = checkWinner();
-      if (winner) {
-        // Award 1 coin for every finished game, regardless of result
-        updateCoins();
-        statusElement.innerText =
-          winner === 'Draw' ? "It's a Draw!" : `${winner} wins!`;
-        newGameBtn.style.display = 'block';
+    /* -------------- טיק-טק-טו -------------- */
+    let tttBoard = ['', '', '', '', '', '', '', '', ''];
+    let tttCurrentPlayer = 'X';
+    let tttIsBot = false;
+    function initTTTBoard() {
+      const boardDiv = document.getElementById('ttt-board');
+      boardDiv.innerHTML = '';
+      tttBoard.forEach((cell, index) => {
+        const cellDiv = document.createElement('div');
+        cellDiv.className = 'ttt-cell';
+        cellDiv.setAttribute('data-index', index);
+        cellDiv.innerText = cell;
+        cellDiv.onclick = () => handleTTTCellClick(index);
+        boardDiv.appendChild(cellDiv);
+      });
+    }
+    function handleTTTCellClick(index) {
+      if(tttBoard[index] !== '' || checkTTTWinner()) return;
+      tttBoard[index] = tttCurrentPlayer;
+      initTTTBoard();
+      let winner = checkTTTWinner();
+      if(winner) {
+        updateCoins(); // בכל משחק, נספר מטבע אחד בסיום
+        document.getElementById('ttt-status').innerText = winner === 'Draw' ? "תיקו!" : `${winner} ניצח!`;
+        document.getElementById('ttt-newGameBtn').style.display = 'block';
         setTimeout(showRatingModal, 800);
         return;
       }
-
-      // Next turn
-      if (isBotEnabled && currentPlayer === 'X') {
-        currentPlayer = 'O';
-        statusElement.innerText = `Bot's turn (O)`;
-        setTimeout(botMove, botThinkingTime);
+      if(tttIsBot && tttCurrentPlayer === 'X') {
+        tttCurrentPlayer = 'O';
+        document.getElementById('ttt-status').innerText = "תור הבוט (O)";
+        setTimeout(tttBotMove, 1500);
       } else {
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        statusElement.innerText =
-          currentPlayer === 'X'
-            ? `Player 1's turn (X)`
-            : `Player 2's turn (O)`;
+        tttCurrentPlayer = tttCurrentPlayer === 'X' ? 'O' : 'X';
+        document.getElementById('ttt-status').innerText = tttCurrentPlayer === 'X' ? "תור שחקן 1 (X)" : "תור שחקן 2 (O)";
       }
     }
-
-    /* -------- Bot Move -------- */
-    function botMove() {
-      const emptyCells = board
-        .map((cell, index) => (cell === '' ? index : null))
-        .filter(val => val !== null);
-      const randomIndex =
-        emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      if (randomIndex !== undefined) {
-        board[randomIndex] = 'O';
-        renderBoard();
-        const winner = checkWinner();
-        if (winner) {
+    function tttBotMove() {
+      const emptyIndices = tttBoard.map((cell, index) => cell === '' ? index : null).filter(i => i !== null);
+      const randomIndex = emptyIndices[Math.floor(Math.random()*emptyIndices.length)];
+      if(randomIndex !== undefined) {
+        tttBoard[randomIndex] = 'O';
+        initTTTBoard();
+        let winner = checkTTTWinner();
+        if(winner) {
           updateCoins();
-          statusElement.innerText =
-            winner === 'Draw' ? "It's a Draw!" : `${winner} wins!`;
-          newGameBtn.style.display = 'block';
+          document.getElementById('ttt-status').innerText = winner === 'Draw' ? "תיקו!" : `${winner} ניצח!`;
+          document.getElementById('ttt-newGameBtn').style.display = 'block';
           setTimeout(showRatingModal, 800);
         } else {
-          currentPlayer = 'X';
-          statusElement.innerText = `Player 1's turn (X)`;
+          tttCurrentPlayer = 'X';
+          document.getElementById('ttt-status').innerText = "תור שחקן 1 (X)";
         }
       }
     }
-
-    /* -------- Check Winner or Draw -------- */
-    function checkWinner() {
-      const winPatterns = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
+    function checkTTTWinner() {
+      const patterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
       ];
-      for (const pattern of winPatterns) {
-        const [a, b, c] = pattern;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-          return board[a];
-        }
+      for(let pattern of patterns) {
+        const [a,b,c] = pattern;
+        if(tttBoard[a] && tttBoard[a] === tttBoard[b] && tttBoard[a] === tttBoard[c])
+          return tttBoard[a];
       }
-      return board.includes('') ? null : 'Draw';
+      return tttBoard.includes('') ? null : 'Draw';
     }
-
-    /* -------- Render Board -------- */
-    function renderBoard() {
-      board.forEach((cell, index) => {
-        const cellElement = document.querySelector(`.cell[data-index='${index}']`);
-        cellElement.innerText = cell;
-        cellElement.style.color = cell === 'X' ? xColor : cell === 'O' ? oColor : 'white';
-      });
+    function startTTTGame(mode) {
+      tttIsBot = (mode === 'playerVsBot');
+      tttCurrentPlayer = 'X';
+      document.getElementById('ttt-status').innerText = "תור שחקן 1 (X)";
+      tttBoard = ['', '', '', '', '', '', '', '', ''];
+      initTTTBoard();
+      document.getElementById('ttt-shop').style.display = 'block';
+      document.getElementById('ttt-toggleShopBtn').style.display = 'block';
+      document.getElementById('ttt-newGameBtn').style.display = 'none';
     }
-
-    /* -------- Start Game -------- */
-    function startGame(mode) {
-      isBotEnabled = mode === 'playerVsBot';
-      currentPlayer = 'X';
-      statusElement.innerText = `Player 1's turn (X)`;
-      board = ['', '', '', '', '', '', '', '', ''];
-      initBoard();
-      document.getElementById('shop').style.display = 'block';
-      toggleShopBtn.style.display = 'block';
-      newGameBtn.style.display = 'none';
+    function startNewTTTGame() {
+      tttBoard = ['', '', '', '', '', '', '', '', ''];
+      tttCurrentPlayer = 'X';
+      document.getElementById('ttt-status').innerText = "תור שחקן 1 (X)";
+      initTTTBoard();
+      document.getElementById('ttt-newGameBtn').style.display = 'none';
     }
-
-    function startNewGame() {
-      board = ['', '', '', '', '', '', '', '', ''];
-      currentPlayer = 'X';
-      statusElement.innerText = `Player 1's turn (X)`;
-      initBoard();
-      newGameBtn.style.display = 'none';
+    function toggleTTTShop() {
+      const shopDiv = document.getElementById('ttt-shop');
+      shopDiv.style.display = shopDiv.style.display === 'block' ? 'none' : 'block';
     }
-
-    /* -------- Update Coins -------- */
-    // Now, every finished game awards 1 coin regardless of outcome.
-    function updateCoins() {
-      coins += 1;
-      coinCountElement.innerText = coins;
-      saveCoins();
-    }
-
-    /* -------- Buy Color in Tic Tac Toe Shop -------- */
-    function buyColor(type) {
-      if (coins <= 0) {
-        alert('Not enough coins!');
-        return;
-      }
-      if (type === 'X') {
-        xColor = xColor === 'white' ? 'red' : 'white';
+    function buyTTTColor(type) {
+      if(coins <= 0) { alert("אין מספיק מטבעות!"); return; }
+      if(type === 'X') {
+        // שינוי צבע X בין לבן לאדום
+        xColor = (typeof xColor === "undefined" || xColor === 'לבן') ? 'אדום' : 'לבן';
       } else {
-        oColor = oColor === 'white' ? 'blue' : 'white';
+        oColor = (typeof oColor === "undefined" || oColor === 'לבן') ? 'כחול' : 'לבן';
       }
       coins--;
-      coinCountElement.innerText = coins;
       saveCoins();
-      renderBoard();
+      initTTTBoard();
     }
 
-    /* -------- Toggle Tic Tac Toe Shop -------- */
-    function toggleShop() {
-      const shop = document.getElementById('shop');
-      shop.style.display = shop.style.display === 'block' ? 'none' : 'block';
+    /* -------------- משחק נחש -------------- */
+    let snakeCanvas, snakeCtx;
+    let snakeGameInterval, snakeSpeed = 100;
+    let snake, snakeDirection, snakeFood;
+    function initSnakeGame() {
+      snakeCanvas = document.getElementById('snake-canvas');
+      snakeCtx = snakeCanvas.getContext('2d');
+      snake = [{x: 10, y: 10}];
+      snakeDirection = {x: 0, y: 0};
+      placeSnakeFood();
+      document.getElementById('snake-status').innerText = "המשחק התחיל!";
+      if(snakeGameInterval) clearInterval(snakeGameInterval);
+      snakeGameInterval = setInterval(updateSnakeGame, snakeSpeed);
     }
-
-    /* -------- Rating Modal -------- */
-    function showRatingModal() {
-      document.getElementById("rating-modal").style.display = "block";
-    }
-
-    document.getElementById("submit-rating").addEventListener("click", function() {
-      let rating;
-      const ratingInputs = document.getElementsByName("rating");
-      for (let input of ratingInputs) {
-        if (input.checked) {
-          rating = input.value;
-          break;
-        }
+    function updateSnakeGame() {
+      const head = { x: snake[0].x + snakeDirection.x, y: snake[0].y + snakeDirection.y };
+      // בדיקת גבולות
+      if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.some(s => s.x === head.x && s.y === head.y)) {
+        clearInterval(snakeGameInterval);
+        document.getElementById('snake-status').innerText = "נגמר המשחק!";
+        updateCoins();
+        setTimeout(showRatingModal, 800);
+        return;
       }
-      if (rating) {
-        alert("Thanks for rating: " + rating + " star" + (rating > 1 ? "s" : ""));
-        document.getElementById("rating-modal").style.display = "none";
+      snake.unshift(head);
+      // אכילת האוכל
+      if(head.x === snakeFood.x && head.y === snakeFood.y) {
+        updateCoins();
+        placeSnakeFood();
       } else {
-        alert("Please select a rating before submitting.");
+        snake.pop();
+      }
+      drawSnakeGame();
+    }
+    function drawSnakeGame() {
+      snakeCtx.fillStyle = "#222";
+      snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+      // ציור הנחש
+      snakeCtx.fillStyle = "#0f0";
+      snake.forEach(part => {
+        snakeCtx.fillRect(part.x * 20, part.y * 20, 18, 18);
+      });
+      // ציור האוכל
+      snakeCtx.fillStyle = "#f00";
+      snakeCtx.fillRect(snakeFood.x * 20, snakeFood.y * 20, 18, 18);
+    }
+    function placeSnakeFood() {
+      snakeFood = {
+        x: Math.floor(Math.random()*20),
+        y: Math.floor(Math.random()*20)
+      };
+    }
+    document.addEventListener("keydown", function(e) {
+      switch(e.key) {
+        case "ArrowUp": if(snakeDirection.y === 0) { snakeDirection = {x: 0, y: -1}; } break;
+        case "ArrowDown": if(snakeDirection.y === 0) { snakeDirection = {x: 0, y: 1}; } break;
+        case "ArrowLeft": if(snakeDirection.x === 0) { snakeDirection = {x: -1, y: 0}; } break;
+        case "ArrowRight": if(snakeDirection.x === 0) { snakeDirection = {x: 1, y: 0}; } break;
       }
     });
+    function startSnakeGame() {
+      initSnakeGame();
+    }
 
-    /* -------- Navigation Between Sections -------- */
-    function showSection(section) {
-      const ticTacToeSec = document.getElementById('tic-tac-toe-section');
-      const moreGamesSec = document.getElementById('more-games-section');
-      const onlineShopSec = document.getElementById('online-shop-section');
-
-      if (section === 'ticTacToe') {
-        ticTacToeSec.style.display = 'block';
-        moreGamesSec.style.display = 'none';
-        onlineShopSec.style.display = 'none';
-      } else if (section === 'moreGames') {
-        ticTacToeSec.style.display = 'none';
-        moreGamesSec.style.display = 'block';
-        onlineShopSec.style.display = 'none';
-      } else if (section === 'onlineShop') {
-        ticTacToeSec.style.display = 'none';
-        moreGamesSec.style.display = 'none';
-        onlineShopSec.style.display = 'block';
+    /* -------------- משחק זיכרון -------------- */
+    let memoryCards = [];
+    let memoryFirstCard = null;
+    let memoryLock = false;
+    function initMemoryGame() {
+      const symbols = ['😀','🎉','🚀','🌟','🍀','🔥','💎','🎵'];
+      memoryCards = symbols.concat(symbols);
+      memoryCards.sort(() => Math.random() - 0.5);
+      memoryFirstCard = null;
+      memoryLock = false;
+      const board = document.getElementById('memory-board');
+      board.innerHTML = '';
+      memoryCards.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.setAttribute('data-symbol', symbol);
+        card.setAttribute('data-index', index);
+        card.onclick = () => flipMemoryCard(card);
+        board.appendChild(card);
+      });
+    }
+    function flipMemoryCard(card) {
+      if(memoryLock || card.classList.contains('flipped')) return;
+      card.classList.add('flipped');
+      card.innerText = card.getAttribute('data-symbol');
+      if(!memoryFirstCard) {
+        memoryFirstCard = card;
+      } else {
+        memoryLock = true;
+        if(memoryFirstCard.getAttribute('data-symbol') === card.getAttribute('data-symbol')) {
+          // התאמה
+          updateCoins();
+          memoryFirstCard = null;
+          memoryLock = false;
+          // בדיקה אם כל הקלפים הופיעו
+          const allFlipped = document.querySelectorAll('.memory-card.flipped');
+          if(allFlipped.length === memoryCards.length) {
+            setTimeout(() => {
+              alert("סיימת את המשחק!");
+              setTimeout(showRatingModal, 800);
+            }, 500);
+          }
+        } else {
+          setTimeout(() => {
+            memoryFirstCard.classList.remove('flipped');
+            memoryFirstCard.innerText = '';
+            card.classList.remove('flipped');
+            card.innerText = '';
+            memoryFirstCard = null;
+            memoryLock = false;
+          }, 1000);
+        }
       }
     }
-
-    /* -------- "Coming Soon" for Unimplemented Games -------- */
-    function comingSoon() {
-      alert("This feature is not available yet!");
+    function startMemoryGame() {
+      initMemoryGame();
     }
 
-    /* -------- Online Shop Purchase Function -------- */
+    /* -------------- Online Shop -------------- */
     function buyItem(item, cost) {
-      if (coins < cost) {
-        alert("Not enough coins to purchase this item!");
+      if(coins < cost) {
+        alert("אין מספיק מטבעות לרכישה!");
         return;
       }
       coins -= cost;
-      coinCountElement.innerText = coins;
       saveCoins();
-      alert("You purchased " + item + " successfully!");
+      alert("רכשת " + item + " בהצלחה!");
     }
-
-    /* -------- Buy Real Coins with Real Money (Not Available) -------- */
     function buyRealCoins(coinAmount, price) {
-      alert("This coin package (" + coinAmount + " coins for " + price + " ₪) is not available at the moment!");
+      alert("חבילה זו (" + coinAmount + " מטבעות ב-" + price + "₪) אינה זמינה כרגע!");
     }
 
-    /* -------- Initialize on Page Load -------- */
+    /* -------------- מודל דירוג -------------- */
+    function showRatingModal() {
+      document.getElementById("rating-modal").style.display = "block";
+    }
+    document.getElementById("submit-rating").addEventListener("click", function() {
+      let rating;
+      const inputs = document.getElementsByName("rating");
+      for(let input of inputs) {
+        if(input.checked) { rating = input.value; break; }
+      }
+      if(rating) {
+        alert("תודה על הדירוג: " + rating + " כוכבים!");
+        document.getElementById("rating-modal").style.display = "none";
+      } else {
+        alert("בחר דירוג לפני השליחה.");
+      }
+    });
+
+    /* -------------- אתחול -------------- */
     loadCoins();
-    initBoard();
+    // כברירת מחדל מציגים את טיק-טק-טו
+    showSection('ttt-section');
+    initTTTBoard();
   </script>
 </body>
 </html>
