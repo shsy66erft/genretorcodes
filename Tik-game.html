@@ -44,6 +44,18 @@
       text-align: center;
     }
     /* ----- טיק-טק-טו ----- */
+    /* סגנונות למודל */
+    .modal-content input {
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      margin-bottom: 10px;
+    }
+    .modal-content button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
     #ttt-section {
       display: none;
       background: rgba(0, 0, 0, 0.2);
@@ -159,6 +171,24 @@
       text-align: center;
       padding: 20px;
     }
+    #online-options button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #online-game {
+      margin-top: 20px;
+    }
+    #online-game input {
+      padding: 5px;
+      font-size: 16px;
+    }
+    #online-game button {
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
     /* ----- חנות אונליין ----- */
     #shop-section {
       display: none;
@@ -262,6 +292,14 @@
   </header>
 
   <main>
+    <!-- מודל לבקשת שם משתמש -->
+<div id="username-modal" class="modal">
+  <div class="modal-content">
+    <h2>הזן את שמך</h2>
+    <input type="text" id="username-input" placeholder="שם משתמש" />
+    <button onclick="submitUsername()">אישור</button>
+  </div>
+</div>
     <!-- טיק-טק-טו -->
     <section id="ttt-section">
       <div id="ttt-status">בחר מצב: שחקן מול שחקן, שחקן מול בוט או משחק אונליין (לא זמין)</div>
@@ -296,10 +334,19 @@
       <button onclick="startMemoryGame()">התחל משחק חדש</button>
     </section>
 
-    <!-- משחק אונליין (לא זמין) -->
+    <!-- משחק אונליין -->
     <section id="online-section">
       <h2>משחק אונליין</h2>
-      <p style="font-size:20px; color:gray;">משחק זה לא זמין כרגע.</p>
+      <div id="online-options">
+        <button onclick="createOnlineGame()">צור משחק חדש</button>
+        <button onclick="joinOnlineGame()">הצטרף למשחק</button>
+      </div>
+      <div id="online-game" style="display:none;">
+        <p>קוד המשחק: <span id="game-code"></span></p>
+        <input type="text" id="join-code" placeholder="הזן קוד משחק">
+        <button onclick="connectToGame()">התחבר</button>
+        <p id="online-status"></p>
+      </div>
     </section>
 
     <!-- חנות אונליין -->
@@ -385,6 +432,10 @@
     function saveCoins() {
       document.cookie = `coins=${coins}; path=/;`;
       updateCoinDisplays();
+    }
+    function updateCoins() {
+      coins++;
+      saveCoins();
     }
     function updateCoinDisplays() {
       document.getElementById('ttt-coinCount').innerText = coins;
@@ -597,7 +648,7 @@
           // התאמה
           updateCoins();
           memoryFirstCard = null;
-          memoryLock = false;
+          memoryLock = false;  // איפוס הנעילה לאחר התאמה
           // בדיקה אם כל הקלפים הופיעו
           const allFlipped = document.querySelectorAll('.memory-card.flipped');
           if(allFlipped.length === memoryCards.length) {
@@ -613,7 +664,7 @@
             card.classList.remove('flipped');
             card.innerText = '';
             memoryFirstCard = null;
-            memoryLock = false;
+            memoryLock = false;  // איפוס הנעילה לאחר אי-התאמה
           }, 1000);
         }
       }
@@ -636,6 +687,66 @@
       alert("חבילה זו (" + coinAmount + " מטבעות ב-" + price + "₪) אינה זמינה כרגע!");
     }
 
+    let username = null;
+
+function showUsernameModal() {
+  document.getElementById("username-modal").style.display = "block";
+}
+
+function submitUsername() {
+  const usernameInput = document.getElementById("username-input").value;
+  if (usernameInput.trim() === "") {
+    alert("הזן שם משתמש תקין!");
+    return;
+  }
+  username = usernameInput;
+  document.getElementById("username-modal").style.display = "none";
+  if (onlineAction === "create") {
+    createOnlineGame();
+  } else if (onlineAction === "join") {
+    joinOnlineGame();
+  }
+}
+
+let onlineAction = null;
+
+function createOnlineGame() {
+  onlineAction = "create";
+  if (!username) {
+    showUsernameModal();
+    return;
+  }
+  onlineGameCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  document.getElementById('online-options').style.display = 'none';
+  document.getElementById('online-game').style.display = 'block';
+  document.getElementById('game-code').innerText = onlineGameCode;
+  document.getElementById('online-status').innerText = "מחנה לשחקן שני...";
+  // כאן תוכל להוסיף קריאה לשרת כדי ליצור משחק חדש
+}
+
+function joinOnlineGame() {
+  onlineAction = "join";
+  if (!username) {
+    showUsernameModal();
+    return;
+  }
+  document.getElementById('online-options').style.display = 'none';
+  document.getElementById('online-game').style.display = 'block';
+  document.getElementById('online-status').innerText = "הזן קוד משחק כדי להתחבר";
+}
+    function connectToGame() {
+      const code = document.getElementById('join-code').value;
+      if (!code) {
+        alert("הזן קוד משחק תקין");
+        return;
+      }
+      document.getElementById('online-status').innerText = "מתחבר לשרת...";
+      setTimeout(() => {
+        document.getElementById('online-status').innerText = "לא ניתן להתחבר לשרת.";
+      }, 2000);
+      // כאן תוכל להוסיף קריאה לשרת כדי להתחבר למשחק
+    }
+
     /* -------------- מודל דירוג -------------- */
     function showRatingModal() {
       document.getElementById("rating-modal").style.display = "block";
@@ -653,7 +764,7 @@
         alert("בחר דירוג לפני השליחה.");
       }
     });
-
+      
     /* -------------- אתחול -------------- */
     loadCoins();
     // כברירת מחדל מציגים את טיק-טק-טו
