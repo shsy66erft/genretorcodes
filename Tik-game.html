@@ -1,260 +1,604 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Tac-Toe with Bot Simulation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #282c34;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        #board {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            gap: 5px;
-            margin-bottom: 20px;
-        }
-        .cell {
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            background-color: #444;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .cell:hover {
-            background-color: #666;
-        }
-        #status {
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-        #shop {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #444;
-            border-radius: 5px;
-        }
-        #shop button {
-            margin: 5px;
-            padding: 5px 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #shop h3 {
-            margin: 0;
-        }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #00796b;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #004d40;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Game Hub</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #4ca1af);
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header button {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    header button:hover {
+      background-color: #004d40;
+    }
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    h2, h3, h4 {
+      text-align: center;
+    }
+    /* Tic Tac Toe Section */
+    #tic-tac-toe-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #status {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .cell:hover {
+      background-color: #666;
+      transform: scale(1.05);
+    }
+    /* Shop (Tic Tac Toe Shop) & Controls */
+    #shop {
+      display: none;
+      background-color: #444;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    #shop button {
+      margin: 5px;
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #toggleShopBtn, #newGameBtn {
+      display: none;
+      margin: 5px auto;
+      background-color: #00796b;
+    }
+    /* Modal Rating */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      color: #333;
+    }
+    .star-rating {
+      direction: rtl;
+      unicode-bidi: bidi-override;
+      font-size: 30px;
+      display: inline-block;
+      margin: 10px 0;
+    }
+    .star-rating input {
+      display: none;
+    }
+    .star-rating label {
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: #f39c12;
+    }
+    /* More Games Section */
+    #more-games-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #more-games-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .game-card {
+      background-color: #444;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s;
+    }
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+    .game-card button {
+      background-color: #00796b;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .game-card button:hover {
+      background-color: #004d40;
+    }
+    /* Online Shop Section */
+    #online-shop-section {
+      display: none;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #online-shop-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .shop-item {
+      background-color: #444;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s;
+    }
+    .shop-item:hover {
+      transform: scale(1.05);
+    }
+    .shop-item button {
+      background-color: #00796b;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .shop-item button:hover {
+      background-color: #004d40;
+    }
+    /* Coin Packages Section (Real Money) */
+    #coin-packages {
+      margin-top: 30px;
+    }
+    #coin-packages h3 {
+      margin-bottom: 15px;
+    }
+    #coin-packages-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+  </style>
 </head>
 <body>
+  <!-- Navigation Menu -->
+  <header>
+    <button onclick="showSection('ticTacToe')">Tic Tac Toe</button>
+    <button onclick="showSection('moreGames')">More Games</button>
+    <button onclick="showSection('onlineShop')">Online Shop</button>
+  </header>
 
-<div id="status">Choose mode: Player vs Player or Player vs Bot</div>
-<button onclick="startGame('playerVsPlayer')">Player vs Player</button>
-<button onclick="startGame('playerVsBot')">Player vs Bot</button>
-<div id="board"></div>
+  <main>
+    <!-- Tic Tac Toe Section -->
+    <section id="tic-tac-toe-section">
+      <div id="status">Choose mode: Player vs Player, Player vs Bot, or Online Game</div>
+      <div style="text-align:center; margin-bottom:15px;">
+        <button onclick="startGame('playerVsPlayer')">Player vs Player</button>
+        <button onclick="startGame('playerVsBot')">Player vs Bot</button>
+        <button style="background-color: gray; cursor: not-allowed;" disabled>Online Game</button>
+      </div>
+      <div id="board"></div>
+      <div id="shop">
+        <h3>Tic Tac Toe Shop</h3>
+        <p>Coins: <span id="coinCount">0</span></p>
+        <button onclick="buyColor('X')">Buy X Color</button>
+        <button onclick="buyColor('O')">Buy O Color</button>
+      </div>
+      <button id="toggleShopBtn" onclick="toggleShop()">Toggle Shop</button>
+      <button id="newGameBtn" onclick="startNewGame()">New Game</button>
+    </section>
 
-<div id="shop">
-    <h3>Shop</h3>
-    <p>Coins: <span id="coinCount">0</span></p>
-    <button onclick="buyColor('X')">Buy X Color</button>
-    <button onclick="buyColor('O')">Buy O Color</button>
-</div>
+    <!-- More Games Section -->
+    <section id="more-games-section" style="display:none;">
+      <h2>More Games</h2>
+      <div id="more-games-container">
+        <div class="game-card">
+          <h3>Snake</h3>
+          <p>Enjoy the classic Snake game!</p>
+          <button onclick="comingSoon()">Play Snake</button>
+        </div>
+        <div class="game-card">
+          <h3>Memory</h3>
+          <p>Test your memory skills.</p>
+          <button onclick="comingSoon()">Play Memory</button>
+        </div>
+        <div class="game-card">
+          <h3>Online Multiplayer</h3>
+          <p style="color: gray;">Coming Soon</p>
+          <button style="background-color: gray; cursor: not-allowed;" disabled>Play Online</button>
+        </div>
+        <div class="game-card">
+          <h3>Coin Shop</h3>
+          <p>Visit the online shop to buy cool items!</p>
+          <button onclick="showSection('onlineShop')">Visit Shop</button>
+        </div>
+      </div>
+    </section>
 
-<button id="toggleShopBtn" style="display:none;" onclick="toggleShop()">Toggle Shop</button>
-<button onclick="startNewGame()" style="display:none;">New Game</button>
+    <!-- Online Shop Section -->
+    <section id="online-shop-section" style="display:none;">
+      <h2>Online Shop</h2>
+      <div id="online-shop-container">
+        <div class="shop-item">
+          <h3>Exclusive Tic Tac Toe Theme</h3>
+          <p>Cost: 50 coins</p>
+          <button onclick="buyItem('theme', 50)">Buy Theme</button>
+        </div>
+        <div class="shop-item">
+          <h3>Special Avatar</h3>
+          <p>Cost: 30 coins</p>
+          <button onclick="buyItem('avatar', 30)">Buy Avatar</button>
+        </div>
+        <div class="shop-item">
+          <h3>Extra Move</h3>
+          <p>Cost: 20 coins</p>
+          <button onclick="buyItem('extraMove', 20)">Buy Extra Move</button>
+        </div>
+      </div>
+      <!-- Real Money Coin Packages -->
+      <div id="coin-packages">
+        <h3>Buy Coins with Real Money</h3>
+        <div id="coin-packages-container">
+          <div class="shop-item">
+            <h4>Small Pack</h4>
+            <p>50 coins - ₪5</p>
+            <button onclick="buyRealCoins(50, 5)">Buy Now</button>
+          </div>
+          <div class="shop-item">
+            <h4>Medium Pack</h4>
+            <p>120 coins - ₪10</p>
+            <button onclick="buyRealCoins(120, 10)">Buy Now</button>
+          </div>
+          <div class="shop-item">
+            <h4>Large Pack</h4>
+            <p>250 coins - ₪20</p>
+            <button onclick="buyRealCoins(250, 20)">Buy Now</button>
+          </div>
+          <div class="shop-item">
+            <h4>Mega Pack</h4>
+            <p>600 coins - ₪45</p>
+            <button onclick="buyRealCoins(600, 45)">Buy Now</button>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:15px;">
+        <button onclick="showSection('moreGames')">Back to More Games</button>
+      </div>
+    </section>
+  </main>
 
-<script>
+  <!-- Rating Modal -->
+  <div id="rating-modal" class="modal">
+    <div class="modal-content">
+      <h2>Rate Your Game Experience</h2>
+      <div class="star-rating">
+        <input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label>
+        <input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label>
+        <input type="radio" id="3-stars" name="rating" value="3" /><label for="3-stars">★</label>
+        <input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label>
+        <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label>
+      </div>
+      <button id="submit-rating">Submit Rating</button>
+    </div>
+  </div>
+
+  <script>
+    /* -------- Global Variables -------- */
     const boardElement = document.getElementById('board');
     const statusElement = document.getElementById('status');
     const coinCountElement = document.getElementById('coinCount');
     const toggleShopBtn = document.getElementById('toggleShopBtn');
-    
+    const newGameBtn = document.getElementById('newGameBtn');
+
     let board = ['', '', '', '', '', '', '', '', ''];
     let currentPlayer = 'X';
     let isBotEnabled = false;
     let coins = 0;
     let xColor = 'white';
     let oColor = 'white';
-    let botThinkingTime = 2000; // Time for bot to think in milliseconds
+    let botThinkingTime = 2000; // in milliseconds
 
-    // Load coins from cookies
+    /* -------- Coin Management -------- */
     function loadCoins() {
-        const cookies = document.cookie.split(';');
-        cookies.forEach(cookie => {
-            const [name, value] = cookie.split('=');
-            if (name.trim() === 'coins') {
-                coins = parseInt(value) || 0;
-            }
-        });
-        coinCountElement.innerText = coins;
+      const cookies = document.cookie.split(';');
+      cookies.forEach(cookie => {
+        const [name, value] = cookie.split('=');
+        if (name.trim() === 'coins') {
+          coins = parseInt(value) || 0;
+        }
+      });
+      coinCountElement.innerText = coins;
     }
 
-    // Save coins to cookies
     function saveCoins() {
-        document.cookie = `coins=${coins}; path=/;`;
+      document.cookie = `coins=${coins}; path=/;`;
     }
 
-    // Initialize the game board
+    /* -------- Tic Tac Toe Board Initialization -------- */
     function initBoard() {
-        boardElement.innerHTML = '';
-        board.forEach((cell, index) => {
-            const cellElement = document.createElement('div');
-            cellElement.classList.add('cell');
-            cellElement.setAttribute('data-index', index);
-            cellElement.innerText = cell;
-            cellElement.onclick = () => handleCellClick(index);
-            boardElement.appendChild(cellElement);
-        });
+      boardElement.innerHTML = '';
+      board.forEach((cell, index) => {
+        const cellElement = document.createElement('div');
+        cellElement.classList.add('cell');
+        cellElement.setAttribute('data-index', index);
+        cellElement.innerText = cell;
+        cellElement.onclick = () => handleCellClick(index);
+        boardElement.appendChild(cellElement);
+      });
     }
 
+    /* -------- Handling Cell Clicks -------- */
     function handleCellClick(index) {
-        if (board[index] !== '' || checkWinner()) return;
-        
-        board[index] = currentPlayer;
+      if (board[index] !== '' || checkWinner()) return;
+
+      board[index] = currentPlayer;
+      renderBoard();
+
+      const winner = checkWinner();
+      if (winner) {
+        // Award 1 coin for every finished game, regardless of result
+        updateCoins();
+        statusElement.innerText =
+          winner === 'Draw' ? "It's a Draw!" : `${winner} wins!`;
+        newGameBtn.style.display = 'block';
+        setTimeout(showRatingModal, 800);
+        return;
+      }
+
+      // Next turn
+      if (isBotEnabled && currentPlayer === 'X') {
+        currentPlayer = 'O';
+        statusElement.innerText = `Bot's turn (O)`;
+        setTimeout(botMove, botThinkingTime);
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        statusElement.innerText =
+          currentPlayer === 'X'
+            ? `Player 1's turn (X)`
+            : `Player 2's turn (O)`;
+      }
+    }
+
+    /* -------- Bot Move -------- */
+    function botMove() {
+      const emptyCells = board
+        .map((cell, index) => (cell === '' ? index : null))
+        .filter(val => val !== null);
+      const randomIndex =
+        emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      if (randomIndex !== undefined) {
+        board[randomIndex] = 'O';
         renderBoard();
-        
         const winner = checkWinner();
         if (winner) {
-            updateCoins(winner);
-            statusElement.innerText = `${winner} wins!`;
-            return;
-        }
-        
-        if (isBotEnabled && currentPlayer === 'X') {
-            currentPlayer = 'O';
-            statusElement.innerText = `Bot's turn (O)`;
-            setTimeout(botMove, botThinkingTime); // Simulate thinking time for the bot
+          updateCoins();
+          statusElement.innerText =
+            winner === 'Draw' ? "It's a Draw!" : `${winner} wins!`;
+          newGameBtn.style.display = 'block';
+          setTimeout(showRatingModal, 800);
         } else {
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            statusElement.innerText = `Player ${currentPlayer === 'X' ? '1' : '2'}'s turn (${currentPlayer})`;
+          currentPlayer = 'X';
+          statusElement.innerText = `Player 1's turn (X)`;
         }
+      }
     }
 
-    function botMove() {
-        const emptyCells = board.map((cell, index) => (cell === '' ? index : null)).filter(val => val !== null);
-        const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        if (randomIndex !== undefined) {
-            board[randomIndex] = 'O';
-            renderBoard();
-            
-            const winner = checkWinner();
-            if (winner) {
-                updateCoins(winner);
-                statusElement.innerText = `${winner} wins!`;
-            } else {
-                currentPlayer = 'X';
-                statusElement.innerText = `Player 1's turn (X)`;
-            }
-        }
-    }
-
+    /* -------- Check Winner or Draw -------- */
     function checkWinner() {
-        const winPatterns = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-        
-        for (const pattern of winPatterns) {
-            const [a, b, c] = pattern;
-            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                return board[a];
-            }
+      const winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+      for (const pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return board[a];
         }
-        return board.includes('') ? null : 'Draw';
+      }
+      return board.includes('') ? null : 'Draw';
     }
 
+    /* -------- Render Board -------- */
     function renderBoard() {
-        board.forEach((cell, index) => {
-            const cellElement = document.querySelector(`.cell[data-index='${index}']`);
-            cellElement.innerText = cell;
-            cellElement.style.color = cell === 'X' ? xColor : cell === 'O' ? oColor : 'white';
-        });
+      board.forEach((cell, index) => {
+        const cellElement = document.querySelector(`.cell[data-index='${index}']`);
+        cellElement.innerText = cell;
+        cellElement.style.color = cell === 'X' ? xColor : cell === 'O' ? oColor : 'white';
+      });
     }
 
+    /* -------- Start Game -------- */
     function startGame(mode) {
-        isBotEnabled = mode === 'playerVsBot';
-        currentPlayer = 'X';
-        statusElement.innerText = `Player 1's turn (X)`;
-        board = ['', '', '', '', '', '', '', '', ''];
-        initBoard();
-        document.getElementById('shop').style.display = 'block';
-        toggleShopBtn.style.display = 'block';
+      isBotEnabled = mode === 'playerVsBot';
+      currentPlayer = 'X';
+      statusElement.innerText = `Player 1's turn (X)`;
+      board = ['', '', '', '', '', '', '', '', ''];
+      initBoard();
+      document.getElementById('shop').style.display = 'block';
+      toggleShopBtn.style.display = 'block';
+      newGameBtn.style.display = 'none';
     }
 
     function startNewGame() {
-        board = ['', '', '', '', '', '', '', '', ''];
-        currentPlayer = 'X';
-        statusElement.innerText = `Player 1's turn (X)`;
-        initBoard();
+      board = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      statusElement.innerText = `Player 1's turn (X)`;
+      initBoard();
+      newGameBtn.style.display = 'none';
     }
 
-    function updateCoins(winner) {
-        if (winner === 'X') {
-            coins += 10; // Player X wins
-        } else if (winner === 'O' && isBotEnabled) {
-            // No coins for player if bot wins
-        }
-        coinCountElement.innerText = coins;
-        saveCoins();
+    /* -------- Update Coins -------- */
+    // Now, every finished game awards 1 coin regardless of outcome.
+    function updateCoins() {
+      coins += 1;
+      coinCountElement.innerText = coins;
+      saveCoins();
     }
 
+    /* -------- Buy Color in Tic Tac Toe Shop -------- */
     function buyColor(type) {
-        if (coins <= 0) {
-            alert('Not enough coins!');
-            return;
-        }
-        
-        if (type === 'X') {
-            xColor = xColor === 'white' ? 'red' : 'white'; // Toggle color between red and white
-        } else {
-            oColor = oColor === 'white' ? 'blue' : 'white'; // Toggle color between blue and white
-        }
-        
-        coins--;
-        coinCountElement.innerText = coins;
-        saveCoins();
+      if (coins <= 0) {
+        alert('Not enough coins!');
+        return;
+      }
+      if (type === 'X') {
+        xColor = xColor === 'white' ? 'red' : 'white';
+      } else {
+        oColor = oColor === 'white' ? 'blue' : 'white';
+      }
+      coins--;
+      coinCountElement.innerText = coins;
+      saveCoins();
+      renderBoard();
     }
 
+    /* -------- Toggle Tic Tac Toe Shop -------- */
     function toggleShop() {
-        const shop = document.getElementById('shop');
-        shop.style.display = shop.style.display === 'block' ? 'none' : 'block';
+      const shop = document.getElementById('shop');
+      shop.style.display = shop.style.display === 'block' ? 'none' : 'block';
     }
 
-    // Load coins on startup
+    /* -------- Rating Modal -------- */
+    function showRatingModal() {
+      document.getElementById("rating-modal").style.display = "block";
+    }
+
+    document.getElementById("submit-rating").addEventListener("click", function() {
+      let rating;
+      const ratingInputs = document.getElementsByName("rating");
+      for (let input of ratingInputs) {
+        if (input.checked) {
+          rating = input.value;
+          break;
+        }
+      }
+      if (rating) {
+        alert("Thanks for rating: " + rating + " star" + (rating > 1 ? "s" : ""));
+        document.getElementById("rating-modal").style.display = "none";
+      } else {
+        alert("Please select a rating before submitting.");
+      }
+    });
+
+    /* -------- Navigation Between Sections -------- */
+    function showSection(section) {
+      const ticTacToeSec = document.getElementById('tic-tac-toe-section');
+      const moreGamesSec = document.getElementById('more-games-section');
+      const onlineShopSec = document.getElementById('online-shop-section');
+
+      if (section === 'ticTacToe') {
+        ticTacToeSec.style.display = 'block';
+        moreGamesSec.style.display = 'none';
+        onlineShopSec.style.display = 'none';
+      } else if (section === 'moreGames') {
+        ticTacToeSec.style.display = 'none';
+        moreGamesSec.style.display = 'block';
+        onlineShopSec.style.display = 'none';
+      } else if (section === 'onlineShop') {
+        ticTacToeSec.style.display = 'none';
+        moreGamesSec.style.display = 'none';
+        onlineShopSec.style.display = 'block';
+      }
+    }
+
+    /* -------- "Coming Soon" for Unimplemented Games -------- */
+    function comingSoon() {
+      alert("This feature is not available yet!");
+    }
+
+    /* -------- Online Shop Purchase Function -------- */
+    function buyItem(item, cost) {
+      if (coins < cost) {
+        alert("Not enough coins to purchase this item!");
+        return;
+      }
+      coins -= cost;
+      coinCountElement.innerText = coins;
+      saveCoins();
+      alert("You purchased " + item + " successfully!");
+    }
+
+    /* -------- Buy Real Coins with Real Money (Not Available) -------- */
+    function buyRealCoins(coinAmount, price) {
+      alert("This coin package (" + coinAmount + " coins for " + price + " ₪) is not available at the moment!");
+    }
+
+    /* -------- Initialize on Page Load -------- */
     loadCoins();
     initBoard();
-</script>
-
+  </script>
 </body>
 </html>
