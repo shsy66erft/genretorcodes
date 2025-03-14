@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>אתר היפוך טקסט - CCC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      text-align: center;
+    }
+
+    header img {
+      width: auto;
+      height: 300px; /* לוגו בענק */
+      margin-bottom: 10px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+      width: calc(50% - 20px);
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #eef;
+      min-height: 50px;
+      white-space: pre-wrap;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="CCC.PNG" alt="לוגו">
+    <h1>אתר היפוך טקסט</h1>
+  </header>
+  <div class="container">
+    <textarea id="inputText" placeholder="הכנס טקסט כאן..."></textarea>
+    <div class="button-container">
+      <select id="functionSelect" style="width: 100%; margin-bottom: 10px;">
+        <!-- 40 פונקציות -->
+        <option value="reverseAllText">1. הפוך את כל הטקסט</option>
+        <option value="reverseWordsOrder">2. הפוך את סדר המילים</option>
+        <option value="reverseEachWord">3. הפוך כל מילה בנפרד</option>
+        <option value="toUpperCase">4. הפוך לאותיות גדולות</option>
+        <option value="toLowerCase">5. הפוך לאותיות קטנות</option>
+        <option value="toggleCase">6. החלף בין גדולות לקטנות</option>
+        <option value="removeVowels">7. הסר תנועות</option>
+        <option value="removeConsonants">8. הסר עיצורים</option>
+        <option value="rot13">9. צופן ROT13</option>
+        <option value="removeSpaces">10. הסר רווחים</option>
+        <option value="removeDuplicateChars">11. הסר תווים כפולים</option>
+        <option value="sortWordsAlphabetically">12. מיין מילים (אלפביתי)</option>
+        <option value="sortChars">13. מיין תווים (אלפביתי)</option>
+        <option value="duplicateEachChar">14. שכפל כל תו</option>
+        <option value="removePunctuation">15. הסר סימני פיסוק</option>
+        <option value="countWords">16. ספירת מילים</option>
+        <option value="countChars">17. ספירת תווים</option>
+        <option value="removeDigits">18. הסר מספרים</option>
+        <option value="insertSpacesBetweenChars">19. הכנס רווחים בין תווים</option>
+        <option value="replaceSpacesWithUnderscores">20. החלף רווחים בקווים תחתונים</option>
+        <option value="reverseSentencesOrder">21. הפוך סדר משפטים</option>
+        <option value="capitalizeEachWord">22. ראש אות בכל מילה</option>
+        <option value="uncapitalizeText">23. הפוך את כל האותיות לקטנות</option>
+        <option value="removeExtraSpaces">24. הסר רווחים מיותרים</option>
+        <option value="mirrorText">25. טקסט מראה (מקור + הפוך)</option>
+        <option value="caesarShiftOne">26. הסטת אותיות (קיסר 1)</option>
+        <option value="removeDuplicateWords">27. הסר מילים כפולות</option>
+        <option value="shuffleChars">28. ערבב תווים</option>
+        <option value="replaceVowelsWithAsterisk">29. החלף תנועות בכוכבית</option>
+        <option value="replaceConsonantsWithAsterisk">30. החלף עיצורים בכוכבית</option>
+        <option value="alternatingCase">31. אותיות בסירוגין</option>
+        <option value="sortWordsByLength">32. מיין מילים לפי אורך</option>
+        <option value="removeLastLetterEachWord">33. הסר את האות האחרונה מכל מילה</option>
+        <option value="appendFixedString">34. הוסף מחרוזת קבועה בסוף כל מילה</option>
+        <option value="prependFixedString">35. הוסף מחרוזת קבועה בתחילת כל מילה</option>
+        <option value="pigLatin">36. המרת מילים לפיג לטין</option>
+        <option value="reverseWordOrderKeepPunctuation">37. הפוך סדר מילים תוך שמירת פיסוק</option>
+        <option value="countSentences">38. ספירת משפטים</option>
+        <option value="encodeBase64">39. קידוד Base64</option>
+        <option value="decodeBase64">40. פענוח Base64</option>
+      </select>
+      <button onclick="processText()">הפוך טקסט</button>
+      <button onclick="copyResult()">העתק טקסט</button>
+    </div>
+    <div class="result" id="resultText"></div>
+  </div>
+  <script>
+    // פונקציות לטיפול בטקסט
+    function reverseAllText(text) { return text.split("").reverse().join(""); }
+    function reverseWordsOrder(text) { return text.split(" ").reverse().join(" "); }
+    function reverseEachWord(text) { return text.split(" ").map(word => word.split("").reverse().join("")).join(" "); }
+    function toUpperCase(text) { return text.toUpperCase(); }
+    function toLowerCase(text) { return text.toLowerCase(); }
+    function toggleCase(text) {
+      let result = "";
+      for (let char of text) {
+        result += char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase();
+      }
+      return result;
+    }
+    function removeVowels(text) { return text.replace(/[aeiouAEIOU]/g, ""); }
+    function removeConsonants(text) { return text.replace(/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]/g, ""); }
+    function rot13(text) { 
+      return text.replace(/[a-zA-Z]/g, function(c){
+        return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+      });
+    }
+    function removeSpaces(text) { return text.replace(/\s+/g, ""); }
+    function removeDuplicateChars(text) {
+      let seen = "";
+      let result = "";
+      for (let char of text) {
+        if (!seen.includes(char)) {
+          seen += char;
+          result += char;
+        }
+      }
+      return result;
+    }
+    function sortWordsAlphabetically(text) { return text.split(" ").sort().join(" "); }
+    function sortChars(text) { return text.split("").sort().join(""); }
+    function duplicateEachChar(text) { return text.split("").map(c => c + c).join(""); }
+    function removePunctuation(text) { return text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); }
+    function countWords(text) {
+      let words = text.trim().split(/\s+/);
+      return "מספר מילים: " + (words[0] === "" ? 0 : words.length);
+    }
+    function countChars(text) { return "מספר תווים: " + text.length; }
+    function removeDigits(text) { return text.replace(/\d/g, ""); }
+    function insertSpacesBetweenChars(text) { return text.split("").join(" "); }
+    function replaceSpacesWithUnderscores(text) { return text.replace(/\s/g, "_"); }
+    function reverseSentencesOrder(text) {
+      let sentences = text.split(/([.?!]+)/).filter(s => s.trim() !== "");
+      let result = "";
+      for (let i = sentences.length - 1; i >= 0; i--) {
+        result += sentences[i];
+      }
+      return result;
+    }
+    function capitalizeEachWord(text) {
+      return text.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+    }
+    function uncapitalizeText(text) { return text.toLowerCase(); }
+    function removeExtraSpaces(text) { return text.replace(/\s+/g, " ").trim(); }
+    function mirrorText(text) { return text + " | " + reverseAllText(text); }
+    function caesarShiftOne(text) {
+      return text.replace(/[a-zA-Z]/g, function(c) {
+        let code = c.charCodeAt(0);
+        if ((code >= 65 && code < 90) || (code >= 97 && code < 122)) {
+          return String.fromCharCode(code + 1);
+        } else if (code === 90) {
+          return 'A';
+        } else if (code === 122) {
+          return 'a';
+        }
+        return c;
+      });
+    }
+    function removeDuplicateWords(text) {
+      let words = text.split(" ");
+      let seen = [];
+      return words.filter(word => {
+        if (seen.includes(word)) { return false; }
+        else { seen.push(word); return true; }
+      }).join(" ");
+    }
+    function shuffleChars(text) {
+      let arr = text.split("");
+      for (let i = arr.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr.join("");
+    }
+    function replaceVowelsWithAsterisk(text) { return text.replace(/[aeiouAEIOU]/g, "*"); }
+    function replaceConsonantsWithAsterisk(text) { return text.replace(/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]/g, "*"); }
+    function alternatingCase(text) {
+      let result = "";
+      for (let i = 0; i < text.length; i++) {
+        result += i % 2 === 0 ? text[i].toUpperCase() : text[i].toLowerCase();
+      }
+      return result;
+    }
+    function sortWordsByLength(text) { return text.split(" ").sort((a, b) => a.length - b.length).join(" "); }
+    function removeLastLetterEachWord(text) { return text.split(" ").map(word => word.slice(0, -1)).join(" "); }
+    function appendFixedString(text) { return text.split(" ").map(word => word + "XYZ").join(" "); }
+    function prependFixedString(text) { return text.split(" ").map(word => "ABC" + word).join(" "); }
+    function pigLatin(text) {
+      return text.split(" ").map(word => {
+        if(word.length > 1) { return word.slice(1) + word.charAt(0) + "ay"; }
+        return word;
+      }).join(" ");
+    }
+    function reverseWordOrderKeepPunctuation(text) { return text.split(" ").reverse().join(" "); }
+    function countSentences(text) {
+      let sentences = text.split(/[.?!]+/).filter(s => s.trim().length > 0);
+      return "מספר משפטים: " + sentences.length;
+    }
+    function encodeBase64(text) {
+      try { return btoa(text); }
+      catch(e) { return "שגיאה בקידוד Base64"; }
+    }
+    function decodeBase64(text) {
+      try { return atob(text); }
+      catch(e) { return "שגיאה בפענוח Base64"; }
+    }
+    
+    function processText() {
+      let text = document.getElementById("inputText").value;
+      let func = document.getElementById("functionSelect").value;
+      let result = "";
+      switch(func) {
+        case "reverseAllText": result = reverseAllText(text); break;
+        case "reverseWordsOrder": result = reverseWordsOrder(text); break;
+        case "reverseEachWord": result = reverseEachWord(text); break;
+        case "toUpperCase": result = toUpperCase(text); break;
+        case "toLowerCase": result = toLowerCase(text); break;
+        case "toggleCase": result = toggleCase(text); break;
+        case "removeVowels": result = removeVowels(text); break;
+        case "removeConsonants": result = removeConsonants(text); break;
+        case "rot13": result = rot13(text); break;
+        case "removeSpaces": result = removeSpaces(text); break;
+        case "removeDuplicateChars": result = removeDuplicateChars(text); break;
+        case "sortWordsAlphabetically": result = sortWordsAlphabetically(text); break;
+        case "sortChars": result = sortChars(text); break;
+        case "duplicateEachChar": result = duplicateEachChar(text); break;
+        case "removePunctuation": result = removePunctuation(text); break;
+        case "countWords": result = countWords(text); break;
+        case "countChars": result = countChars(text); break;
+        case "removeDigits": result = removeDigits(text); break;
+        case "insertSpacesBetweenChars": result = insertSpacesBetweenChars(text); break;
+        case "replaceSpacesWithUnderscores": result = replaceSpacesWithUnderscores(text); break;
+        case "reverseSentencesOrder": result = reverseSentencesOrder(text); break;
+        case "capitalizeEachWord": result = capitalizeEachWord(text); break;
+        case "uncapitalizeText": result = uncapitalizeText(text); break;
+        case "removeExtraSpaces": result = removeExtraSpaces(text); break;
+        case "mirrorText": result = mirrorText(text); break;
+        case "caesarShiftOne": result = caesarShiftOne(text); break;
+        case "removeDuplicateWords": result = removeDuplicateWords(text); break;
+        case "shuffleChars": result = shuffleChars(text); break;
+        case "replaceVowelsWithAsterisk": result = replaceVowelsWithAsterisk(text); break;
+        case "replaceConsonantsWithAsterisk": result = replaceConsonantsWithAsterisk(text); break;
+        case "alternatingCase": result = alternatingCase(text); break;
+        case "sortWordsByLength": result = sortWordsByLength(text); break;
+        case "removeLastLetterEachWord": result = removeLastLetterEachWord(text); break;
+        case "appendFixedString": result = appendFixedString(text); break;
+        case "prependFixedString": result = prependFixedString(text); break;
+        case "pigLatin": result = pigLatin(text); break;
+        case "reverseWordOrderKeepPunctuation": result = reverseWordOrderKeepPunctuation(text); break;
+        case "countSentences": result = countSentences(text); break;
+        case "encodeBase64": result = encodeBase64(text); break;
+        case "decodeBase64": result = decodeBase64(text); break;
+        default: result = "פונקציה לא קיימת";
+      }
+      document.getElementById("resultText").innerText = result;
+      copyResult();
+    }
+    
+    // כפתור העתק טקסט שמעתיק את התוצאה אוטומטית
+    function copyResult() {
+      let resultText = document.getElementById("resultText").innerText;
+      if(resultText.trim() === "") return;
+      navigator.clipboard.writeText(resultText).then(() => {
+        console.log("הטקסט הועתק!");
+      }).catch(err => {
+        console.error("העתקת הטקסט נכשלה", err);
+      });
+    }
+  </script>
+  <footer style="text-align:center; font-size:0.9em; color:#777;">
+    כל הזכויות שמורות © שי מדלסי - בנייה ופיתוח אתרים
+  </footer>
+  
+</body>
+</html>
