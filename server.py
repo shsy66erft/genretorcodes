@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 
 # כתובת האתר שלך (עדכן בהתאם)
-WEBSITE_URL = "https://yourwebsite.com"
+WEBSITE_URL = "https://shsy66erft.github.io/genretorcodes/"
 
 def fetch_website_text(url):
     """שואב את התוכן של האתר לצורך חיפוש תשובות"""
@@ -21,7 +21,7 @@ def ask():
 
     # **בדיקת בקשה למעבר לאתר**
     if "לך לאתר" in user_input or "פתח" in user_input or "מעבר ל" in user_input:
-        return jsonify({"redirect": "https://www.google.com"})  # שנה לכתובת הרלוונטית
+        return jsonify({"redirect": "https://shsy66erft.github.io/genretorcodes/"})  # שנה לכתובת הרלוונטית
 
     # **בדיקת שאלה על האתר**
     website_content = fetch_website_text(WEBSITE_URL)
