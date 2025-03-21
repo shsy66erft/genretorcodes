@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מודל AI סיני - DeepSeek</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>מודל AI סיני - DeepSeek</h1>
+    <p>הכניסו טקסט ושאלו את המודל</p>
+
+    <textarea id="userInput" rows="4" cols="50" placeholder="הכניסו טקסט כאן..."></textarea><br>
+    <button onclick="sendToAI()">שלח</button>
+
+    <div id="response">
+        <h3>תשובת המודל:</h3>
+        <p id="aiResponse"></p>
+    </div>
+
+    <script>
+        function sendToAI() {
+            let inputText = document.getElementById("userInput").value;
+            
+            fetch("http://localhost:5000/generate", {  // שימו לב, יש להפעיל שרת Flask
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: inputText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("aiResponse").innerText = data.response;
+                document.getElementById("response").style.display = "block";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
