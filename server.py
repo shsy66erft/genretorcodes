@@ -1,24 +1,37 @@
 from flask import Flask, request, jsonify
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import torch
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
-# טעינת המודל
-model_name = "deepseek/DeepSeek-V3"  
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+# כתובת האתר שלך (יש לשנות לכתובת האתר בפועל)
+WEBSITE_URL = "https://shsy66erft.github.io/genretorcodes"
 
-@app.route('/generate', methods=['POST'])
-def generate():
-    data = request.json
-    user_input = data.get("text", "")
-
-    inputs = tokenizer(user_input, return_tensors="pt")
-    outputs = model.generate(**inputs, max_length=200, do_sample=True, temperature=0.7)
+def fetch_website_text(url):
+    """פונקציה ששואבת את התוכן מהאתר"""
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
     
-    response_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return jsonify({"response": response_text})
+    # מחפש רק טקסט מתוך התגיות הרלוונטיות (למשל <p>, <h1> וכו')
+    text = " ".join([p.get_text() for p in soup.find_all(["p", "h1", "h2"])])
+    
+    return text if text else "לא נמצא מידע מתאים באתר."
+
+@app.route('/ask', methods=['POST'])
+def ask():
+    data = request.json
+    user_question = data.get("question", "").lower()
+
+    # קבלת תוכן האתר שלך
+    website_content = fetch_website_text(WEBSITE_URL)
+
+    # לוגיקה פשוטה למציאת תשובה בטקסט
+    if user_question in website_content.lower():
+        response = "מצאתי מידע באתר שלך שמתאים לשאלה!"
+    else:
+        response = "לא מצאתי תשובה באתר, נסה לשאול משהו אחר."
+
+    return jsonify({"answer": response})
 
 if __name__ == '__main__':
     app.run(debug=True)
