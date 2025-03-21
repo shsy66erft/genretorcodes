@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צ'אט AI באתר</title>
+    <title>שאלות על האתר וניווט</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
         #chatbox { width: 50%; margin: auto; padding: 20px; background: white; border-radius: 5px; }
@@ -14,26 +14,30 @@
 </head>
 <body>
 
-    <h1>שאל את ג'יפי!</h1>
+    <h1>שאל את הבוט או בקש מעבר לאתר</h1>
     <div id="chatbox">
-        <textarea id="question" placeholder="מה תרצה לשאול?"></textarea><br>
-        <button onclick="askGPT()">שלח</button>
-        <div id="response"><strong>תשובה:</strong> <span id="answer"></span></div>
+        <textarea id="userInput" placeholder="כתוב שאלה או בקשה..."></textarea><br>
+        <button onclick="askBot()">שלח</button>
+        <div id="response"><strong>תשובה:</strong> <span id="botAnswer"></span></div>
     </div>
 
     <script>
-        function askGPT() {
-            let question = document.getElementById("question").value;
-            
+        function askBot() {
+            let userInput = document.getElementById("userInput").value;
+
             fetch("http://localhost:5000/ask", {  
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question: question })
+                body: JSON.stringify({ question: userInput })
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("answer").innerText = data.answer;
-                document.getElementById("response").style.display = "block";
+                if (data.redirect) {
+                    window.location.href = data.redirect; // מעביר לאתר אחר אם יש הפניה
+                } else {
+                    document.getElementById("botAnswer").innerText = data.answer;
+                    document.getElementById("response").style.display = "block";
+                }
             })
             .catch(error => console.error("Error:", error));
         }
