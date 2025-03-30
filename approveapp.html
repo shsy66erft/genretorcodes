@@ -7,35 +7,51 @@
     <style>
         body {
             text-align: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             direction: rtl;
-            background-color: #f4f4f4;
+            background: linear-gradient(to bottom, #4CAF50, #2E7D32);
+            color: white;
             margin: 0;
-            padding: 50px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: inline-block;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
         }
         img {
-            max-width: 200px;
+            max-width: 150px;
             margin-bottom: 20px;
+            animation: bounce 1.5s infinite;
         }
         h1 {
-            color: #333;
+            color: #2E7D32;
+            font-size: 28px;
+            margin-bottom: 10px;
         }
         p {
-            font-size: 18px;
-            color: #555;
+            font-size: 20px;
+            color: #444;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="logo.png.png" alt="Approve It Web Logo">
+        <img src="logo.png" alt="Approve It Web Logo">
         <h1>בקרוב עולים לאוויר!</h1>
         <p>אנחנו עדיין בונים פה...</p>
     </div>
