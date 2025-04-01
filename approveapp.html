@@ -1,141 +1,342 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Approve It Web - האתר המושלם לאישורי הגעה">
-  <title>Approve It Web - אישורי הגעה</title>
+  <meta name="description" content="Approve It Web - הפתרון המתקדם לאישורי הגעה לאירועים">
+  <title>Approve It Web | אישורי הגעה</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.rtl.min.css">
+  <!-- AOS CSS for Scroll Animations -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom CSS -->
   <style>
-    /* Reset בסיסי */
-    * {
+    /* Reset and basic styles */
+    body, html {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Arial', sans-serif;
+      background-color: #f7f7f7;
     }
-    html, body {
-      height: 100%;
-      font-family: Arial, sans-serif;
-      direction: rtl;
+    /* Navigation Bar */
+    .navbar-custom {
+      background-color: #2E7D32;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    body {
-      background: linear-gradient(135deg, #4CAF50, #2E7D32);
-      color: #fff;
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-    header {
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
-    header p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-    }
-    .card {
-      background: rgba(255,255,255,0.95);
-      color: #333;
-      border-radius: 15px;
-      padding: 40px;
-      margin: 20px 0;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      text-align: center;
-    }
-    .card h2 {
-      margin-bottom: 15px;
-      font-size: 2rem;
-    }
-    .card p {
+    .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+      color: #fff !important;
       font-size: 1.1rem;
-      margin-bottom: 25px;
     }
-    .contact {
-      margin-top: 30px;
+    .navbar-custom .nav-link:hover {
+      color: #d4ffd4 !important;
+    }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 100vh;
+      background: url('https://via.placeholder.com/1920x1080?text=Background+Image') center/cover no-repeat;
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .btn {
-      display: inline-flex;
       align-items: center;
-      text-decoration: none;
-      background: #fff;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      z-index: 2;
+    }
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .hero-content p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    .hero-content .btn-cta {
+      font-size: 1.1rem;
+      padding: 15px 30px;
+      border-radius: 50px;
+      background-color: #fff;
       color: #2E7D32;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    .hero-content .btn-cta:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    /* Features Section */
+    .features {
+      padding: 80px 0;
+      background-color: #fff;
+    }
+    .features .feature-item {
+      text-align: center;
+      padding: 30px;
+    }
+    .features .feature-item i {
+      font-size: 3rem;
+      color: #2E7D32;
+      margin-bottom: 20px;
+    }
+    .features .feature-item h3 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+    .features .feature-item p {
+      font-size: 1rem;
+      color: #555;
+    }
+    /* Testimonials Section */
+    .testimonials {
+      background-color: #f0f0f0;
+      padding: 80px 0;
+    }
+    .testimonials .testimonial-item {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin: 15px;
+    }
+    .testimonials .testimonial-item p {
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+    .testimonials .testimonial-item h5 {
+      margin: 0;
+      font-weight: bold;
+      color: #2E7D32;
+    }
+    /* Contact Section */
+    .contact-section {
+      padding: 80px 0;
+      background-color: #fff;
+      text-align: center;
+    }
+    .contact-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #2E7D32;
+    }
+    .contact-section p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 40px;
+    }
+    .contact-section .btn-contact {
+      font-size: 1rem;
       padding: 15px 25px;
       border-radius: 50px;
-      font-weight: bold;
+      margin: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .btn:hover {
+    .contact-section .btn-contact:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
-    .btn i {
-      margin-right: 10px;
-    }
-    .instagram {
-      background: #E1306C;
+    .btn-whatsapp {
+      background-color: #25D366;
       color: #fff;
+      border: none;
     }
+    .btn-instagram {
+      background-color: #E1306C;
+      color: #fff;
+      border: none;
+    }
+    /* Footer */
     footer {
+      background-color: #2E7D32;
+      color: #fff;
       text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      opacity: 0.8;
+      padding: 30px 0;
     }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2.5rem;
+    footer a {
+      color: #d4ffd4;
+      text-decoration: underline;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2.8rem;
       }
-      .btn {
-        padding: 12px 20px;
-        font-size: 0.9rem;
+      .hero-content p {
+        font-size: 1.2rem;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Approve It Web</h1>
-    <p>האתר המושלם לאישורי הגעה</p>
-  </header>
-  <div class="container">
-    <!-- כרטיס "ברוכים הבאים" -->
-    <div class="card">
-      <h2>ברוכים הבאים לאתר שלנו!</h2>
-      <p>אנו מציעים פתרון חדשני לניהול אישורי הגעה בצורה פשוטה ונוחה. כאן תוכלו לקבל עדכונים שוטפים, ליצור קשר ולהתחבר אלינו דרך הרשתות החברתיות.</p>
-      <div class="contact">
-        <!-- כפתור יצירת קשר ב-WhatsApp -->
-        <a href="https://wa.me/972509643779" target="_blank" class="btn">
-          <i class="fab fa-whatsapp" style="font-size:1.5rem;"></i>
-          צרו קשר ב-WhatsApp
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Approve It Web</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon" style="color:#fff;"><i class="fas fa-bars"></i></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#hero">בית</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">שירותים</a></li>
+          <li class="nav-item"><a class="nav-link" href="#testimonials">המלצות</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">צור קשר</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1>Approve It Web</h1>
+      <p>הפלטפורמה המתקדמת לאישורי הגעה לאירועים – בקליק אחד</p>
+      <button class="btn-cta" onclick="window.location.href='#contact'">להתחיל עכשיו</button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <div class="row">
+        <!-- Feature 1: אישורי הגעה דיגיטליים -->
+        <div class="col-md-4 feature-item" data-aos="fade-up" data-aos-delay="100">
+          <i class="fas fa-check-circle"></i>
+          <h3>אישורי הגעה מהירים</h3>
+          <p>מערכת אינטואיטיבית לאישור הגעה בזמן אמת דרך וואטסאפ, SMS ודואר אלקטרוני.</p>
+        </div>
+        <!-- Feature 2: ניהול מתנות -->
+        <div class="col-md-4 feature-item" data-aos="fade-up" data-aos-delay="200">
+          <i class="fas fa-gift"></i>
+          <h3>ניהול מתנות באשראי</h3>
+          <p>אפשרות לקבל מתנות מהאורחים בצורה דיגיטלית, בצורה מאובטחת ונוחה.</p>
+        </div>
+        <!-- Feature 3: סידורי הושבה -->
+        <div class="col-md-4 feature-item" data-aos="fade-up" data-aos-delay="300">
+          <i class="fas fa-chair"></i>
+          <h3>סידורי הושבה מתקדמים</h3>
+          <p>כלים חזותיים לניהול וסידור מושבים בצורה חכמה ואינטואיטיבית.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="testimonials">
+    <div class="container">
+      <h2 class="text-center mb-5" data-aos="fade-up">מה אומרים עלינו</h2>
+      <div class="row">
+        <!-- Testimonial 1 -->
+        <div class="col-md-4" data-aos="fade-right" data-aos-delay="100">
+          <div class="testimonial-item">
+            <p>"מאז שהתחלנו להשתמש ב-Approve It Web, ניהול האירוע נעשה חלק ונוח – האורחים מאשרים הגעה בזמן וכל התהליך מתבצע ביעילות."</p>
+            <h5>נועה כהן</h5>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="testimonial-item">
+            <p>"הממשק המתקדם והאינטואיטיבי של האתר חסך לנו שעות עבודה – שירות מקצועי ואמין באמת!"</p>
+            <h5>אבי לוי</h5>
+          </div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="col-md-4" data-aos="fade-left" data-aos-delay="300">
+          <div class="testimonial-item">
+            <p>"השתמשנו במערכת לקבלת אישורי הגעה וסידורי הושבה, והחוויה הייתה מעל ומעבר לציפיות – מומלץ בחום."</p>
+            <h5>רוני מזרחי</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section">
+    <div class="container" data-aos="fade-up">
+      <h2>צור קשר עכשיו</h2>
+      <p>רוצה לשמוע עוד? פנה אלינו ונחזור אליך בהקדם.</p>
+      <div class="d-flex flex-wrap justify-content-center">
+        <!-- WhatsApp Button -->
+        <a href="https://wa.me/972509643779" target="_blank" class="btn-contact btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+          <span>צור קשר בוואטסאפ</span>
         </a>
-        <!-- כפתור קישור לדף אינסטגרם -->
-        <a href="https://instagram.com/approve_it_app" target="_blank" class="btn instagram">
-          <i class="fab fa-instagram" style="font-size:1.5rem;"></i>
-          עקבו באינסטגרם
+        <!-- Instagram Button -->
+        <a href="https://instagram.com/approve_it_app" target="_blank" class="btn-contact btn-instagram">
+          <i class="fab fa-instagram"></i>
+          <span>עקבו באינסטגרם</span>
         </a>
       </div>
     </div>
-    <!-- כרטיס "עלינו" -->
-    <div class="card">
-      <h2>עלינו</h2>
-      <p>אנו צוות מקצועי בתחום הפתרונות לאישורי הגעה, עם ניסיון עשיר ומומחיות בעיצוב חוויות משתמש. האתר שלנו מציע ממשק מודרני, אינטואיטיבי ובטוח, ומיועד לענות על כל הצרכים שלכם.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer data-aos="fade-in">
+    <div class="container">
+      <p>&copy; 2025 Approve It Web. כל הזכויות שמורות.</p>
+      <p>
+        <a href="#contact">צור קשר</a> &nbsp;|&nbsp;
+        <a href="#features">השירותים שלנו</a> &nbsp;|&nbsp;
+        <a href="#testimonials">המלצות</a>
+      </p>
     </div>
-  </div>
-  <footer>
-    <p>&copy; 2025 Approve It Web. כל הזכויות שמורות.</p>
   </footer>
+
+  <!-- External Libraries JS -->
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS JS for scroll animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <!-- GSAP for advanced animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <!-- Custom JS -->
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+
+    // Example GSAP animation on hero content
+    gsap.from(".hero-content", { 
+      opacity: 0, 
+      y: 50, 
+      duration: 1.5, 
+      ease: "power3.out" 
+    });
+
+    // Smooth scroll for navigation links (Bootstrap already does it, but in case)
+    document.querySelectorAll('a.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+    
+    // (אפשר להוסיף עוד אינטראקציות מתקדמות כאן, כמו קרוסלות, טפסים דינמיים ועוד)
+  </script>
 </body>
 </html>
