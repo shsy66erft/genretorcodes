@@ -1,59 +1,152 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approve It Web - בקרוב</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            direction: rtl;
-            background: linear-gradient(to bottom, #4CAF50, #2E7D32);
-            color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1.5s ease-in-out;
-        }
-        img {
-            max-width: 150px;
-            margin-bottom: 20px;
-            animation: bounce 1.5s infinite;
-        }
-        h1 {
-            color: #2E7D32;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 20px;
-            color: #444;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Approve It Web - אישורי ההגעה</title>
+  <!-- Font Awesome for WhatsApp icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Reset בסיסי */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      direction: rtl;
+    }
+    body {
+      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    /* אנימציה לכניסה חלקה */
+    .fade-in {
+      animation: fadeIn 1.5s ease-in-out both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* עיצוב הלוגו והכותרת */
+    .header {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+    .header p {
+      font-size: 1.25rem;
+      opacity: 0.9;
+    }
+    /* כפתורי יצירת קשר וקישורים */
+    .contact-buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .contact-buttons a {
+      text-decoration: none;
+      padding: 15px 25px;
+      border-radius: 50px;
+      background: #fff;
+      color: #2E7D32;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .contact-buttons a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    /* קטע תוכן מרכזי */
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+    /* תחתית */
+    footer {
+      margin-top: 40px;
+      padding: 20px 10px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    /* עיצוב קישורים */
+    a.instagram-link {
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      padding-bottom: 2px;
+    }
+    a.instagram-link:hover {
+      color: #eee;
+    }
+    /* עיצוב לכרטיס מרכזי */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 30px auto;
+      max-width: 90%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 2.5rem;
+      }
+      .contact-buttons a {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <img src="Logo.png.png" alt="Approve It Web Logo">
-        <h1>בקרוב עולים לאוויר!</h1>
-        <p>אנחנו עדיין בונים פה...</p>
+  <header class="header fade-in">
+    <h1>Approve It Web</h1>
+    <p>האתר שלך לאישורי הגעה</p>
+  </header>
+  
+  <section class="card fade-in">
+    <h2 style="margin-bottom: 15px;">בקרוב עולים לאוויר!</h2>
+    <p>אנחנו עובדים קשה כדי להביא לכם את האתר הטוב ביותר לאישורי הגעה. עקבו אחרינו וקבלו עדכונים שוטפים.</p>
+    
+    <div class="contact-buttons">
+      <!-- כפתור יצירת קשר ב-WhatsApp -->
+      <a href="https://wa.me/972509643779" target="_blank">
+        <i class="fab fa-whatsapp" style="font-size:1.5rem;"></i>
+        <span>צרו קשר</span>
+      </a>
+      <!-- כפתור קישור לאינסטגרם -->
+      <a href="https://instagram.com/approve_it_app" target="_blank" style="background: #E1306C; color: #fff;">
+        <i class="fab fa-instagram" style="font-size:1.5rem;"></i>
+        <span>עקבו באינסטגרם</span>
+      </a>
     </div>
+  </section>
+  
+  <section class="content fade-in">
+    <p>אנו מזמינים אתכם להצטרף למסע שלנו ולחוות את הפתרון החדשני לאישורי הגעה. האתר נבנה במחשבה על חווית משתמש חלקה, מהירה ובטוחה.</p>
+  </section>
+  
+  <footer class="fade-in">
+    <p>&copy; 2025 Approve It Web. כל הזכויות שמורות.</p>
+  </footer>
+  
 </body>
 </html>
