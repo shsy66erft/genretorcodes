@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>התחברות</title>
+  
+  <!-- הוספת סקריפט Google Sign-In -->
   <script src="https://apis.google.com/js/platform.js" async defer></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -39,26 +42,31 @@
 
   <br />
 
+  <!-- כפתור התחברות עם גוגל -->
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
 
   <script>
+    // פונקציה שמופעלת אחרי התחברות עם גוגל
     function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
       var userName = profile.getName();
       var userEmail = profile.getEmail();
+      
       // שמור את המידע ב-localStorage
       localStorage.setItem('username', userName);
       localStorage.setItem('email', userEmail);
-      window.location.href = 'dashboard.html'; // הפנה לדשבורד
+      
+      // הפנה לדף הדשבורד
+      window.location.href = 'dashboard.html';
     }
 
+    // התחברות באמצעות טופס אימייל/סיסמה (כמו דוגמה קודמת)
     document.getElementById('login-form').onsubmit = function(event) {
       event.preventDefault();
       var email = document.getElementById('email').value;
       var password = document.getElementById('password').value;
       
-      // שים קוד להתחברות כאן (למשל מול דאטאבייס)
-
+      // אם נרצה ניתן לבדוק מול דאטאבייס, אחרת נשמור ב-localStorage לצורך הדוגמה
       localStorage.setItem('email', email);
       window.location.href = 'dashboard.html'; // הפנה לדשבורד
     }
