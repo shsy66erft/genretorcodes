@@ -2,148 +2,226 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Eventiz - ברוכים הבאים</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eventiz - דף הבית</title>
   <style>
-    :root {
-      --primary-color: #4a00e0;
-      --secondary-color: #8e2de2;
-      --text-color: #333;
-      --bg-color: #f9f9f9;
-    }
     body {
+      font-family: 'Arial', sans-serif;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      direction: rtl;
-    }
-    header {
-      background: linear-gradient(to left, var(--primary-color), var(--secondary-color));
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-    nav a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    .hero {
-      padding: 100px 20px;
-      text-align: center;
-      background: white;
-    }
-    .hero h2 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-    }
-    .hero .btn {
-      padding: 15px 30px;
-      background: var(--secondary-color);
-      border: none;
-      color: white;
-      font-size: 1rem;
-      border-radius: 30px;
-      cursor: pointer;
-    }
-    .hero .btn:hover {
-      background: #6a1cb1;
-    }
-    .lang-toggle {
-      background: white;
-      color: var(--primary-color);
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .popup {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: #ffc107;
+      padding: 0;
+      background-color: #f5f5f5;
       color: #333;
-      padding: 15px 20px;
+    }
+
+    header {
+      background-color: #1e88e5;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      background-color: #1e88e5;
+      color: white;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      z-index: 999;
-      display: none;
+      border: none;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #1565c0;
+    }
+
+    .intro-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    .intro-text span {
+      color: #1e88e5;
+    }
+
+    .events-section {
+      margin-top: 50px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .event-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .event-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .event-card h3 {
+      color: #1e88e5;
+      font-size: 22px;
+      margin: 10px 0;
+    }
+
+    .event-card p {
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .event-card button {
+      padding: 12px 20px;
+      background-color: #1e88e5;
+      color: white;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .event-card button:hover {
+      background-color: #1565c0;
+    }
+
+    footer {
+      background-color: #1e88e5;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
 
-  <!-- הודעת פיתוח -->
-  <div class="popup" id="popup">
-    מפתחים/בודקים/אורחים יקרים<br>
-    אתר זה נמצא כעת במצב פיתוח-דמה ונועד לבדיקות בלבד. <br>
-    אין לבצע באתר זה שום פעולה או שיתוף לא מאושר.
-  </div>
-
+  <!-- Header Section -->
   <header>
-    <h1>Eventiz</h1>
-    <nav>
-      <a href="login.html">התחברות</a>
-      <a href="signup.html">הרשמה</a>
-      <a href="dashboard.html">האזור שלי</a>
-      <button class="lang-toggle" onclick="toggleLang()">EN</button>
-    </nav>
+    <div>Eventiz</div>
   </header>
 
-  <section class="hero">
-    <h2>תכנון אירועים בקלות</h2>
-    <p>צור, נהל, ושלח הזמנות לאירועים שלך – הכול במקום אחד.</p>
-    <a href="signup.html"><button class="btn">התחל עכשיו</button></a>
-  </section>
+  <div class="container">
+    <!-- Welcome Message -->
+    <div id="welcome-message" class="intro-text">
+      <p>ברוכים הבאים ל־<span>Eventiz</span></p>
+      <p>המשתמש לא מחובר. אנא התחבר או הירשם כדי להמשיך</p>
+      <div>
+        <a href="login.html" class="btn">התחברות</a>
+        <a href="signup.html" class="btn">הרשמה</a>
+      </div>
+    </div>
+
+    <!-- User-Welcome Message after login -->
+    <div id="user-welcome" class="intro-text" style="display:none;">
+      <p id="welcome-user">שלום, </p>
+      <a href="dashboard.html" class="btn">עבור לדאשבורד</a>
+      <button class="btn" onclick="logout()">התנתק</button>
+    </div>
+
+    <!-- Events Section -->
+    <div class="events-section" id="events-container">
+      <!-- Here events will be dynamically inserted -->
+      <div class="event-card">
+        <h3>אירוע 1</h3>
+        <p>תיאור קצר של האירוע</p>
+        <button>פרטים נוספים</button>
+      </div>
+      <div class="event-card">
+        <h3>אירוע 2</h3>
+        <p>תיאור קצר של האירוע</p>
+        <button>פרטים נוספים</button>
+      </div>
+      <div class="event-card">
+        <h3>אירוע 3</h3>
+        <p>תיאור קצר של האירוע</p>
+        <button>פרטים נוספים</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Eventiz. כל הזכויות שמורות.</p>
+  </footer>
 
   <script>
-    // הודעה קופצת
-    window.onload = function() {
-      const popup = document.getElementById("popup");
-      popup.style.display = "block";
-      setTimeout(() => {
-        popup.style.display = "none";
-      }, 6000);
-    };
+    // Check if user is logged in
+    const username = localStorage.getItem("username");
+    const welcomeMessage = document.getElementById("welcome-message");
+    const userWelcome = document.getElementById("user-welcome");
+    const welcomeUserText = document.getElementById("welcome-user");
 
-    // החלפת שפה
-    function toggleLang() {
-      const currentLang = document.documentElement.lang;
-      if (currentLang === "he") {
-        document.documentElement.lang = "en";
-        document.documentElement.dir = "ltr";
-        document.querySelector('h1').textContent = "Eventiz";
-        document.querySelector('.hero h2').textContent = "Plan Events Easily";
-        document.querySelector('.hero p').textContent = "Create, manage and send invitations – all in one place.";
-        document.querySelector('.btn').textContent = "Get Started";
-        document.querySelector('.lang-toggle').textContent = "עברית";
-      } else {
-        document.documentElement.lang = "he";
-        document.documentElement.dir = "rtl";
-        document.querySelector('h1').textContent = "Eventiz";
-        document.querySelector('.hero h2').textContent = "תכנון אירועים בקלות";
-        document.querySelector('.hero p').textContent = "צור, נהל, ושלח הזמנות לאירועים שלך – הכול במקום אחד.";
-        document.querySelector('.btn').textContent = "התחל עכשיו";
-        document.querySelector('.lang-toggle').textContent = "EN";
-      }
+    if (username) {
+      welcomeMessage.style.display = "none";
+      userWelcome.style.display = "block";
+      welcomeUserText.innerText = `שלום ${username}`;
     }
-  </script>
 
+    // Logout function
+    function logout() {
+      localStorage.clear();
+      location.reload();
+    }
+
+    // Function to load events dynamically
+    function loadEvents() {
+      const events = [
+        { title: "אירוע 1", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 2", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 3", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 4", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 5", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 6", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 7", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 8", description: "תיאור קצר של האירוע" },
+        { title: "אירוע 9", description: "תיאור קצר של האירוע" }
+      ];
+
+      const eventsContainer = document.getElementById("events-container");
+      eventsContainer.innerHTML = ""; // Clear the event container
+
+      events.forEach(event => {
+        const eventCard = document.createElement("div");
+        eventCard.classList.add("event-card");
+
+        const eventTitle = document.createElement("h3");
+        eventTitle.innerText = event.title;
+
+        const eventDescription = document.createElement("p");
+        eventDescription.innerText = event.description;
+
+        const eventButton = document.createElement("button");
+        eventButton.innerText = "פרטים נוספים";
+
+        eventCard.appendChild(eventTitle);
+        eventCard.appendChild(eventDescription);
+        eventCard.appendChild(eventButton);
+
+        eventsContainer.appendChild(eventCard);
+      });
+    }
+
+    // Load events when page loads
+    window.onload = loadEvents;
+  </script>
 </body>
 </html>
