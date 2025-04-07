@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>יצירת אירוע - Eventiz</title>
+    <title>יצירת אירוע חדש - Eventiz</title>
     <link rel="stylesheet" href="css/style.css">
     <script defer src="js/lang.js"></script>
 </head>
 <body>
     <header>
-        <h1 data-lang-he="יצירת אירוע" data-lang-en="Create Event">יצירת אירוע</h1>
+        <h1 data-lang-he="יצירת אירוע חדש" data-lang-en="Create New Event">יצירת אירוע חדש</h1>
         <nav>
-            <a href="dashboard.html" data-lang-he="חזור לדashboard" data-lang-en="Back to Dashboard">חזור לדashboard</a>
+            <a href="dashboard.html" data-lang-he="חזור לדשבורד" data-lang-en="Back to Dashboard">חזור לדשבורד</a>
         </nav>
     </header>
 
@@ -53,6 +53,11 @@
 
             <button type="submit" class="btn-submit" data-lang-he="צור אירוע" data-lang-en="Create Event">צור אירוע</button>
         </form>
+
+        <!-- Success/Failure Messages -->
+        <div id="message-box" class="message-box" style="display: none;">
+            <p id="message-text"></p>
+        </div>
     </main>
 
     <footer>
