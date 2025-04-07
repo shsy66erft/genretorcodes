@@ -1,25 +1,86 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ברוך הבא ל-Eventiz</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script defer src="js/lang.js"></script>
-    <script>
-        window.onload = function() {
-            setTimeout(() => {
-                const messageBox = document.getElementById("popup-message");
-                messageBox.style.display = "block";
-                setTimeout(() => {
-                    messageBox.style.display = "none";
-                }, 5000);
-            }, 1000);
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            direction: rtl;
+            text-align: right;
         }
-    </script>
+        .popup-message {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            display: none;
+            z-index: 9999;
+            max-width: 80%;
+            width: 400px;
+        }
+        header {
+            background-color: #007BFF;
+            padding: 20px;
+            color: white;
+        }
+        header nav {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        header nav a:hover { background-color: #0056b3; }
+        .container { padding: 40px 10%; }
+        h2 { font-size: 2rem; margin-bottom: 20px; }
+        p { font-size: 1rem; line-height: 1.6; }
+        .btn-primary, .btn-submit {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover, .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+        #langToggle {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <!-- הודעה קופצת -->
     <div id="popup-message" class="popup-message">
         <p>מפתחים/בודקים/אורחים יקרים<br>
         אתר זה כרגע נמצא במצב פיתוח-דמה ונועד לבדיקות בלבד.<br>
@@ -39,8 +100,8 @@
     <main class="container">
         <section>
             <h2 data-lang-he="מה זה Eventiz?" data-lang-en="What is Eventiz?">מה זה Eventiz?</h2>
-            <p data-lang-he="Eventiz הוא פלטפורמה לניהול והפקת אירועים. בעזרתה תוכלו ליצור אירועים חדשים, לנהל אותם ולשתף אותם עם קהל היעד שלכם." data-lang-en="Eventiz is a platform for managing and producing events. With it, you can create new events, manage them, and share them with your target audience.">
-                Eventiz הוא פלטפורמה לניהול והפקת אירועים. בעזרתה תוכלו ליצור אירועים חדשים, לנהל אותם ולשתף אותם עם קהל היעד שלכם.
+            <p data-lang-he="Eventiz הוא פלטפורמה לניהול והפקת אירועים..." data-lang-en="Eventiz is a platform for managing and producing events...">
+                Eventiz הוא פלטפורמה לניהול והפקת אירועים...
             </p>
         </section>
 
@@ -56,5 +117,33 @@
     <footer>
         <button id="langToggle">English</button>
     </footer>
+
+    <script>
+        // הודעה קופצת
+        window.onload = function() {
+            setTimeout(() => {
+                const messageBox = document.getElementById("popup-message");
+                messageBox.style.display = "block";
+                setTimeout(() => {
+                    messageBox.style.display = "none";
+                }, 5000);
+            }, 1000);
+        };
+
+        // כפתור החלפת שפה
+        const langToggleButton = document.getElementById('langToggle');
+        const elements = document.querySelectorAll('[data-lang-he], [data-lang-en]');
+
+        langToggleButton.addEventListener('click', () => {
+            const currentLang = document.documentElement.lang === 'he' ? 'he' : 'en';
+            const newLang = currentLang === 'he' ? 'en' : 'he';
+            document.documentElement.lang = newLang;
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-lang-${newLang}`);
+                if (text) element.innerHTML = text;
+            });
+            langToggleButton.innerHTML = newLang === 'he' ? 'English' : 'עברית';
+        });
+    </script>
 </body>
 </html>
