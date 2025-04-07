@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="css/style.css">
     <script defer src="js/lang.js"></script>
     <script>
-        // הצגת ההודעה הקופצת
         window.onload = function() {
             setTimeout(() => {
                 const messageBox = document.getElementById("popup-message");
                 messageBox.style.display = "block";
                 setTimeout(() => {
                     messageBox.style.display = "none";
-                }, 5000); // מחביא את ההודעה אחרי 5 שניות
-            }, 1000); // מציג את ההודעה אחרי 1 שניה
+                }, 5000);
+            }, 1000);
         }
     </script>
 </head>
