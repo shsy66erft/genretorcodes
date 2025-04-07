@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>דשבורד</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      text-align: center;
+      padding: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>שלום, <span id="username"></span></h2>
+  <p>אין לך אירועים כרגע.</p>
+
+  <button onclick="logout()">התנתק</button>
+
+  <script>
+    // קבלת שם המשתמש מ-localStorage
+    var username = localStorage.getItem('username');
+    document.getElementById('username').textContent = username;
+
+    function logout() {
+      localStorage.removeItem('username');
+      localStorage.removeItem('email');
+      window.location.href = 'login.html'; // הפנה לדף התחברות
+    }
+  </script>
+
+</body>
+</html>
