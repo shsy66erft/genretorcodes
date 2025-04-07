@@ -3,62 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>התחברות - Eventiz</title>
+  <title>התחברות</title>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
       direction: rtl;
-      padding: 40px;
       text-align: center;
+      padding: 50px;
     }
-    h1 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-    form {
-      background: white;
-      max-width: 400px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input {
+    input[type="email"], input[type="password"] {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 4px;
     }
-    .btn-submit {
-      background-color: #007BFF;
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
       color: white;
-      padding: 12px;
       border: none;
-      width: 100%;
-      border-radius: 5px;
-      font-size: 1rem;
       cursor: pointer;
-    }
-    .btn-submit:hover {
-      background-color: #0056b3;
-    }
-    a {
-      display: block;
-      margin-top: 15px;
-      color: #007BFF;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h1>התחברות</h1>
-  <form>
-    <input type="email" placeholder="אימייל" required />
-    <input type="password" placeholder="סיסמה" required />
-    <button type="submit" class="btn-submit">התחבר</button>
-    <a href="signup.html">אין לך חשבון? הירשם כאן</a>
+
+  <h2>התחבר לאתר</h2>
+
+  <form id="login-form">
+    <input type="email" id="email" placeholder="אימייל" required />
+    <input type="password" id="password" placeholder="סיסמה" required />
+    <button type="submit">התחבר</button>
   </form>
+
+  <br />
+
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      var userName = profile.getName();
+      var userEmail = profile.getEmail();
+      // שמור את המידע ב-localStorage
+      localStorage.setItem('username', userName);
+      localStorage.setItem('email', userEmail);
+      window.location.href = 'dashboard.html'; // הפנה לדשבורד
+    }
+
+    document.getElementById('login-form').onsubmit = function(event) {
+      event.preventDefault();
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+      
+      // שים קוד להתחברות כאן (למשל מול דאטאבייס)
+
+      localStorage.setItem('email', email);
+      window.location.href = 'dashboard.html'; // הפנה לדשבורד
+    }
+  </script>
+
 </body>
 </html>
