@@ -1,41 +1,57 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>דשבורד</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דאשבורד</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      direction: rtl;
-      text-align: center;
-      padding: 50px;
+      padding: 40px;
+      background-color: #f9f9f9;
+      text-align: right;
     }
-    button {
+    h2 {
+      color: #444;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
       padding: 10px 20px;
-      background-color: #f44336;
+      background-color: #1e88e5;
       color: white;
       border: none;
+      border-radius: 5px;
+      text-decoration: none;
       cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #1565c0;
     }
   </style>
 </head>
 <body>
 
-  <h2>שלום, <span id="username"></span></h2>
+  <div class="top-bar">
+    <h2 id="welcome"></h2>
+    <button class="btn" onclick="window.location.href='new-event.html'">+ צור אירוע</button>
+  </div>
+
   <p>אין לך אירועים כרגע.</p>
 
-  <button onclick="logout()">התנתק</button>
-
   <script>
-    // קבלת שם המשתמש מ-localStorage
-    var username = localStorage.getItem('username');
-    document.getElementById('username').textContent = username;
-
-    function logout() {
-      localStorage.removeItem('username');
-      localStorage.removeItem('email');
-      window.location.href = 'login.html'; // הפנה לדף התחברות
+    // בדיקה אם המשתמש מחובר
+    const username = localStorage.getItem("username");
+    if (!username) {
+      // אם אין שם משתמש – מפנה לעמוד ההתחברות
+      window.location.href = "login.html";
+    } else {
+      // אם כן – מציג את השם
+      document.getElementById("welcome").innerText = `שלום ${username}`;
     }
   </script>
 
