@@ -285,7 +285,11 @@
     }
 
     // Load events when page loads
-    window.onload = loadEvents;
+    window.onload = function() {
+      loadEvents();
+      // Show the popup after the page loads
+      document.getElementById("popup").style.display = "flex";
+    };
   </script>
 </body>
 </html>
