@@ -3,63 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>הרשמה - Eventiz</title>
+  <title>הרשמה</title>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
       direction: rtl;
-      padding: 40px;
       text-align: center;
+      padding: 50px;
     }
-    h1 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-    form {
-      background: white;
-      max-width: 400px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input {
+    input[type="text"], input[type="email"], input[type="password"] {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 4px;
     }
-    .btn-submit {
-      background-color: #28a745;
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
       color: white;
-      padding: 12px;
       border: none;
-      width: 100%;
-      border-radius: 5px;
-      font-size: 1rem;
       cursor: pointer;
-    }
-    .btn-submit:hover {
-      background-color: #218838;
-    }
-    a {
-      display: block;
-      margin-top: 15px;
-      color: #007BFF;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h1>הרשמה</h1>
-  <form>
-    <input type="text" placeholder="שם מלא" required />
-    <input type="email" placeholder="אימייל" required />
-    <input type="password" placeholder="סיסמה" required />
-    <button type="submit" class="btn-submit">הרשם</button>
-    <a href="login.html">כבר יש לך חשבון? התחבר כאן</a>
+
+  <h2>הירשם לאתר</h2>
+
+  <form id="signup-form">
+    <input type="text" id="username" placeholder="שם משתמש" required />
+    <input type="email" id="email" placeholder="אימייל" required />
+    <input type="password" id="password" placeholder="סיסמה" required />
+    <button type="submit">הירשם</button>
   </form>
+
+  <br />
+
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      var userName = profile.getName();
+      var userEmail = profile.getEmail();
+      // שמור את המידע ב-localStorage
+      localStorage.setItem('username', userName);
+      localStorage.setItem('email', userEmail);
+      window.location.href = 'dashboard.html'; // הפנה לדשבורד
+    }
+
+    document.getElementById('signup-form').onsubmit = function(event) {
+      event.preventDefault();
+      var username = document.getElementById('username').value;
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+
+      // לדוגמה, נשמור את המידע ב-localStorage
+      localStorage.setItem('username', username);
+      localStorage.setItem('email', email);
+      
+      // הפנה לדף התחברות
+      window.location.href = 'login.html';
+    }
+  </script>
+
 </body>
 </html>
