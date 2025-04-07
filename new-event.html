@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יצירת אירוע - Eventiz</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/lang.js"></script>
+</head>
+<body>
+    <header>
+        <h1 data-lang-he="יצירת אירוע" data-lang-en="Create Event">יצירת אירוע</h1>
+        <nav>
+            <a href="dashboard.html" data-lang-he="חזור לדashboard" data-lang-en="Back to Dashboard">חזור לדashboard</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <form id="event-form">
+            <div class="form-group">
+                <label for="event-name" data-lang-he="שם האירוע:" data-lang-en="Event Name:">שם האירוע:</label>
+                <input type="text" id="event-name" name="event-name" placeholder="לדוג' מופע חיות" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event-date" data-lang-he="תאריך:" data-lang-en="Date:">תאריך:</label>
+                <input type="date" id="event-date" name="event-date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event-time" data-lang-he="שעה:" data-lang-en="Time:">שעה:</label>
+                <input type="time" id="event-time" name="event-time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event-location" data-lang-he="מיקום:" data-lang-en="Location:">מיקום:</label>
+                <input type="text" id="event-location" name="event-location" placeholder="לדוג' מרכז העיר" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event-description" data-lang-he="תיאור:" data-lang-en="Description:">תיאור:</label>
+                <textarea id="event-description" name="event-description" placeholder="תאר את האירוע שלך" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="event-category" data-lang-he="קטגוריה:" data-lang-en="Category:">קטגוריה:</label>
+                <select id="event-category" name="event-category" required>
+                    <option value="music" data-lang-he="מוזיקה" data-lang-en="Music">מוזיקה</option>
+                    <option value="art" data-lang-he="אומנות" data-lang-en="Art">אומנות</option>
+                    <option value="sports" data-lang-he="ספורט" data-lang-en="Sports">ספורט</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit" data-lang-he="צור אירוע" data-lang-en="Create Event">צור אירוע</button>
+        </form>
+    </main>
+
+    <footer>
+        <button id="langToggle">English</button>
+    </footer>
+</body>
+</html>
