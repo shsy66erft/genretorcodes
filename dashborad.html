@@ -44,8 +44,15 @@
   <p>אין לך אירועים כרגע.</p>
 
   <script>
-    const username = localStorage.getItem("username") || "אורח";
-    document.getElementById("welcome").innerText = `שלום ${username}`;
+    // בדיקה אם המשתמש מחובר
+    const username = localStorage.getItem("username");
+    if (!username) {
+      // אם אין שם משתמש – מפנה לעמוד ההתחברות
+      window.location.href = "login.html";
+    } else {
+      // אם כן – מציג את השם
+      document.getElementById("welcome").innerText = `שלום ${username}`;
+    }
   </script>
 
 </body>
