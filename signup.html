@@ -4,17 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>הרשמה</title>
-
-  <!-- Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <meta name="google-signin-client_id" content="27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com">
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
       direction: rtl;
       text-align: center;
       padding: 50px;
+      background-color: #f4f4f4;
     }
     input, button {
       padding: 10px;
@@ -22,42 +20,66 @@
       width: 90%;
       max-width: 300px;
     }
-    .g-signin2 {
+    .g_id_signin {
       margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h2>הרשמה</h2>
+  <h2>הרשמה לאתר</h2>
 
   <form id="signup-form">
-    <input type="text" id="username" placeholder="שם משתמש" required />
+    <input type="text" id="name" placeholder="שם מלא" required />
     <input type="email" id="email" placeholder="אימייל" required />
     <input type="password" id="password" placeholder="סיסמה" required />
-    <button type="submit">הירשם</button>
+    <button type="submit">הרשמה</button>
   </form>
 
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <!-- התחברות עם גוגל -->
+  <div id="g_id_onload"
+       data-client_id="27161244762-eccbdthje6jom9uoa0sb00d7t7k1tepj.apps.googleusercontent.com"
+       data-context="signup"
+       data-ux_mode="popup"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-shape="pill"
+       data-theme="outline"
+       data-text="signup_with"
+       data-size="large"
+       data-logo_alignment="left">
+  </div>
 
   <script>
-    function onSignIn(googleUser) {
-      const profile = googleUser.getBasicProfile();
-      const name = profile.getName();
-      const email = profile.getEmail();
+    function handleCredentialResponse(response) {
+      const payload = parseJwt(response.credential);
+      const name = payload.name;
+      const email = payload.email;
       localStorage.setItem("username", name);
       localStorage.setItem("email", email);
       window.location.href = "dashboard.html";
     }
 
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
     document.getElementById("signup-form").onsubmit = function(e) {
       e.preventDefault();
-      const username = document.getElementById("username").value;
+      const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      localStorage.setItem("username", username);
+      localStorage.setItem("username", name);
       localStorage.setItem("email", email);
-      window.location.href = "login.html";
+      window.location.href = "dashboard.html";
     };
   </script>
 
