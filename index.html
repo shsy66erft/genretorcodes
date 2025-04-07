@@ -2,23 +2,39 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Eventiz - דף הבית</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ברוך הבא ל-Eventiz</title>
     <link rel="stylesheet" href="css/style.css">
     <script defer src="js/lang.js"></script>
 </head>
 <body>
     <header>
-        <h1 data-lang-he="ברוכים הבאים ל-Eventiz" data-lang-en="Welcome to Eventiz">ברוכים הבאים ל-Eventiz</h1>
+        <h1 data-lang-he="ברוך הבא ל-Eventiz" data-lang-en="Welcome to Eventiz">ברוך הבא ל-Eventiz</h1>
         <nav>
-            <a href="login.html" data-lang-he="התחברות" data-lang-en="Login">התחברות</a>
-            <a href="register.html" data-lang-he="הרשמה" data-lang-en="Register">הרשמה</a>
-            <button id="langToggle">English</button>
+            <a href="new-event.html" data-lang-he="צור אירוע חדש" data-lang-en="Create New Event">צור אירוע חדש</a>
+            <a href="dashboard.html" data-lang-he="לוח בקרה" data-lang-en="Dashboard">לוח בקרה</a>
         </nav>
     </header>
-    <main>
-        <p data-lang-he="כאן תוכלו לגלות וליצור אירועים בקלות." data-lang-en="Here you can discover and create events easily.">
-            כאן תוכלו לגלות וליצור אירועים בקלות.
-        </p>
+
+    <main class="container">
+        <section>
+            <h2 data-lang-he="מה זה Eventiz?" data-lang-en="What is Eventiz?">מה זה Eventiz?</h2>
+            <p data-lang-he="Eventiz הוא פלטפורמה לניהול והפקת אירועים. בעזרתה תוכלו ליצור אירועים חדשים, לנהל אותם ולשתף אותם עם קהל היעד שלכם." data-lang-en="Eventiz is a platform for managing and producing events. With it, you can create new events, manage them, and share them with your target audience.">
+                Eventiz הוא פלטפורמה לניהול והפקת אירועים. בעזרתה תוכלו ליצור אירועים חדשים, לנהל אותם ולשתף אותם עם קהל היעד שלכם.
+            </p>
+        </section>
+
+        <section>
+            <h2 data-lang-he="התחל עכשיו!" data-lang-en="Get Started Now!">התחל עכשיו!</h2>
+            <p data-lang-he="הירשם ויצר את האירוע הראשון שלך!" data-lang-en="Sign up and create your first event!">
+                הירשם ויצר את האירוע הראשון שלך!
+            </p>
+            <a href="new-event.html" class="btn-primary" data-lang-he="צור אירוע חדש" data-lang-en="Create New Event">צור אירוע חדש</a>
+        </section>
     </main>
+
+    <footer>
+        <button id="langToggle">English</button>
+    </footer>
 </body>
 </html>
