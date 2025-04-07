@@ -1,67 +1,63 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>יצירת אירוע חדש - Eventiz</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script defer src="js/lang.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>אירוע חדש - Eventiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      direction: rtl;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    .btn-submit {
+      background-color: #007BFF;
+      color: white;
+      padding: 12px;
+      border: none;
+      width: 100%;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .btn-submit:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1 data-lang-he="יצירת אירוע חדש" data-lang-en="Create New Event">יצירת אירוע חדש</h1>
-        <nav>
-            <a href="dashboard.html" data-lang-he="חזור לדשבורד" data-lang-en="Back to Dashboard">חזור לדשבורד</a>
-        </nav>
-    </header>
-
-    <main class="container">
-        <form id="event-form">
-            <div class="form-group">
-                <label for="event-name" data-lang-he="שם האירוע:" data-lang-en="Event Name:">שם האירוע:</label>
-                <input type="text" id="event-name" name="event-name" placeholder="לדוג' מופע חיות" required>
-            </div>
-
-            <div class="form-group">
-                <label for="event-date" data-lang-he="תאריך:" data-lang-en="Date:">תאריך:</label>
-                <input type="date" id="event-date" name="event-date" required>
-            </div>
-
-            <div class="form-group">
-                <label for="event-time" data-lang-he="שעה:" data-lang-en="Time:">שעה:</label>
-                <input type="time" id="event-time" name="event-time" required>
-            </div>
-
-            <div class="form-group">
-                <label for="event-location" data-lang-he="מיקום:" data-lang-en="Location:">מיקום:</label>
-                <input type="text" id="event-location" name="event-location" placeholder="לדוג' מרכז העיר" required>
-            </div>
-
-            <div class="form-group">
-                <label for="event-description" data-lang-he="תיאור:" data-lang-en="Description:">תיאור:</label>
-                <textarea id="event-description" name="event-description" placeholder="תאר את האירוע שלך" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="event-category" data-lang-he="קטגוריה:" data-lang-en="Category:">קטגוריה:</label>
-                <select id="event-category" name="event-category" required>
-                    <option value="music" data-lang-he="מוזיקה" data-lang-en="Music">מוזיקה</option>
-                    <option value="art" data-lang-he="אומנות" data-lang-en="Art">אומנות</option>
-                    <option value="sports" data-lang-he="ספורט" data-lang-en="Sports">ספורט</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn-submit" data-lang-he="צור אירוע" data-lang-en="Create Event">צור אירוע</button>
-        </form>
-
-        <!-- Success/Failure Messages -->
-        <div id="message-box" class="message-box" style="display: none;">
-            <p id="message-text"></p>
-        </div>
-    </main>
-
-    <footer>
-        <button id="langToggle">English</button>
-    </footer>
+  <h1>צור אירוע חדש</h1>
+  <form>
+    <input type="text" placeholder="שם האירוע" required />
+    <input type="date" required />
+    <input type="time" required />
+    <input type="text" placeholder="מיקום האירוע" required />
+    <textarea rows="4" placeholder="תיאור האירוע"></textarea>
+    <button type="submit" class="btn-submit">צור אירוע</button>
+  </form>
 </body>
 </html>
