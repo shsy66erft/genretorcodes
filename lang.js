@@ -1,15 +1,25 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const toggleBtn = document.getElementById("langToggle");
-    let currentLang = "he";
+// פונקציה להחלפת שפה
+const langToggleButton = document.getElementById('langToggle');
+const elements = document.querySelectorAll('[data-lang-he], [data-lang-en]');
 
-    toggleBtn.addEventListener("click", () => {
-        currentLang = currentLang === "he" ? "en" : "he";
-        document.documentElement.lang = currentLang;
-        document.documentElement.dir = currentLang === "he" ? "rtl" : "ltr";
-        toggleBtn.textContent = currentLang === "he" ? "English" : "עברית";
-
-        document.querySelectorAll("[data-lang-he]").forEach(el => {
-            el.textContent = el.getAttribute(`data-lang-${currentLang}`);
-        });
+langToggleButton.addEventListener('click', () => {
+    const currentLang = document.documentElement.lang === 'he' ? 'he' : 'en';
+    const newLang = currentLang === 'he' ? 'en' : 'he';
+    document.documentElement.lang = newLang;
+    elements.forEach(element => {
+        const text = element.getAttribute(`data-lang-${newLang}`);
+        element.innerHTML = text;
     });
+
+    langToggleButton.innerHTML = newLang === 'he' ? 'English' : 'עברית';
 });
+
+// קביעת השפה המתחילה
+if (document.documentElement.lang !== 'he') {
+    document.documentElement.lang = 'en';
+    elements.forEach(element => {
+        const text = element.getAttribute('data-lang-en');
+        element.innerHTML = text;
+    });
+    langToggleButton.innerHTML = 'עברית';
+}
