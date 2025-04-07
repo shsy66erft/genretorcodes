@@ -6,13 +6,34 @@
     <title>ברוך הבא ל-Eventiz</title>
     <link rel="stylesheet" href="css/style.css">
     <script defer src="js/lang.js"></script>
+    <script>
+        // הצגת ההודעה הקופצת
+        window.onload = function() {
+            setTimeout(() => {
+                const messageBox = document.getElementById("popup-message");
+                messageBox.style.display = "block";
+                setTimeout(() => {
+                    messageBox.style.display = "none";
+                }, 5000); // מחביא את ההודעה אחרי 5 שניות
+            }, 1000); // מציג את ההודעה אחרי 1 שניה
+        }
+    </script>
 </head>
 <body>
+    <!-- הודעה קופצת -->
+    <div id="popup-message" class="popup-message">
+        <p>מפתחים/בודקים/אורחים יקרים<br>
+        אתר זה כרגע נמצא במצב פיתוח-דמה ונועד לבדיקות בלבד.<br>
+        אין לבצע באתר זה שום פעולה או שיתוף לא מאושר.</p>
+    </div>
+
     <header>
         <h1 data-lang-he="ברוך הבא ל-Eventiz" data-lang-en="Welcome to Eventiz">ברוך הבא ל-Eventiz</h1>
         <nav>
             <a href="new-event.html" data-lang-he="צור אירוע חדש" data-lang-en="Create New Event">צור אירוע חדש</a>
             <a href="dashboard.html" data-lang-he="לוח בקרה" data-lang-en="Dashboard">לוח בקרה</a>
+            <a href="login.html" data-lang-he="התחברות" data-lang-en="Login">התחברות</a>
+            <a href="signup.html" data-lang-he="הרשמה" data-lang-en="Sign Up">הרשמה</a>
         </nav>
     </header>
 
