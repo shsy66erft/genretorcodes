@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>לוח בקרה - Eventiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דאשבורד</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      direction: rtl;
       padding: 40px;
-      text-align: center;
+      background-color: #f9f9f9;
+      text-align: right;
     }
-    h1 {
-      color: #333;
-      margin-bottom: 30px;
+    h2 {
+      color: #444;
     }
-    .no-events {
-      background: white;
-      max-width: 500px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      font-size: 1.2rem;
-      color: #666;
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      padding: 10px 20px;
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #1565c0;
     }
   </style>
 </head>
 <body>
-  <h1>לוח הבקרה שלך</h1>
-  <div class="no-events">
-    כרגע אין אירועים זמינים
+
+  <div class="top-bar">
+    <h2 id="welcome"></h2>
+    <button class="btn" onclick="window.location.href='new-event.html'">+ צור אירוע</button>
   </div>
+
+  <p>אין לך אירועים כרגע.</p>
+
+  <script>
+    const username = localStorage.getItem("username") || "אורח";
+    document.getElementById("welcome").innerText = `שלום ${username}`;
+  </script>
+
 </body>
 </html>
