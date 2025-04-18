@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>ניהול קופונים</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      direction: rtl;
+      background-color: #f7f7f7;
+    }
+    h2 {
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h2>רשימת קופונים פעילים</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>קוד</th>
+        <th>הנחה</th>
+        <th>סוג (₪ או %)</th>
+      </tr>
+    </thead>
+    <tbody id="couponTable">
+      <!-- נתונים ייכנסו מה־JS -->
+    </tbody>
+  </table>
+
+  <script>
+    const coupons = [
+      { code: "DREE", discount: 100, type: "₪" },
+      { code: "SALE20", discount: 20, type: "%" },
+      { code: "VIP10", discount: 10, type: "%" }
+    ];
+
+    const table = document.getElementById("couponTable");
+    coupons.forEach(coupon => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${coupon.code}</td>
+        <td>${coupon.discount}</td>
+        <td>${coupon.type}</td>
+      `;
+      table.appendChild(row);
+    });
+  </script>
+</body>
+</html>
