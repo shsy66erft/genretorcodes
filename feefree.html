@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>תשלום עבור מנוי</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .checkout-form {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .checkout-form h2 {
+      text-align: center;
+    }
+
+    .checkout-form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .checkout-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>תשלום עבור מנוי</h1>
+  </header>
+
+  <div class="checkout-form">
+    <h2>השלם את פרטי התשלום</h2>
+    <form id="paymentForm">
+      <label for="cardNumber">מספר כרטיס אשראי</label>
+      <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" required>
+
+      <label for="expiryDate">תוקף (MM/YY)</label>
+      <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+
+      <label for="cvv">קוד CVV</label>
+      <input type="text" id="cvv" name="cvv" placeholder="123" required>
+
+      <button type="submit" class="btn">בצע תשלום</button>
+    </form>
+    <div id="errorMessage" class="error"></div>
+  </div>
+
+  <script>
+    document.getElementById("paymentForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      const cardNumber = document.getElementById("cardNumber").value;
+      const expiryDate = document.getElementById("expiryDate").value;
+      const cvv = document.getElementById("cvv").value;
+
+      // ניקוי שגיאות ישנות
+      document.getElementById("errorMessage").textContent = "";
+
+      // ביצוע הקריאה ל-API של קארדום
+      fetch('https://api.cardom.com/payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_API_KEY' // הוסף כאן את ה-API Key שלך
+        },
+        body: JSON.stringify({
+          amount: 1500,  // סכום התשלום (באגורות) – 15 ₪
+          currency: 'ILS',
+          description: 'מנוי יוטיוב פרימיום',
+          cardDetails: {
+            number: cardNumber,
+            expiryDate: expiryDate,
+            cvv: cvv
+          }
+        })
+      }).then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("התשלום בוצע בהצלחה!");
+            window.location.href = "thankyou.html";  // דף תודה לאחר תשלום
+          } else {
+            document.getElementById("errorMessage").textContent = "הייתה שגיאה בתשלום, נסה שוב.";
+          }
+        })
+        .catch(error => {
+          document.getElementById("errorMessage").textContent = "שגיאה בעת חיבור לשרת. אנא נסה שוב.";
+        });
+    });
+  </script>
+</body>
+</html>
