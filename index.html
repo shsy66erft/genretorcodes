@@ -1,290 +1,138 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eventiz - דף הבית</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מנויים מסובסדים</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
+    /* עיצוב כללי */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
+      direction: rtl;
       margin: 0;
       padding: 0;
-      background-color: #f5f5f5;
+      background-color: #f9f9f9;
+    }
+    
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .plans {
+      display: flex;
+      justify-content: space-around;
+      padding: 40px;
+    }
+
+    .plan {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      width: 250px;
+      position: relative;
+    }
+
+    .plan h2 {
       color: #333;
     }
 
-    header {
-      background-color: #1e88e5;
-      color: white;
-      padding: 15px 0;
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
+    .plan p {
+      color: #555;
+      font-size: 16px;
     }
 
-    .container {
-      padding: 50px;
-      max-width: 1200px;
-      margin: 0 auto;
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 18px;
+    }
+
+    .discount-tag {
+      background-color: #FF6347;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
     }
 
     .btn {
-      padding: 12px 25px;
-      background-color: #1e88e5;
+      background-color: #4CAF50;
       color: white;
-      border-radius: 8px;
+      padding: 10px 20px;
       border: none;
+      border-radius: 5px;
       text-decoration: none;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 10px;
-      transition: background-color 0.3s;
+      display: inline-block;
+      margin-top: 20px;
     }
 
     .btn:hover {
-      background-color: #1565c0;
+      background-color: #45a049;
     }
 
-    .intro-text {
+    .login-register {
       text-align: center;
-      margin-top: 20px;
-      font-size: 24px;
-      line-height: 1.5;
+      margin-top: 30px;
     }
 
-    .intro-text span {
-      color: #1e88e5;
-    }
-
-    .events-section {
-      margin-top: 50px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
-
-    .event-card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .event-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .event-card h3 {
-      color: #1e88e5;
-      font-size: 22px;
-      margin: 10px 0;
-    }
-
-    .event-card p {
-      color: #555;
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .event-card button {
-      padding: 12px 20px;
-      background-color: #1e88e5;
-      color: white;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .event-card button:hover {
-      background-color: #1565c0;
-    }
-
-    footer {
-      background-color: #1e88e5;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 50px;
-      border-radius: 8px;
-    }
-
-    /* Popup Modal Styles */
-    #popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .popup-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 600px;
-      text-align: center;
-    }
-
-    .popup-content h2 {
-      font-size: 20px;
-      margin-bottom: 15px;
-    }
-
-    .popup-content p {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .popup-content button {
-      padding: 12px 25px;
-      background-color: #1e88e5;
-      color: white;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .popup-content button:hover {
-      background-color: #1565c0;
+    .login-register a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
-  <!-- Header Section -->
   <header>
-    <div>Eventiz</div>
+    <h1>מנויים מסובסדים לשירותים מובילים</h1>
   </header>
 
-  <div class="container">
-    <!-- Welcome Message -->
-    <div id="welcome-message" class="intro-text">
-      <p>ברוכים הבאים ל־<span>Eventiz</span></p>
-      <p>המשתמש לא מחובר. אנא התחבר או הירשם כדי להמשיך</p>
-      <div>
-        <a href="login.html" class="btn">התחברות</a>
-        <a href="signup.html" class="btn">הרשמה</a>
-      </div>
+  <section class="plans">
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>יוטיוב פרימיום</h2>
+      <p>גישה לשירותי פרימיום של יוטיוב במחיר מסובסד</p>
+      <p class="original-price">מחיר מקורי: 30 ₪ לחודש</p>
+      <p class="price">מחיר: 15 ₪ לחודש</p>
+      <a href="checkout.html?plan=youtube" class="btn">קנה עכשיו</a>
     </div>
 
-    <!-- User-Welcome Message after login -->
-    <div id="user-welcome" class="intro-text" style="display:none;">
-      <p id="welcome-user">שלום, </p>
-      <a href="dashboard.html" class="btn">עבור לדאשבורד</a>
-      <button class="btn" onclick="logout()">התנתק</button>
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>ספוטיפי פרימיום</h2>
+      <p>האזינו למוזיקה ללא פרסומות ועם גישה מלאה</p>
+      <p class="original-price">מחיר מקורי: 40 ₪ לחודש</p>
+      <p class="price">מחיר: 20 ₪ לחודש</p>
+      <a href="checkout.html?plan=spotify" class="btn">קנה עכשיו</a>
     </div>
 
-    <!-- Events Section -->
-    <div class="events-section" id="events-container">
-      <!-- Dynamically loaded real events -->
-      <div class="event-card">
-        <h3>אירוע אמיתי 1</h3>
-        <p>תיאור קצר של האירוע אמיתי ומרגש!</p>
-        <button>פרטים נוספים</button>
-      </div>
-      <div class="event-card">
-        <h3>אירוע אמיתי 2</h3>
-        <p>עוד תיאור של אירוע מרהיב, רק מה צריכים לבוא!</p>
-        <button>פרטים נוספים</button>
-      </div>
-      <div class="event-card">
-        <h3>אירוע אמיתי 3</h3>
-        <p>הנה אירוע אמיתי עם תאריך ומיקום!</p>
-        <button>פרטים נוספים</button>
-      </div>
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>אפל מיוזיק</h2>
+      <p>האזינו למוזיקה איכותית עם גישה לכל התכנים</p>
+      <p class="original-price">מחיר מקורי: 40 ₪ לחודש</p>
+      <p class="price">מחיר: 18 ₪ לחודש</p>
+      <a href="checkout.html?plan=applemusic" class="btn">קנה עכשיו</a>
     </div>
-  </div>
+  </section>
 
-  <footer>
-    <p>© 2025 Eventiz. כל הזכויות שמורות.</p>
-  </footer>
-
-  <!-- Popup Message -->
-  <div id="popup">
-    <div class="popup-content">
-      <h2>מפתחים/בודקים/אורחים יקרים</h2>
-      <p>האתר נמצא במצב פיתוח-דמה ונועד לבדיקות בלבד. אין לבצע באתר זה שום פעולה או שיתוף לא מאושר.</p>
-      <button onclick="closePopup()">אישור</button>
-    </div>
-  </div>
-
-  <script>
-    // Show the popup message on page load
-    window.onload = function() {
-      document.getElementById("popup").style.display = "flex";
-    };
-
-    // Close the popup when user clicks the "אישור" button
-    function closePopup() {
-      document.getElementById("popup").style.display = "none";
-    }
-
-    // Check if user is logged in
-    const username = localStorage.getItem("username");
-    const welcomeMessage = document.getElementById("welcome-message");
-    const userWelcome = document.getElementById("user-welcome");
-    const welcomeUserText = document.getElementById("welcome-user");
-
-    if (username) {
-      welcomeMessage.style.display = "none";
-      userWelcome.style.display = "block";
-      welcomeUserText.innerText = `שלום ${username}`;
-    }
-
-    // Logout function
-    function logout() {
-      localStorage.clear();
-      location.reload();
-    }
-
-    // Function to load events dynamically
-    function loadEvents() {
-      const events = [
-        { title: "אירוע אמיתי 1", description: "תיאור קצר של האירוע" },
-        { title: "אירוע אמיתי 2", description: "תיאור קצר של האירוע" },
-        { title: "אירוע אמיתי 3", description: "תיאור קצר של האירוע" },
-        { title: "אירוע אמיתי 4", description: "תיאור קצר של האירוע" },
-        { title: "אירוע אמיתי 5", description: "תיאור קצר של האירוע" }
-      ];
-
-      const eventsContainer = document.getElementById("events-container");
-      eventsContainer.innerHTML = ""; // Clear the event container
-
-      events.forEach(event => {
-        const eventCard = document.createElement("div");
-        eventCard.classList.add("event-card");
-
-        const eventTitle = document.createElement("h3");
-        eventTitle.innerText = event.title;
-
-        const eventDescription = document.createElement("p");
-        eventDescription.innerText = event.description;
-
-        const eventButton = document.createElement("button");
-        eventButton.innerText = "פרטים נוספים";
-
-        eventCard.appendChild(eventTitle);
-        eventCard.appendChild(eventDescription);
-        eventCard.appendChild(eventButton);
-
-        eventsContainer.appendChild(eventCard);
-      });
-    }
-
-    // Load events when page loads
-    window.onload = function() {
-      loadEvents();
-      document.getElementById("popup").style.display = "flex";
-    };
-  </script>
+  <section class="login-register">
+    <p>כבר יש לך חשבון? <a href="login.html">התחבר כאן</a></p>
+    <p>חדש כאן? <a href="register.html">הרשם עכשיו</a></p>
+  </section>
 </body>
 </html>
