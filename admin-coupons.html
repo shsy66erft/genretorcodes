@@ -91,7 +91,12 @@
       </tr>
     </thead>
     <tbody id="couponTable">
-const coupons = {
+    </tbody>
+  </table>
+
+  <script>
+    // רשימה של קופונים קיימים
+    let coupons ={
     "DREE": 0,        // DREE -> 0% הנחה
     "DISCOUNT20": 29,  // DISCOUNT20 -> 29% הנחה
     "DISCOUNT30": 30,  // DISCOUNT30 -> 30% הנחה
@@ -103,16 +108,6 @@ const coupons = {
     "DISCOUNT90": 90,  // DISCOUNT90 -> 90% הנחה
     "DISCOUNT100": 100 // DISCOUNT100 -> 100% הנחה
 };
-    </tbody>
-  </table>
-
-  <script>
-    // רשימה של קופונים קיימים
-    let coupons = [
-      { code: "DREE", discount: 100, type: "₪" },
-      { code: "SALE20", discount: 20, type: "%" },
-      { code: "VIP10", discount: 10, type: "%" }
-    ];
 
     // פונקציה להוסיף קופון חדש לטבלה
     function renderCoupons() {
