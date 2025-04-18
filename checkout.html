@@ -57,6 +57,7 @@
   <input type="text" id="name" placeholder="שם מלא" required>
   <input type="tel" id="phone" placeholder="מספר טלפון" required>
   <input type="text" id="coupon" placeholder="קוד קופון (אם יש)">
+  <button id="applyCouponButton">החל קופון</button>
   <button onclick="handlePayment()">מעבר לתשלום</button>
 
   <div id="orderDetails" style="margin-top:20px;"></div>
@@ -71,13 +72,8 @@
 <script>
   emailjs.init("2T_CaMbAN4-h9rTjA");
 
-// פונקציה לפענוח קוד מוצפן (Base64)
-function decryptCouponCode(encryptedCode) {
-    return atob(encryptedCode);  // פונקציית atob פועלת לפענוח Base64
-}
-
-// רשימת קופונים מוצפנים
-const encryptedCoupons = {
+  // רשימת קופונים מוצפנים ב-Base64
+  const ENCRYPTED_COUPONS = {
     "RFJFRA==": 0,    // DREE -> 0% הנחה
     "RElTQ1VPQ1R7MjA=": 29,  // DISCOUNT20 -> 29% הנחה
     "RElTQ1VPQ1R7MzA=": 30,  // DISCOUNT30 -> 30% הנחה
@@ -88,26 +84,35 @@ const encryptedCoupons = {
     "RElTQ1VPQ1R7ODg=": 80,  // DISCOUNT80 -> 80% הנחה
     "RElTQ1VPQ1R7OTk=": 90,  // DISCOUNT90 -> 90% הנחה
     "RElTQ1VPQ1R7MTAw": 100  // DISCOUNT100 -> 100% הנחה
-};
+  };
 
-// פונקציה לקבלת הנחה על פי קוד קופון
-function getCouponDiscount(couponCode) {
-    // פענוח הקוד המוצפן
-    const decryptedCode = decryptCouponCode(couponCode);
-    
-    // חיפוש הנחה על פי הקוד המפוענח
-    if (encryptedCoupons[decryptedCode] !== undefined) {
-        return encryptedCoupons[decryptedCode];
+  // פונקציה לפענוח קוד קופון (Base64)
+  function decryptCouponCode(encryptedCode) {
+    return atob(encryptedCode);  // פענוח קוד Base64
+  }
+
+  // פונקציה לקבלת הנחה על פי קוד קופון
+  function getCouponDiscount(couponCode) {
+    const decryptedCode = decryptCouponCode(couponCode);  // פענוח הקוד
+    if (ENCRYPTED_COUPONS[decryptedCode] !== undefined) {
+      return ENCRYPTED_COUPONS[decryptedCode];  // מחזיר את ההנחה אם הקוד קיים
     } else {
-        return null;  // אם הקוד לא נמצא
+      return null;  // אם הקוד לא נמצא
     }
-}
+  }
 
-// דוגמת קריאה:
-const couponCode = "RFJFRA=="; // לדוגמה קוד DREE
-const discount = getCouponDiscount(couponCode);
-console.log(`ההנחה עבור קוד הקופון היא: ${discount}%`);
-
+  // פונקציה להחיל את הקופון
+  document.getElementById("applyCouponButton").addEventListener("click", function() {
+    const couponCode = document.getElementById("coupon").value.trim();
+    const discount = getCouponDiscount(couponCode);
+    
+    if (discount !== null) {
+      alert(`ההנחה שהתקבלה: ${discount}%`);
+      document.getElementById("finalPrice").innerText = `מחיר סופי אחרי הנחה: ₪${(49 - (49 * (discount / 100))).toFixed(2)}`;
+    } else {
+      alert("הקוד אינו תקף");
+    }
+  });
 
   function generateOrderNumber() {
     return 'ORD' + Math.floor(Math.random() * 1000000);
@@ -116,7 +121,7 @@ console.log(`ההנחה עבור קוד הקופון היא: ${discount}%`);
   function handlePayment() {
     const name = document.getElementById("name").value.trim();
     const phone = document.getElementById("phone").value.trim();
-    const coupon = document.getElementById("coupon").value.trim().toUpperCase();
+    const coupon = document.getElementById("coupon").value.trim();
 
     if (!name || !phone) {
       alert("נא למלא את כל השדות");
@@ -124,8 +129,9 @@ console.log(`ההנחה עבור קוד הקופון היא: ${discount}%`);
     }
 
     let finalPrice = 49;
-    if (coupon && COUPONS[coupon] !== undefined) {
-      finalPrice = COUPONS[coupon];
+    const discount = getCouponDiscount(coupon);
+    if (discount !== null) {
+      finalPrice = 49 - (49 * (discount / 100));
     }
 
     const orderNumber = generateOrderNumber();
@@ -135,9 +141,9 @@ console.log(`ההנחה עבור קוד הקופון היא: ${discount}%`);
       name: name,
       phone: phone,
       order_number: orderNumber,
-      final_price: finalPrice
+      final_price: finalPrice.toFixed(2)
     }).then(() => {
-      document.getElementById("orderDetails").innerText = `מספר הזמנה: ${orderNumber} | מחיר סופי: ₪${finalPrice}`;
+      document.getElementById("orderDetails").innerText = `מספר הזמנה: ${orderNumber} | מחיר סופי: ₪${finalPrice.toFixed(2)}`;
       const whatsappLink = `https://wa.me/972509643779?text=שלום,%20רכשתי%20מנוי%20והמספר%20הזמנה%20שלי%20הוא:%20${orderNumber}`;
       document.getElementById("whatsappLink").href = whatsappLink;
       document.getElementById("whatsappSection").style.display = "block";
