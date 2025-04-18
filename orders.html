@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>רשימת הזמנות</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      direction: rtl;
+      background-color: #f1f1f1;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <h2>הזמנות שהתקבלו</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>מספר הזמנה</th>
+        <th>מחיר סופי</th>
+        <th>טלפון</th>
+      </tr>
+    </thead>
+    <tbody id="ordersTable">
+      <!-- דוגמאות זמניות -->
+    </tbody>
+  </table>
+
+  <script>
+    const orders = [
+      { orderNumber: "ORD129384", finalPrice: "0₪", phone: "0501234567" },
+      { orderNumber: "ORD823712", finalPrice: "15₪", phone: "0509876543" }
+    ];
+
+    const ordersTable = document.getElementById("ordersTable");
+    orders.forEach(order => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${order.orderNumber}</td>
+        <td>${order.finalPrice}</td>
+        <td>${order.phone}</td>
+      `;
+      ordersTable.appendChild(row);
+    });
+  </script>
+</body>
+</html>
