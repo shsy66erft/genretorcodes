@@ -72,66 +72,57 @@
 <script>
   emailjs.init("2T_CaMbAN4-h9rTjA");
 
-  // רשימת קופונים מוצפנים ב-Base64
-  const ENCRYPTED_COUPONS = {
-    "RFJFRA==": 0,    // DREE -> 0% הנחה
-    "RElTQ1VPQ1R7MjA=": 29,  // DISCOUNT20 -> 29% הנחה
-    "RElTQ1VPQ1R7MzA=": 30,  // DISCOUNT30 -> 30% הנחה
-    "RElTQ1VPQ1R7NDA=": 40,  // DISCOUNT40 -> 40% הנחה
-    "RElTQ1VPQ1R7NTA=": 50,  // DISCOUNT50 -> 50% הנחה
-    "RElTQ1VPQ1R7NjA=": 60,  // DISCOUNT60 -> 60% הנחה
-    "RElTQ1VPQ1R7NzA=": 70,  // DISCOUNT70 -> 70% הנחה
-    "RElTQ1VPQ1R7ODg=": 80,  // DISCOUNT80 -> 80% הנחה
-    "RElTQ1VPQ1R7OTk=": 90,  // DISCOUNT90 -> 90% הנחה
-    "RElTQ1VPQ1R7MTAw": 100  // DISCOUNT100 -> 100% הנחה
-  };
-
-  // פונקציה לפענוח קוד קופון (Base64)
-  function decryptCouponCode(encryptedCode) {
-    return atob(encryptedCode);  // פענוח קוד Base64
-  }
-
-  // פונקציה לקבלת הנחה על פי קוד קופון
-  function getCouponDiscount(couponCode) {
-    const decryptedCode = decryptCouponCode(couponCode);  // פענוח הקוד
-    if (ENCRYPTED_COUPONS[decryptedCode] !== undefined) {
-      return ENCRYPTED_COUPONS[decryptedCode];  // מחזיר את ההנחה אם הקוד קיים
-    } else {
-      return null;  // אם הקוד לא נמצא
+  // טוען את הקופונים מקובץ JSON
+  async function loadCoupons() {
+    try {
+      const response = await fetch('coupons.json');
+      const coupons = await response.json();
+      return coupons;
+    } catch (error) {
+      console.error("שגיאה בטעינת הקופונים:", error);
+      return {};
     }
   }
 
-  // פונקציה להחיל את הקופון
-  document.getElementById("applyCouponButton").addEventListener("click", function() {
-    const couponCode = document.getElementById("coupon").value.trim();
-    const discount = getCouponDiscount(couponCode);
-    
-    if (discount !== null) {
-      alert(`ההנחה שהתקבלה: ${discount}%`);
-      document.getElementById("finalPrice").innerText = `מחיר סופי אחרי הנחה: ₪${(49 - (49 * (discount / 100))).toFixed(2)}`;
-    } else {
-      alert("הקוד אינו תקף");
-    }
+  let COUPONS = {};
+
+  // טוען את הקופונים ומעדכן את הרשימה
+  loadCoupons().then(coupons => {
+    COUPONS = coupons;
   });
 
+  // פונקציה להחלת קופון
+  function applyCoupon() {
+    const couponCode = document.getElementById("coupon").value.trim().toUpperCase();
+
+    if (COUPONS[couponCode] !== undefined) {
+      alert(`הקופון ${couponCode} הוחל! ההנחה היא ${COUPONS[couponCode]}%`);
+    } else {
+      alert("הקופון לא תקף.");
+    }
+  }
+
+  document.getElementById("applyCouponButton").addEventListener("click", applyCoupon);
+
+  // פונקציה ליצירת מספר הזמנה
   function generateOrderNumber() {
     return 'ORD' + Math.floor(Math.random() * 1000000);
   }
 
+  // פונקציה לטיפול בתשלום
   function handlePayment() {
     const name = document.getElementById("name").value.trim();
     const phone = document.getElementById("phone").value.trim();
-    const coupon = document.getElementById("coupon").value.trim();
+    const coupon = document.getElementById("coupon").value.trim().toUpperCase();
 
     if (!name || !phone) {
       alert("נא למלא את כל השדות");
       return;
     }
 
-    let finalPrice = 49;
-    const discount = getCouponDiscount(coupon);
-    if (discount !== null) {
-      finalPrice = 49 - (49 * (discount / 100));
+    let finalPrice = 49; // מחיר אחרי הנחה ברירת מחדל
+    if (COUPONS[coupon] !== undefined) {
+      finalPrice = 49 - (49 * COUPONS[coupon] / 100); // חישוב מחיר אחרי הנחה
     }
 
     const orderNumber = generateOrderNumber();
@@ -141,7 +132,7 @@
       name: name,
       phone: phone,
       order_number: orderNumber,
-      final_price: finalPrice.toFixed(2)
+      final_price: finalPrice
     }).then(() => {
       document.getElementById("orderDetails").innerText = `מספר הזמנה: ${orderNumber} | מחיר סופי: ₪${finalPrice.toFixed(2)}`;
       const whatsappLink = `https://wa.me/972509643779?text=שלום,%20רכשתי%20מנוי%20והמספר%20הזמנה%20שלי%20הוא:%20${orderNumber}`;
