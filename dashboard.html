@@ -1,50 +1,140 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>דאשבורד</title>
+  <title>מנויים מסובסדים</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
+    /* עיצוב כללי */
     body {
       font-family: Arial, sans-serif;
-      padding: 40px;
+      direction: rtl;
+      margin: 0;
+      padding: 0;
       background-color: #f9f9f9;
-      text-align: right;
     }
-    h2 {
-      color: #444;
-    }
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .btn {
-      padding: 10px 20px;
-      background-color: #1e88e5;
+    
+    header {
+      background-color: #4CAF50;
       color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .plans {
+      display: flex;
+      justify-content: space-around;
+      padding: 40px;
+    }
+
+    .plan {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      width: 250px;
+      position: relative;
+    }
+
+    .plan h2 {
+      color: #333;
+    }
+
+    .plan p {
+      color: #555;
+      font-size: 16px;
+    }
+
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 18px;
+    }
+
+    .discount-tag {
+      background-color: #FF6347;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
       border: none;
       border-radius: 5px;
       text-decoration: none;
-      cursor: pointer;
-      font-size: 16px;
+      display: inline-block;
+      margin-top: 20px;
     }
+
     .btn:hover {
-      background-color: #1565c0;
+      background-color: #45a049;
+    }
+
+    .login-register {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .login-register a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>מנויים מסובסדים לשירותים מובילים</h1>
+  </header>
 
-  <div class="top-bar">
-    <h2 id="welcome"></h2>
-    <button class="btn" onclick="window.location.href='new-event.html'">+ צור אירוע</button>
-  </div>
+  <section class="plans">
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>יוטיוב פרימיום</h2>
+      <p>גישה לשירותי פרימיום של יוטיוב במחיר מסובסד</p>
+      <p class="original-price">מחיר מקורי: 30 ₪ לחודש</p>
+      <p class="price">מחיר: 15 ₪ לחודש</p>
+      <a href="checkout.html?plan=youtube" class="btn">קנה עכשיו</a>
+    </div>
 
-    <button class="btn" onclick="window.location.href='index.html'">עבור לדף הבית </button>
-  </div>
-  <p>אין לך אירועים כרגע.</p>
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>ספוטיפי פרימיום</h2>
+      <p>האזינו למוזיקה ללא פרסומות ועם גישה מלאה</p>
+      <p class="original-price">מחיר מקורי: 40 ₪ לחודש</p>
+      <p class="price">מחיר: 20 ₪ לחודש</p>
+      <a href="checkout.html?plan=spotify" class="btn">קנה עכשיו</a>
+    </div>
 
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>אפל מיוזיק</h2>
+      <p>האזינו למוזיקה איכותית עם גישה לכל התכנים</p>
+      <p class="original-price">מחיר מקורי: 40 ₪ לחודש</p>
+      <p class="price">מחיר: 18 ₪ לחודש</p>
+      <a href="checkout.html?plan=applemusic" class="btn">קנה עכשיו</a>
+    </div>
+  </section>
+
+  <section class="login-register">
+    <p>כבר יש לך חשבון? <a href="login.html">התחבר כאן</a></p>
+    <p>חדש כאן? <a href="register.html">הרשם עכשיו</a></p>
+  </section>
+  
   <script>
     // בדיקה אם המשתמש מחובר
     const username = localStorage.getItem("username");
