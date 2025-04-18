@@ -96,18 +96,18 @@
 
   <script>
     // רשימה של קופונים קיימים
-    let coupons ={
-    "DREE": 0,        // DREE -> 0% הנחה
-    "DISCOUNT20": 29,  // DISCOUNT20 -> 29% הנחה
-    "DISCOUNT30": 30,  // DISCOUNT30 -> 30% הנחה
-    "DISCOUNT40": 40,  // DISCOUNT40 -> 40% הנחה
-    "DISCOUNT50": 50,  // DISCOUNT50 -> 50% הנחה
-    "DISCOUNT60": 60,  // DISCOUNT60 -> 60% הנחה
-    "DISCOUNT70": 70,  // DISCOUNT70 -> 70% הנחה
-    "DISCOUNT80": 80,  // DISCOUNT80 -> 80% הנחה
-    "DISCOUNT90": 90,  // DISCOUNT90 -> 90% הנחה
-    "DISCOUNT100": 100 // DISCOUNT100 -> 100% הנחה
-};
+    let coupons = [
+      { code: "DREE", discount: 0, type: "%" },
+      { code: "DISCOUNT20", discount: 20, type: "%" },
+      { code: "DISCOUNT30", discount: 30, type: "%" },
+      { code: "DISCOUNT40", discount: 40, type: "%" },
+      { code: "DISCOUNT50", discount: 50, type: "%" },
+      { code: "DISCOUNT60", discount: 60, type: "%" },
+      { code: "DISCOUNT70", discount: 70, type: "%" },
+      { code: "DISCOUNT80", discount: 80, type: "%" },
+      { code: "DISCOUNT90", discount: 90, type: "%" },
+      { code: "DISCOUNT100", discount: 100, type: "%" }
+    ];
 
     // פונקציה להוסיף קופון חדש לטבלה
     function renderCoupons() {
