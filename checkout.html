@@ -2,225 +2,118 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
+  <title>תשלום על מנוי</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>דף תשלום</title>
-  <link rel="stylesheet" href="styles.css">
   <style>
-    /* עיצוב כללי */
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
+      background: #f9f9f9;
+      padding: 20px;
       direction: rtl;
-      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
       padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    header {
-      background-color: #4CAF50;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .payment-container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .payment-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .payment-details, .coupon-section, .final-total {
-      margin-bottom: 20px;
-    }
-
-    .payment-details p, .coupon-section p, .final-total p {
-      font-size: 18px;
-      margin: 5px 0;
-    }
-
-    .coupon-section input {
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 16px;
-      width: 80%;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .coupon-section button {
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      width: 18%;
-    }
-
-    .coupon-section button:hover {
-      background-color: #45a049;
-    }
-
-    .final-total {
-      font-weight: bold;
-      font-size: 20px;
-    }
-
-    .error-message {
-      color: red;
-      text-align: center;
-    }
-
-    .disabled-button {
-      background-color: #d3d3d3;
-      cursor: not-allowed;
-    }
-
-    .whatsapp-button {
-      background-color: #25D366;
-      color: white;
-      padding: 10px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
+    input, button {
       width: 100%;
-      margin-top: 20px;
-      text-align: center;
-      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-
-    .whatsapp-button:hover {
-      background-color: #128C7E;
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
-
-    .order-details {
-      font-weight: bold;
-      font-size: 18px;
+    button:hover {
+      background: #388e3c;
+    }
+    .price-line {
+      text-decoration: line-through;
+      color: gray;
+      font-size: 14px;
+    }
+    #whatsappSection {
+      display: none;
       margin-top: 20px;
-      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>דף תשלום</h1>
-  </header>
+<div class="container">
+  <h2>רכישת מנוי יוטיוב פרימיום</h2>
+  <p class="price-line">מחיר מקורי: ₪99</p>
+  <p><strong>מחיר מבצע: ₪49</strong></p>
 
-  <div class="payment-container">
-    <h2>פרטי התשלום</h2>
-    
-    <!-- פרטי המוצרים שהוזמנו -->
-    <div class="payment-details">
-      <p id="packageDetails">חבילה חודשית - 99.99 ש"ח</p>
-      <p>עלות המשלוח - 10 ש"ח</p>
-    </div>
+  <input type="text" id="name" placeholder="שם מלא" required>
+  <input type="tel" id="phone" placeholder="מספר טלפון" required>
+  <input type="text" id="coupon" placeholder="קוד קופון (אם יש)">
+  <button onclick="handlePayment()">מעבר לתשלום</button>
 
-    <!-- שדה להזנת קוד קופון -->
-    <div class="coupon-section">
-      <p>הזן קוד קופון לקבלת הנחה:</p>
-      <input type="text" id="couponCode" placeholder="הכנס קוד קופון">
-      <button onclick="applyCoupon()">החלת קופון</button>
-      <div id="couponError" class="error-message"></div>
-    </div>
+  <div id="orderDetails" style="margin-top:20px;"></div>
 
-    <!-- סיכום התשלום -->
-    <div class="final-total">
-      <p id="totalPrice">סכום כולל: 109.99 ש"ח</p>
-    </div>
-
-    <!-- כפתור תשלום -->
-    <button onclick="completePayment()" id="paymentButton">סיים תשלום</button>
-
-    <!-- כפתור לשליחה בוואטסאפ -->
-    <div id="whatsappSection" style="display:none;">
-      <p class="order-details" id="orderDetails"></p>
-      <a id="whatsappLink" href="" target="_blank">
-        <button class="whatsapp-button">שלח מספר הזמנה לוואטסאפ</button>
-      </a>
-    </div>
+  <div id="whatsappSection">
+    <p>יש לשלוח את מספר ההזמנה לוואטסאפ:</p>
+    <a id="whatsappLink" target="_blank" style="color: #25D366;">שלח לוואטסאפ</a>
   </div>
+</div>
 
-  <script>
-    // רשימת קופונים לדוגמה
-    const coupons = {
-      "DISCOUNT10": 0.10, // הנחה של 10%
-      "FREESHIP": 0.00,   // הנחה של 0% (לשלוח חינם)
-      "DREE": 1.00        // הנחה של 100% (המחיר אפס)
-    };
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  emailjs.init("2T_CaMbAN4-h9rTjA");
 
-    let originalPrice = 109.99; // מחיר כולל של החבילה והמשלוח
-    let finalPrice = originalPrice;
+  const COUPONS = {
+    "DREE": 0,
+    "DISCOUNT20": 29
+  };
 
-    // פונקציה להחלת קופון
-    function applyCoupon() {
-      const couponCode = document.getElementById('couponCode').value.trim();
-      const errorMessage = document.getElementById('couponError');
-      errorMessage.textContent = ''; // מנקים הודעות שגיאה
+  function generateOrderNumber() {
+    return 'ORD' + Math.floor(Math.random() * 1000000);
+  }
 
-      // בדיקת הקופון
-      if (coupons[couponCode]) {
-        const discount = coupons[couponCode];
+  function handlePayment() {
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const coupon = document.getElementById("coupon").value.trim().toUpperCase();
 
-        // אם קוד הקופון הוא DREE, המחיר יתעדכן ל-0
-        if (couponCode === "DREE") {
-          finalPrice = 0;
-        } else {
-          finalPrice = originalPrice * (1 - discount); // חישוב המחיר אחרי ההנחה
-        }
-
-        document.getElementById('totalPrice').textContent = `סכום כולל: ${finalPrice.toFixed(2)} ש"ח`;
-        document.getElementById('paymentButton').disabled = false; // מאפשר את כפתור התשלום אם הקופון תקף
-      } else {
-        errorMessage.textContent = 'הקוד שהוזן לא תקף. נסה שוב.';
-        document.getElementById('paymentButton').disabled = true; // משאיר את כפתור התשלום לא פעיל אם הקופון לא תקף
-      }
+    if (!name || !phone) {
+      alert("נא למלא את כל השדות");
+      return;
     }
 
-    // פונקציה לסיום התשלום
-    function completePayment() {
-      // יצירת מספר הזמנה אקראי
-      const orderNumber = generateOrderNumber();
-      
-      if (finalPrice === 0) {
-        alert('תשלום בוצע בהצלחה! סכום לתשלום: 0 ש"ח');
-      } else {
-        alert('תשלום בוצע בהצלחה! סכום לתשלום: ' + finalPrice.toFixed(2) + ' ש"ח');
-      }
-
-      // הצגת פרטי ההזמנה והכפתור WhatsApp
-      document.getElementById('orderDetails').textContent = `מספר הזמנה: ${orderNumber}`;
-      const whatsappLink = `https://wa.me/972509643779?text=שלום,%20אני%20רוצה%20לאשר%20הזמנה%20מספר%20${orderNumber}`;
-      document.getElementById('whatsappLink').href = whatsappLink;
-      document.getElementById('whatsappSection').style.display = 'block'; // הצגת כפתור וואטסאפ
+    let finalPrice = 49;
+    if (coupon && COUPONS[coupon] !== undefined) {
+      finalPrice = COUPONS[coupon];
     }
 
-    // פונקציה ליצירת מספר הזמנה אקראי
-    function generateOrderNumber() {
-      return 'ORD-' + Math.floor(Math.random() * 1000000); // יצירת מספר אקראי בין 0 ל-999999
-    }
+    const orderNumber = generateOrderNumber();
 
-    // פונקציה לעדכון פרטי החבילה (אם יש חבילה אחרת לבחור ממנה)
-    function updatePackagePrice(packageName) {
-      // כאן נעדכן את המחיר של החבילה שנבחרה, לדוגמה:
-      if (packageName === "basic") {
-        originalPrice = 99.99;
-      } else if (packageName === "premium") {
-        originalPrice = 199.99;
-      }
-
-      // עדכון המחיר לאחר בחירת החבילה
-      finalPrice = originalPrice;
-      document.getElementById('packageDetails').textContent = `חבילה ${packageName} - ${originalPrice} ש"ח`;
-      document.getElementById('totalPrice').textContent = `סכום כולל: ${finalPrice.toFixed(2)} ש"ח`;
-    }
-  </script>
+    // שליחת מייל עם EmailJS
+    emailjs.send("service_zuhohgv", "template_1wpdy5y", {
+      name: name,
+      phone: phone,
+      order_number: orderNumber,
+      final_price: finalPrice
+    }).then(() => {
+      document.getElementById("orderDetails").innerText = `מספר הזמנה: ${orderNumber} | מחיר סופי: ₪${finalPrice}`;
+      const whatsappLink = `https://wa.me/972509643779?text=שלום,%20רכשתי%20מנוי%20והמספר%20הזמנה%20שלי%20הוא:%20${orderNumber}`;
+      document.getElementById("whatsappLink").href = whatsappLink;
+      document.getElementById("whatsappSection").style.display = "block";
+    }).catch(error => {
+      alert("שליחת המייל נכשלה. נסה שוב.");
+      console.error(error);
+    });
+  }
+</script>
 
 </body>
 </html>
