@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>תשלום עבור מנוי</title>
+  <title>מנויים מסובסדים</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* עיצוב כללי */
     body {
       font-family: Arial, sans-serif;
       direction: rtl;
+      margin: 0;
+      padding: 0;
       background-color: #f9f9f9;
-      padding: 20px;
     }
-
+    
     header {
       background-color: #4CAF50;
       color: white;
@@ -20,119 +22,117 @@
       text-align: center;
     }
 
-    .checkout-form {
+    .plans {
+      display: flex;
+      justify-content: space-around;
+      padding: 40px;
+    }
+
+    .plan {
       background-color: white;
-      padding: 30px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .checkout-form h2 {
+      padding: 20px;
       text-align: center;
+      width: 250px;
+      position: relative;
     }
 
-    .checkout-form label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
+    .plan h2 {
+      color: #333;
     }
 
-    .checkout-form input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    .plan p {
+      color: #555;
       font-size: 16px;
+    }
+
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 18px;
+    }
+
+    .discount-tag {
+      background-color: #FF6347;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
     }
 
     .btn {
       background-color: #4CAF50;
       color: white;
-      padding: 12px 20px;
+      padding: 10px 20px;
       border: none;
       border-radius: 5px;
-      text-align: center;
-      cursor: pointer;
-      width: 100%;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
     }
 
     .btn:hover {
       background-color: #45a049;
     }
 
-    .error {
-      color: red;
+    .login-register {
       text-align: center;
+      margin-top: 30px;
+    }
+
+    .login-register a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>תשלום עבור מנוי</h1>
+    <h1>מנויים מסובסדים לשירותים מובילים</h1>
   </header>
 
-  <div class="checkout-form">
-    <h2>השלם את פרטי התשלום</h2>
-    <form id="paymentForm">
-      <label for="cardNumber">מספר כרטיס אשראי</label>
-      <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" required>
+  <section class="plans">
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>יוטיוב פרימיום</h2>
+      <p>גישה לשירותי פרימיום של יוטיוב במחיר מסובסד</p>
+      <p class="original-price">מחיר מקורי: 30 ₪ לחודש</p>
+      <p class="price">מחיר: 15 ₪ לחודש</p>
+      <a href="checkout.html?plan=youtube" class="btn">קנה עכשיו</a>
+    </div>
 
-      <label for="expiryDate">תוקף (MM/YY)</label>
-      <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>ספוטיפי פרימיום</h2>
+      <p>האזינו למוזיקה ללא פרסומות ועם גישה מלאה</p>
+      <p class="original-price">מחיר מקורי: 40 ₪ לחודש</p>
+      <p class="price">מחיר: 20 ₪ לחודש</p>
+      <a href="checkout.html?plan=spotify" class="btn">קנה עכשיו</a>
+    </div>
 
-      <label for="cvv">קוד CVV</label>
-      <input type="text" id="cvv" name="cvv" placeholder="123" required>
+    <div class="plan">
+      <div class="discount-tag">הנחה</div>
+      <h2>אפל מיוזיק</h2>
+      <p>האזינו למוזיקה איכותית עם גישה לכל התכנים</p>
+      <p class="original-price">מחיר מקורי: 40 ₪ לחודש</p>
+      <p class="price">מחיר: 18 ₪ לחודש</p>
+      <a href="checkout.html?plan=applemusic" class="btn">קנה עכשיו</a>
+    </div>
+  </section>
 
-      <button type="submit" class="btn">בצע תשלום</button>
-    </form>
-    <div id="errorMessage" class="error"></div>
-  </div>
-
-  <script>
-    document.getElementById("paymentForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      
-      const cardNumber = document.getElementById("cardNumber").value;
-      const expiryDate = document.getElementById("expiryDate").value;
-      const cvv = document.getElementById("cvv").value;
-
-      // ניקוי שגיאות ישנות
-      document.getElementById("errorMessage").textContent = "";
-
-      // ביצוע הקריאה ל-API של קארדום
-      fetch('https://api.cardom.com/payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_API_KEY' // הוסף כאן את ה-API Key שלך
-        },
-        body: JSON.stringify({
-          amount: 1500,  // סכום התשלום (באגורות) – 15 ₪
-          currency: 'ILS',
-          description: 'מנוי יוטיוב פרימיום',
-          cardDetails: {
-            number: cardNumber,
-            expiryDate: expiryDate,
-            cvv: cvv
-          }
-        })
-      }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert("התשלום בוצע בהצלחה!");
-            window.location.href = "thankyou.html";  // דף תודה לאחר תשלום
-          } else {
-            document.getElementById("errorMessage").textContent = "הייתה שגיאה בתשלום, נסה שוב.";
-          }
-        })
-        .catch(error => {
-          document.getElementById("errorMessage").textContent = "שגיאה בעת חיבור לשרת. אנא נסה שוב.";
-        });
-    });
-  </script>
+  <section class="login-register">
+    <p>כבר יש לך חשבון? <a href="login.html">התחבר כאן</a></p>
+    <p>חדש כאן? <a href="register.html">הרשם עכשיו</a></p>
+  </section>
 </body>
 </html>
