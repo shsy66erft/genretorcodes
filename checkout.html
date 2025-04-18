@@ -71,10 +71,43 @@
 <script>
   emailjs.init("2T_CaMbAN4-h9rTjA");
 
-  const COUPONS = {
-    "DREE": 0,
-    "DISCOUNT20": 29
-  };
+// פונקציה לפענוח קוד מוצפן (Base64)
+function decryptCouponCode(encryptedCode) {
+    return atob(encryptedCode);  // פונקציית atob פועלת לפענוח Base64
+}
+
+// רשימת קופונים מוצפנים
+const encryptedCoupons = {
+    "RFJFRA==": 0,    // DREE -> 0% הנחה
+    "RElTQ1VPQ1R7MjA=": 29,  // DISCOUNT20 -> 29% הנחה
+    "RElTQ1VPQ1R7MzA=": 30,  // DISCOUNT30 -> 30% הנחה
+    "RElTQ1VPQ1R7NDA=": 40,  // DISCOUNT40 -> 40% הנחה
+    "RElTQ1VPQ1R7NTA=": 50,  // DISCOUNT50 -> 50% הנחה
+    "RElTQ1VPQ1R7NjA=": 60,  // DISCOUNT60 -> 60% הנחה
+    "RElTQ1VPQ1R7NzA=": 70,  // DISCOUNT70 -> 70% הנחה
+    "RElTQ1VPQ1R7ODg=": 80,  // DISCOUNT80 -> 80% הנחה
+    "RElTQ1VPQ1R7OTk=": 90,  // DISCOUNT90 -> 90% הנחה
+    "RElTQ1VPQ1R7MTAw": 100  // DISCOUNT100 -> 100% הנחה
+};
+
+// פונקציה לקבלת הנחה על פי קוד קופון
+function getCouponDiscount(couponCode) {
+    // פענוח הקוד המוצפן
+    const decryptedCode = decryptCouponCode(couponCode);
+    
+    // חיפוש הנחה על פי הקוד המפוענח
+    if (encryptedCoupons[decryptedCode] !== undefined) {
+        return encryptedCoupons[decryptedCode];
+    } else {
+        return null;  // אם הקוד לא נמצא
+    }
+}
+
+// דוגמת קריאה:
+const couponCode = "RFJFRA=="; // לדוגמה קוד DREE
+const discount = getCouponDiscount(couponCode);
+console.log(`ההנחה עבור קוד הקופון היא: ${discount}%`);
+
 
   function generateOrderNumber() {
     return 'ORD' + Math.floor(Math.random() * 1000000);
