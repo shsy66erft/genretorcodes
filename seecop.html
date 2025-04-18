@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ניהול קופונים</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* עיצוב כללי */
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .login-container, .manage-coupons-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .login-container h2, .manage-coupons-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .login-form input, .add-coupon-form input, .add-coupon-form button {
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .login-form button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .login-form button:hover {
+      background-color: #45a049;
+    }
+
+    .coupon-list {
+      margin-bottom: 30px;
+    }
+
+    .coupon-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .add-coupon-form button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .add-coupon-form button:hover {
+      background-color: #45a049;
+    }
+
+    .add-coupon-form input {
+      margin-bottom: 10px;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+    }
+
+    .btn-logout {
+      background-color: #e74c3c;
+      color: white;
+      padding: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- דף התחברות -->
+  <div class="login-container" id="loginContainer">
+    <h2>התחברות למערכת ניהול</h2>
+    <form class="login-form" id="loginForm">
+      <input type="text" id="username" placeholder="שם משתמש" required>
+      <input type="password" id="password" placeholder="סיסמה" required>
+      <button type="submit">התחבר</button>
+    </form>
+    <div class="error-message" id="errorMessage"></div>
+  </div>
+
+  <!-- דף ניהול קופונים -->
+  <div class="manage-coupons-container" id="manageCouponsContainer" style="display:none;">
+    <h2>קופונים קיימים</h2>
+    
+    <!-- רשימת הקופונים -->
+    <div class="coupon-list" id="couponList">
+      <!-- קופונים יוצגו כאן -->
+    </div>
+
+    <!-- טופס להוספת/עדכון קופון -->
+    <h2>הוסף או עדכן קופון</h2>
+    <form class="add-coupon-form" id="couponForm">
+      <input type="text" id="couponCode" placeholder="הכנס קוד קופון" required>
+      <input type="number" id="couponDiscount" placeholder="הכנס ערך הנחה (למשל 0.10 ל-10%)" required step="0.01" min="0" max="1">
+      <button type="submit">הוסף/עדכן קופון</button>
+    </form>
+
+    <!-- כפתור יציאה -->
+    <button class="btn-logout" onclick="logout()">יציאה</button>
+  </div>
+
+  <script>
+    // פרטי התחברות: שם משתמש וסיסמה (מצפנים סיסמה ב-Base64)
+    const validUsername = "admin";
+    const validPassword = btoa("שי3779"); // הצפנה ב-Base64 (base64)
+    const coupons = {
+      "DISCOUNT10": 0.10,
+      "FREESHIP": 0.00
+    };
+
+    // פונקציה להראות את רשימת הקופונים
+    function displayCoupons() {
+      const couponListElement = document.getElementById('couponList');
+      couponListElement.innerHTML = ''; // מנקים את הרשימה
+      for (let couponCode in coupons) {
+        const discount = coupons[couponCode];
+        const couponItem = document.createElement('div');
+        couponItem.classList.add('coupon-item');
+        couponItem.innerHTML = `
+          <p>${couponCode}</p>
+          <p>הנחה של ${(discount * 100).toFixed(0)}%</p>
+        `;
+        couponListElement.appendChild(couponItem);
+      }
+    }
+
+    // טיפול בהתחברות
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = btoa(document.getElementById('password').value); // הצפנה ב-Base64
+
+      if (username === validUsername && password === validPassword) {
+        // התחברות הצליחה, מציגים את דף ניהול הקופונים
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('manageCouponsContainer').style.display = 'block';
+        displayCoupons();
+      } else {
+        document.getElementById('errorMessage').textContent = 'שם משתמש או סיסמה לא נכונים';
+      }
+    });
+
+    // טיפול בהוספת/עדכון קופון
+    document.getElementById('couponForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const couponCode = document.getElementById('couponCode').value;
+      const couponDiscount = parseFloat(document.getElementById('couponDiscount').value);
+
+      if (couponCode && couponDiscount >= 0 && couponDiscount <= 1) {
+        coupons[couponCode] = couponDiscount;
+        displayCoupons();
+        document.getElementById('couponCode').value = '';
+        document.getElementById('couponDiscount').value = '';
+        alert('הקופון נוסף/עודכן בהצלחה!');
+      } else {
+        alert('הכנס קוד קופון תקף וערך הנחה בין 0 ל-1');
+      }
+    });
+
+    // פונקציה ליציאה מהחשבון
+    function logout() {
+      document.getElementById('loginContainer').style.display = 'block';
+      document.getElementById('manageCouponsContainer').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
