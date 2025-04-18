@@ -44,11 +44,19 @@
   </table>
 
   <script>
-    const coupons = [
-      { code: "DREE", discount: 100, type: "₪" },
-      { code: "SALE20", discount: 20, type: "%" },
-      { code: "VIP10", discount: 10, type: "%" }
-    ];
+const coupons = [
+    { code: "DREE", discount: 100, type: "₪" },
+    { code: "SALE20", discount: 20, type: "%" },
+    { code: "VIP10", discount: 10, type: "%" },
+    { code: "DISCOUNT30", discount: 30, type: "%" },
+    { code: "DISCOUNT40", discount: 40, type: "%" },
+    { code: "DISCOUNT50", discount: 50, type: "%" },
+    { code: "DISCOUNT60", discount: 60, type: "%" },
+    { code: "DISCOUNT70", discount: 70, type: "%" },
+    { code: "DISCOUNT80", discount: 80, type: "%" },
+    { code: "DISCOUNT90", discount: 90, type: "%" },
+    { code: "DISCOUNT100", discount: 100, type: "%" }
+];
 
     const table = document.getElementById("couponTable");
     coupons.forEach(coupon => {
