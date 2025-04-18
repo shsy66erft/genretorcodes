@@ -89,7 +89,7 @@
     
     <!-- פרטי המוצרים שהוזמנו -->
     <div class="payment-details">
-      <p>מנוי חודשי - 99.99 ש"ח</p>
+      <p id="packageDetails">חבילה חודשית - 99.99 ש"ח</p>
       <p>עלות המשלוח - 10 ש"ח</p>
     </div>
 
@@ -107,17 +107,18 @@
     </div>
 
     <!-- כפתור תשלום -->
-    <button onclick="completePayment()">סיים תשלום</button>
+    <button onclick="completePayment()" id="paymentButton">סיים תשלום</button>
   </div>
 
   <script>
     // רשימת קופונים לדוגמה
     const coupons = {
       "DISCOUNT10": 0.10, // הנחה של 10%
-      "FREESHIP": 0.00   // הנחה של 0% (לשלוח חינם)
+      "FREESHIP": 0.00,   // הנחה של 0% (לשלוח חינם)
+      "DREE": 1.00        // הנחה של 100% (המחיר אפס)
     };
 
-    let originalPrice = 109.99; // מחיר כולל של המנוי והמשלוח
+    let originalPrice = 109.99; // מחיר כולל של החבילה והמשלוח
     let finalPrice = originalPrice;
 
     // פונקציה להחלת קופון
@@ -128,10 +129,18 @@
 
       if (coupons[couponCode]) {
         const discount = coupons[couponCode];
-        finalPrice = originalPrice * (1 - discount); // חישוב המחיר אחרי ההנחה
+
+        // אם קוד הקופון הוא DREE, המחיר יתעדכן ל-0
+        if (couponCode === "DREE") {
+          finalPrice = 0;
+        } else {
+          finalPrice = originalPrice * (1 - discount); // חישוב המחיר אחרי ההנחה
+        }
         document.getElementById('totalPrice').textContent = `סכום כולל: ${finalPrice.toFixed(2)} ש"ח`;
+        document.getElementById('paymentButton').disabled = false; // מאפשר את הכפתור תשלום אם הקופון תקף
       } else {
         errorMessage.textContent = 'הקוד שהוזן לא תקף. נסה שוב.';
+        document.getElementById('paymentButton').disabled = true; // משאיר את כפתור התשלום לא פעיל עד שהקופון תקף
       }
     }
 
@@ -142,6 +151,21 @@
       } else {
         alert('תשלום בוצע בהצלחה! סכום לתשלום: ' + finalPrice.toFixed(2) + ' ש"ח');
       }
+    }
+
+    // פונקציה לעדכון פרטי החבילה (אם יש חבילה אחרת לבחור ממנה)
+    function updatePackagePrice(packageName) {
+      // כאן נעדכן את המחיר של החבילה שנבחרה, לדוגמה:
+      if (packageName === "basic") {
+        originalPrice = 99.99;
+      } else if (packageName === "premium") {
+        originalPrice = 199.99;
+      }
+
+      // עדכון המחיר לאחר בחירת החבילה
+      finalPrice = originalPrice;
+      document.getElementById('packageDetails').textContent = `חבילה ${packageName} - ${originalPrice} ש"ח`;
+      document.getElementById('totalPrice').textContent = `סכום כולל: ${finalPrice.toFixed(2)} ש"ח`;
     }
   </script>
 
