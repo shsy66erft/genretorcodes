@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>ניהול קופונים</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #f0f0f0;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+
+    .form-container {
+      background-color: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h2>ניהול קופונים</h2>
+
+  <!-- טופס להוספת קופונים חדשים -->
+  <div class="form-container">
+    <h3>הוסף קופון חדש</h3>
+    <form id="couponForm">
+      <input type="text" id="couponCode" placeholder="קוד קופון" required>
+      <input type="number" id="couponDiscount" placeholder="הנחה" required>
+      <select id="couponType" required>
+        <option value="₪">₪</option>
+        <option value="%">%</option>
+      </select>
+      <button type="submit" class="button">הוסף קופון</button>
+    </form>
+  </div>
+
+  <h3>רשימת קופונים פעילים</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>קוד</th>
+        <th>הנחה</th>
+        <th>סוג (₪ או %)</th>
+      </tr>
+    </thead>
+    <tbody id="couponTable">
+      <!-- קופונים יתווספו כאן -->
+    </tbody>
+  </table>
+
+  <script>
+    // רשימה של קופונים קיימים
+    let coupons = [
+      { code: "DREE", discount: 100, type: "₪" },
+      { code: "SALE20", discount: 20, type: "%" },
+      { code: "VIP10", discount: 10, type: "%" }
+    ];
+
+    // פונקציה להוסיף קופון חדש לטבלה
+    function renderCoupons() {
+      const table = document.getElementById("couponTable");
+      table.innerHTML = ""; // איפוס הטבלה
+      coupons.forEach(coupon => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${coupon.code}</td>
+          <td>${coupon.discount}</td>
+          <td>${coupon.type}</td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    // הוספת קופון חדש
+    document.getElementById("couponForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const code = document.getElementById("couponCode").value.trim();
+      const discount = parseFloat(document.getElementById("couponDiscount").value.trim());
+      const type = document.getElementById("couponType").value;
+      
+      if (code && !isNaN(discount) && type) {
+        // הוספת הקופון לרשימה
+        coupons.push({ code, discount, type });
+        renderCoupons(); // רענון הטבלה
+        document.getElementById("couponForm").reset(); // איפוס הטופס
+      }
+    });
+
+    // הצגת הקופונים כברירת מחדל
+    renderCoupons();
+  </script>
+
+</body>
+</html>
